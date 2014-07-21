@@ -63,7 +63,9 @@ namespace Autodesk_Interactive_Storytelling
                 {
                     Console.WriteLine("Value is: " + value.ToString());
                     //TODO CHANGE MAKE MORE GENERIC
-                    hc.changeColorLED(0, 0, 0, 255, 0, 0);
+
+                    changeToRandColor(hc);
+
                     imageFrames.Add(hc.ColorArray);
                     Console.WriteLine(hc.ColorArray[0].ToString());
                 }
@@ -76,6 +78,27 @@ namespace Autodesk_Interactive_Storytelling
             if(mode == 0)
             {
                 tl.ReceiveSignal(imageFrames);
+            }
+        }
+
+        private void changeToRandColor(Hypnocube hc) 
+        {
+            Random rand = new Random();
+            byte randR = (byte)rand.Next(0, 255);
+            byte randG = (byte)rand.Next(0, 255);
+            byte randB = (byte)rand.Next(0, 255);
+
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        hc.changeColorLED(i, j, k,
+                            randR, randG, randB);
+                    }
+                }
             }
         }
 

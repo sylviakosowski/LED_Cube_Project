@@ -33,9 +33,14 @@ namespace CubeVisualization
         private Vector3[] convertToGLArray(byte[] colorArray)
         {
             Vector3[] glColorArray = new Vector3[colorArray.Length/3];
+
+            int j = 0;
+
             for (int i = 0; i < colorArray.Length; i += 3 )
             {
-                convertToGLColor(colorArray[i], colorArray[i+1], colorArray[i+2]);
+                Vector3 newColor = convertToGLColor(colorArray[i], colorArray[i+1], colorArray[i+2]);
+                glColorArray[j] = newColor;
+                j++;
             }
 
             return glColorArray;
@@ -50,7 +55,6 @@ namespace CubeVisualization
             {
                 Vector3[] glImage = convertToGLArray(image);
                 game.changeCubeColors(glImage);
-                Console.WriteLine(glImage[0].ToString());
             }
 
         }

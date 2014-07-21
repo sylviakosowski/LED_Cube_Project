@@ -242,7 +242,7 @@ namespace CubeVisualization
                         Cube c = new Cube(new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble()));
                         c.Position = new Vector3((float)(x - 4), (float)(y - 4), (float)(z - 4));
                         c.Rotation = Vector3.Zero;
-                        c.Scale = Vector3.One * (0.45f);
+                        c.Scale = Vector3.One * (0.3f);
                         objects.Add(c);
                     }
                 }
