@@ -47,16 +47,20 @@ namespace CubeVisualization
         }
 
         /* Given a list of iamgeFrames, converts each of them to a GL array of
-         * Vector3 values.
+         * Vector3 values and returns a queue of all these Vector3 arrays.
          */
         public void ReceiveSignal(List<byte[]> imageFrames) 
         {
+            Queue<Vector3[]> glImageFrames = new Queue<Vector3[]>();
+
             foreach(byte[] image in imageFrames)
             {
                 Vector3[] glImage = convertToGLArray(image);
-                game.changeCubeColors(glImage);
+                //game.changeCubeColors(glImage);
+                glImageFrames.Enqueue(glImage);
             }
 
+            game.ImageFrames = glImageFrames;
         }
 
     }

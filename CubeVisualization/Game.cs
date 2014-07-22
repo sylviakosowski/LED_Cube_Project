@@ -44,8 +44,11 @@ namespace CubeVisualization
 
         float time = 0.0f;
 
+        /* Camera stuff */
         Camera cam = new Camera();
         Vector2 lastMousePos = new Vector2();
+
+        private Queue<Vector3[]> imageFrames = new Queue<Vector3[]>();
         
         /* Constructor for Game class which tells it to use multi-sampling */
         public Game() : base(512,512, new GraphicsMode(32, 24, 0, 4))
@@ -54,6 +57,12 @@ namespace CubeVisualization
              * d2 bits in the depth buffer, no stencil buffer, and 4x 
              * sampling for anti-aliasing.
              */
+        }
+
+        public Queue<Vector3[]> ImageFrames
+        {
+            get { return imageFrames; }
+            set { imageFrames = value;  }
         }
 
         /* Changes the colors of each cube in the cube. */
@@ -65,8 +74,8 @@ namespace CubeVisualization
                 c.Color = colors[i];
                 i++;
             }
+            Console.WriteLine("The cube shoudl have changed color");
         }
-
 
         /* What happens when the window is first loaded. */
         protected override void OnLoad(EventArgs e)
@@ -112,6 +121,11 @@ namespace CubeVisualization
             //Everything must be drawn before we swap buffers
             //Double buffered setup
             SwapBuffers();
+
+            if (imageFrames.Count > 0)
+            {
+                changeCubeColors(imageFrames.Dequeue());
+            }
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
