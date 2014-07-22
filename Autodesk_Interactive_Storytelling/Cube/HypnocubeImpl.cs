@@ -49,7 +49,33 @@ namespace Autodesk_Interactive_Storytelling
             return (x + 8 * y + 64 * z) * 3;
         }
 
-        /* Simple method which changes the whole cube to a random color. */
+
+        //////////////////////// ANIMATION CODE ///////////////////////////////////////
+
+        /* Adds an image frame to the image frame queue. */
+        private void AddImageFrame(List<byte[]> imageFrames)
+        {
+            byte[] newImage = new byte[ColorArray.Length];
+            Array.Copy(ColorArray, newImage, ColorArray.Length);
+            imageFrames.Add(newImage);
+        }
+
+        /* Changes the whole cube to the specified color. */
+        public void SpecificColorWholeCube(byte r, byte g, byte b)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        changeColorLED(i, j, k, r, g, b);
+                    }
+                }
+            }
+        }
+
+        /* Changes the whole cube to a random color. */
         public void ChangeToRandColor(Random rand)
         {
             byte randR = (byte)rand.Next(0, 255);
@@ -57,17 +83,7 @@ namespace Autodesk_Interactive_Storytelling
             byte randB = (byte)rand.Next(0, 255);
 
 
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        changeColorLED(i, j, k,
-                            randR, randG, randB);
-                    }
-                }
-            }
+            SpecificColorWholeCube(randR, randG, randB);
         }
 
         /* Makes the cube blink quickly through 10 random colors */
@@ -78,10 +94,39 @@ namespace Autodesk_Interactive_Storytelling
             for (int i = 0; i < count; i++)
             {
                 ChangeToRandColor(rand);
-
+                AddImageFrame(imageFrames);
+                /*
                 byte[] newImage = new byte[ColorArray.Length];
                 Array.Copy(ColorArray, newImage, ColorArray.Length);
                 imageFrames.Add(newImage);
+                 */
+            }
+        }
+
+        /* Blink a specific LED */
+        public void BlinkLED(List<byte[]> imageFrames, int x, int y, int z)
+        {
+            SpecificColorWholeCube(56, 56, 56);
+            int counter = 0;
+            for (int i = 0; i < 40; i++ )
+            {
+                if(counter == 8)
+                {
+                    counter = 0;
+                }
+                
+                if(counter < 4)
+                {
+                    changeColorLED(x, y, z, 255, 0, 0);
+                    AddImageFrame(imageFrames);
+                    counter++;
+                }
+                else
+                {
+                    changeColorLED(x, y, z, 56, 56, 56);
+                    AddImageFrame(imageFrames);
+                    counter++;
+                }
             }
         }
 
