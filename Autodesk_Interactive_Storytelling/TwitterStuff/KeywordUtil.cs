@@ -8,7 +8,9 @@ using CubeVisualization;
 
 namespace Autodesk_Interactive_Storytelling
 {
-    /* Provides utilities for working with Twitter Keywords and statuses. */
+    /* Provides utilities for working with Twitter keywords and statuses, and the
+     * animations that correspond to them in the cube.
+     */
     public class KeywordUtil
     {
         private TweetListener tl;
@@ -67,28 +69,8 @@ namespace Autodesk_Interactive_Storytelling
                     Console.WriteLine("Value is: " + value.ToString());
 
                     //TODO CHANGE MAKE MORE GENERIC
-                    Random rand = new Random();
 
-                    Console.WriteLine("printing out rand colors generated for each image");
-                    for (int i = 0; i < 100; i++ )
-                    {
-                        //PROBLEM HERE: IT IS NOT GENERATING A RANDOM THING FOR EACH FRAME?
-                        changeToRandColor(hc, rand);
-
-                        byte[] newImage = new byte[hc.ColorArray.Length];
-                        Array.Copy(hc.ColorArray, newImage, hc.ColorArray.Length);
-
-                        Console.WriteLine("Image frame value this loop:" + newImage[0].ToString());
-
-                        imageFrames.Add(newImage);
-                        Console.WriteLine("Color array value this loop:" + hc.ColorArray[0].ToString());
-                    }
-
-                    Console.WriteLine("Printing out imageframe values");
-                    foreach ( byte[] image in imageFrames)
-                    {
-                        Console.WriteLine(image[0].ToString());
-                    }
+                    hc.RandomFullCubeColorChange(10, imageFrames);
                 }
                 else
                 {
@@ -98,28 +80,7 @@ namespace Autodesk_Interactive_Storytelling
 
             if(mode == 0)
             {
-                tl.ReceiveSignal(imageFrames);
-            }
-        }
-
-        /* Simple method which changes the whole cube to a random color. */
-        private void changeToRandColor(HypnocubeImpl hc, Random rand) 
-        {
-            byte randR = (byte)rand.Next(0, 255);
-            byte randG = (byte)rand.Next(0, 255);
-            byte randB = (byte)rand.Next(0, 255);
-
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        hc.changeColorLED(i, j, k,
-                            randR, randG, randB);
-                    }
-                }
+                tl.ReceiveAndSendSignal(imageFrames);
             }
         }
 

@@ -12,29 +12,30 @@ using System.IO;
 
 namespace CubeVisualization
 {
+    /* Class which handles the entire Cube Visualization. */
     public class Game : GameWindow
     {
         /* SHADERS */
         /* Stores the shaders fs.glsl and vs.glsl together in a a
          * usable form (program object). */
-        int pgmID;
-        int vsID; //stores address of vs.glsl shader
-        int fsID; //stores address of fs.glsl shader
+        private int pgmID;
+        private int vsID; //stores address of vs.glsl shader
+        private int fsID; //stores address of fs.glsl shader
 
         /* SHADER ATTRIBUTES */
-        int attribute_vpos; //Pos attribute from shade
-        int attribute_vcol; //Color attribute from shader
-        int uniform_mview; //View attribute from shader
+        private int attribute_vpos; //Pos attribute from shade
+        private int attribute_vcol; //Color attribute from shader
+        private int uniform_mview; //View attribute from shader
 
         /* BUFFERS */
-        int vbo_position; //Position buffer
-        int vbo_color; //Color buffer
-        int vbo_mview; //View buffer
-        int ibo_elements; //Cube index buffer
+        private int vbo_position; //Position buffer
+        private int vbo_color; //Color buffer
+        private int vbo_mview; //View buffer
+        private int ibo_elements; //Cube index buffer
 
         /* BUFFER DATA - VECTOR ARRAYS */
-        Vector3[] vertData;
-        Vector3[] colData;
+        private Vector3[] vertData;
+        private Vector3[] colData;
 
         //Stores everything we're going to draw
         private List<Cube> objects = new List<Cube>();
@@ -42,11 +43,11 @@ namespace CubeVisualization
         /* CUBE */
         private int[] indiceData;
 
-        float time = 0.0f;
+        private float time = 0.0f;
 
         /* Camera stuff */
-        Camera cam = new Camera();
-        Vector2 lastMousePos = new Vector2();
+        private Camera cam = new Camera();
+        private Vector2 lastMousePos = new Vector2();
 
         private Queue<Vector3[]> imageFrames = new Queue<Vector3[]>();
         
@@ -121,11 +122,12 @@ namespace CubeVisualization
             //Double buffered setup
             SwapBuffers();
 
+            /* Load the next image frame in the queue in, discard the current image frame */
             if (imageFrames.Count > 0)
             {
                 Vector3[] currentImage = imageFrames.Dequeue();
                 changeCubeColors(currentImage);
-                Console.WriteLine("Current color: " + currentImage[0].ToString());
+                Console.WriteLine("meep");
             }
         }
 

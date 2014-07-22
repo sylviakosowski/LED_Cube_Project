@@ -21,19 +21,15 @@ namespace Autodesk_Interactive_Storytelling
         private TwitterContext twitterCtx; //Instance of Twitter
         private string[] keywordArray; //Keywrods in array.
         private Dictionary<string, int> keywordDict; //Keywords paired with dict for anim
-
-        private int mode;
         private KeywordUtil ku;
 
         /* Constructor */
         public UserStreamer(TwitterContext twitterCtx, string[] keywordArray,
-            Dictionary<string, int> keywordDict, int mode, KeywordUtil ku)
+            Dictionary<string, int> keywordDict, KeywordUtil ku)
         {
             this.twitterCtx = twitterCtx;
             this.keywordArray = keywordArray;
             this.keywordDict = keywordDict;
-
-            this.mode = mode;
             this.ku = ku;
         }
 
@@ -48,9 +44,6 @@ namespace Autodesk_Interactive_Storytelling
                   select strm)
                  .StartAsync(async strm =>
                  {
-
-                     //Console.WriteLine(strm.Content + "\n");
-
                      bool exceptionFound = false;
                      JObject o = null;
                      try
@@ -79,7 +72,7 @@ namespace Autodesk_Interactive_Storytelling
                                      ku.determineKeywordsFromString(keywordArray, tweetText);
 
                                  //Run animations based on the keywords found.
-                                 ku.RunAnimationBasedOnKeywords(keywordDict, keywordsFound, mode);
+                                 ku.RunAnimationBasedOnKeywords(keywordDict, keywordsFound);
                              }
                          }
                      }

@@ -7,6 +7,12 @@ using OpenTK;
 
 namespace CubeVisualization
 {
+    /* The link between the twitter code in Autodesk_Interactive_Storytelling and
+     * the visualization in CubeVisualization. Provides methods for converting
+     * a set of RGB values to OpenGL color values, (and converting byte color
+     * arrays to OpenGL Color arrays), as well as sending queues of image frames
+     * to the visualization's Game class.
+     */
     public class TweetListener
     {
         private Game game;
@@ -49,14 +55,13 @@ namespace CubeVisualization
         /* Given a list of iamgeFrames, converts each of them to a GL array of
          * Vector3 values and returns a queue of all these Vector3 arrays.
          */
-        public void ReceiveSignal(List<byte[]> imageFrames) 
+        public void ReceiveAndSendSignal(List<byte[]> imageFrames) 
         {
             Queue<Vector3[]> glImageFrames = new Queue<Vector3[]>();
 
             foreach(byte[] image in imageFrames)
             {
                 Vector3[] glImage = convertToGLArray(image);
-                //game.changeCubeColors(glImage);
                 glImageFrames.Enqueue(glImage);
             }
 

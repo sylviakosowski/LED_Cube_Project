@@ -7,7 +7,7 @@ using OpenTK;
 
 namespace CubeVisualization
 {
-    class Camera
+    public class Camera
     {
         //public Vector3 Position = Vector3.Zero;
         public Vector3 Position = new Vector3(0f, 0f, 12f);

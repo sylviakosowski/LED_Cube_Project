@@ -9,13 +9,13 @@ using CubeVisualization;
 namespace Autodesk_Interactive_Storytelling
 {
     /* Run this class to begin everything.*/
-    class Program
+    public class Program
     {
         //Change to 0 for the OpenGL visualization, 1 for the actual cube.
         private static int CUBE_MODE = 0;
 
         private static TwitterObj t;
-        private static Hypnocube hc;
+        private static HypnocubeImpl hc;
         private static Game game;
         private static KeywordUtil ku;
         private static TweetListener tl;
@@ -35,7 +35,7 @@ namespace Autodesk_Interactive_Storytelling
         private static void Begin(int phys_mode)
         {
             t = new TwitterObj();
-            hc = new Hypnocube();
+            hc = new HypnocubeImpl();
 
             t.DoEverything();
 
@@ -89,7 +89,7 @@ namespace Autodesk_Interactive_Storytelling
             kr.ExtractKeywords();
             KeywordStreamer ks = 
                 new KeywordStreamer(t.TwitterCtx, kr.CombinedString, kr.KeywordArray,
-                    kr.KeywordDict, CUBE_MODE, ku);
+                    kr.KeywordDict, ku);
             ks.BeginStream();
         }
 
@@ -106,7 +106,7 @@ namespace Autodesk_Interactive_Storytelling
         {
             KeywordReader kr = new KeywordReader(keywordStreamPath);
             kr.ExtractKeywords();
-            UserStreamer us = new UserStreamer(t.TwitterCtx, kr.KeywordArray, kr.KeywordDict, CUBE_MODE, ku);
+            UserStreamer us = new UserStreamer(t.TwitterCtx, kr.KeywordArray, kr.KeywordDict, ku);
             us.BeginStream();
         }
 
@@ -117,7 +117,7 @@ namespace Autodesk_Interactive_Storytelling
         {
             game = new Game();
             tl = new TweetListener(game);
-            ku = new KeywordUtil(tl);
+            ku = new KeywordUtil(tl, CUBE_MODE);
 
             SeekResponse();
 

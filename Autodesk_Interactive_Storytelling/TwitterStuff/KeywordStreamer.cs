@@ -17,27 +17,23 @@ namespace Autodesk_Interactive_Storytelling
      * animation based on the keyword(s) present in the Tweet which
      * was streamed.
      */
-    class KeywordStreamer
+    public class KeywordStreamer
     {
         private TwitterContext twitterCtx; //Instance of Twitter
         private string keywords; //Keywords to track.
         private string[] keywordArray; //Keywrods in array.
         private Dictionary<string, int> keywordDict; //Keywords paired with dict for anim
-        //private KeywordUtil util; //class containing util functions
-        private int mode;
-        private KeywordUtil ku;
+        private KeywordUtil ku; 
 
         /* Constructor */
         public KeywordStreamer(TwitterContext twitterCtx, 
             string keywords, string[] keywordArray,
-            Dictionary<string,int> keywordDict, int mode,
-            KeywordUtil ku)
+            Dictionary<string,int> keywordDict, KeywordUtil ku)
         {
             this.twitterCtx = twitterCtx;
             this.keywords = keywords;
             this.keywordArray = keywordArray;
             this.keywordDict = keywordDict;
-            this.mode = mode;
             this.ku = ku;
 
             Console.WriteLine("\nTracking keywords:" + keywords);
@@ -83,7 +79,7 @@ namespace Autodesk_Interactive_Storytelling
                                     ku.determineKeywordsFromString(keywordArray, tweetText);
 
                                 //Run animations based on the keywords found.
-                                ku.RunAnimationBasedOnKeywords(keywordDict, keywordsFound, mode);
+                                ku.RunAnimationBasedOnKeywords(keywordDict, keywordsFound);
                             }
                         }
                     }
