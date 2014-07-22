@@ -11,15 +11,18 @@ namespace Autodesk_Interactive_Storytelling
     /* Provides utilities for working with Twitter Keywords and statuses. */
     public class KeywordUtil
     {
-        TweetListener tl;
+        private TweetListener tl;
+        private int mode;
 
         public KeywordUtil()
         {
         }
 
-        public KeywordUtil(TweetListener tl)
+        /* Constructor to be used when in OpenGL visualization mode. */
+        public KeywordUtil(TweetListener tl, int mode)
         {
             this.tl = tl;
+            this.mode = mode;
         }
 
         /* 
@@ -50,10 +53,10 @@ namespace Autodesk_Interactive_Storytelling
          * be done in some sort of animation handler, not here.
          */
         public void RunAnimationBasedOnKeywords(Dictionary<string,int> keywordDict, 
-            ArrayList keywordsPresent, int mode)
+            ArrayList keywordsPresent)
         {
             List<byte[]> imageFrames = new List<byte[]>();
-            Hypnocube hc = new Hypnocube();
+            HypnocubeImpl hc = new HypnocubeImpl();
 
             foreach( string element in keywordsPresent )
             {
@@ -62,12 +65,30 @@ namespace Autodesk_Interactive_Storytelling
                 if (keywordDict.TryGetValue(element, out value))
                 {
                     Console.WriteLine("Value is: " + value.ToString());
+
                     //TODO CHANGE MAKE MORE GENERIC
+                    Random rand = new Random();
 
-                    changeToRandColor(hc);
+                    Console.WriteLine("printing out rand colors generated for each image");
+                    for (int i = 0; i < 100; i++ )
+                    {
+                        //PROBLEM HERE: IT IS NOT GENERATING A RANDOM THING FOR EACH FRAME?
+                        changeToRandColor(hc, rand);
 
-                    imageFrames.Add(hc.ColorArray);
-                    Console.WriteLine(hc.ColorArray[0].ToString());
+                        byte[] newImage = new byte[hc.ColorArray.Length];
+                        Array.Copy(hc.ColorArray, newImage, hc.ColorArray.Length);
+
+                        Console.WriteLine("Image frame value this loop:" + newImage[0].ToString());
+
+                        imageFrames.Add(newImage);
+                        Console.WriteLine("Color array value this loop:" + hc.ColorArray[0].ToString());
+                    }
+
+                    Console.WriteLine("Printing out imageframe values");
+                    foreach ( byte[] image in imageFrames)
+                    {
+                        Console.WriteLine(image[0].ToString());
+                    }
                 }
                 else
                 {
@@ -81,9 +102,9 @@ namespace Autodesk_Interactive_Storytelling
             }
         }
 
-        private void changeToRandColor(Hypnocube hc) 
+        /* Simple method which changes the whole cube to a random color. */
+        private void changeToRandColor(HypnocubeImpl hc, Random rand) 
         {
-            Random rand = new Random();
             byte randR = (byte)rand.Next(0, 255);
             byte randG = (byte)rand.Next(0, 255);
             byte randB = (byte)rand.Next(0, 255);

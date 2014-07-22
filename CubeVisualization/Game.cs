@@ -74,7 +74,6 @@ namespace CubeVisualization
                 c.Color = colors[i];
                 i++;
             }
-            Console.WriteLine("The cube shoudl have changed color");
         }
 
         /* What happens when the window is first loaded. */
@@ -124,7 +123,9 @@ namespace CubeVisualization
 
             if (imageFrames.Count > 0)
             {
-                changeCubeColors(imageFrames.Dequeue());
+                Vector3[] currentImage = imageFrames.Dequeue();
+                changeCubeColors(currentImage);
+                Console.WriteLine("Current color: " + currentImage[0].ToString());
             }
         }
 
