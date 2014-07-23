@@ -71,7 +71,8 @@ namespace Autodesk_Interactive_Storytelling
                     //TODO CHANGE MAKE MORE GENERIC
 
                     //hc.RandomFullCubeColorChange(10, imageFrames);
-                    hc.BlinkLED(imageFrames, 7, 0, 7);
+                    //hc.BlinkLED(imageFrames, 0, 0, 7);
+                    hc.LightHorizontalStrip(imageFrames, 7,0,4,4,255,0,0);
                 }
                 else
                 {

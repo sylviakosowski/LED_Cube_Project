@@ -130,5 +130,31 @@ namespace Autodesk_Interactive_Storytelling
             }
         }
 
+        /* Light up a vertical strip of LEDs between the two coordinates specified */
+        public void LightHorizontalStrip(List<byte[]> imageFrames, int x, int z, int y1, int y2, byte r, byte g, byte b)
+        {
+            int yMax = Math.Max(y1, y2);
+            int yMin = Math.Min(y1, y2);
+
+            for(int i = yMin; i <= yMax; i++)
+            {
+                changeColorLED(x, i, z, r, g, b);
+            }
+
+            AddImageFrame(imageFrames);
+        }
+
+        /* Light up a cross section of the cube */
+        public void LightUpCrossSection()
+        {
+
+        }
+
+        /* Horizontal slider */
+        public void HorizontalSlider(List<byte[]> imageFrames)
+        {
+
+        }
+
     }
 }
