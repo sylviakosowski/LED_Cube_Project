@@ -34,12 +34,12 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Change color of a single LED at the position specified. */
-        public byte[] changeColorLED(Coordinate c, byte red ,byte green, byte blue)
+        public byte[] changeColorLED(Coordinate coord, RGBColor color)
         {
-            int index = IndexFromCoord(c);
-            colorArray[index] = red;
-            colorArray[index + 1] = green;
-            colorArray[index + 2] = blue;
+            int index = IndexFromCoord(coord);
+            colorArray[index] = color.R;
+            colorArray[index + 1] = color.G;
+            colorArray[index + 2] = color.B;
             return colorArray;
         }
 
@@ -61,7 +61,7 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Changes the whole cube to the specified color. */
-        public void SpecificColorWholeCube(byte r, byte g, byte b)
+        public void SpecificColorWholeCube(RGBColor color)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -69,7 +69,7 @@ namespace Autodesk_Interactive_Storytelling
                 {
                     for (int k = 0; k < 8; k++)
                     {
-                        changeColorLED(new Coordinate(i,j,k), r, g, b);
+                        changeColorLED(new Coordinate(i,j,k), color);
                     }
                 }
             }
@@ -83,7 +83,7 @@ namespace Autodesk_Interactive_Storytelling
             byte randB = (byte)rand.Next(0, 255);
 
 
-            SpecificColorWholeCube(randR, randG, randB);
+            SpecificColorWholeCube(new RGBColor(randR, randG, randB));
         }
 
         /* Makes the cube blink quickly through 10 random colors */
@@ -106,7 +106,7 @@ namespace Autodesk_Interactive_Storytelling
         /* Blink a specific LED */
         public void BlinkLED(List<byte[]> imageFrames, Coordinate c)
         {
-            SpecificColorWholeCube(56, 56, 56);
+            SpecificColorWholeCube(new RGBColor(56, 56, 56));
             int counter = 0;
             for (int i = 0; i < 40; i++ )
             {
@@ -117,13 +117,13 @@ namespace Autodesk_Interactive_Storytelling
                 
                 if(counter < 4)
                 {
-                    changeColorLED(c, 255, 0, 0);
+                    changeColorLED(c, new RGBColor(255, 0, 0));
                     AddImageFrame(imageFrames);
                     counter++;
                 }
                 else
                 {
-                    changeColorLED(c, 56, 56, 56);
+                    changeColorLED(c, new RGBColor(56, 56, 56));
                     AddImageFrame(imageFrames);
                     counter++;
                 }
@@ -131,14 +131,14 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Light up a vertical strip of LEDs between the two coordinates specified */
-        public void LightHorizontalStrip(List<byte[]> imageFrames, Coordinate c, int y2, byte r, byte g, byte b)
+        public void LightHorizontalStrip(List<byte[]> imageFrames, Coordinate c, int y2, RGBColor color)
         {
             int yMax = Math.Max(c.Y, y2);
             int yMin = Math.Min(c.Y, y2);
 
             for(int i = yMin; i <= yMax; i++)
             {
-                changeColorLED(new Coordinate(c.X, i, c.Z), r, g, b);
+                changeColorLED(new Coordinate(c.X, i, c.Z), color);
             }
 
             AddImageFrame(imageFrames);
