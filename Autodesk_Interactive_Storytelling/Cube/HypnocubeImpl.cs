@@ -206,7 +206,8 @@ namespace Autodesk_Interactive_Storytelling
         /* Light up a cross section, given a coordinate and a plane which the cross section
          * should be on. Direction is an enum and can be x, y, or z.
          * */
-        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
+        //public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
+        public void LightCrossSection(RGBColor col, Coordinate c, Direction d, bool blend)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -238,14 +239,93 @@ namespace Autodesk_Interactive_Storytelling
                 }
             }
 
-            AddImageFrame(imageFrames);
+            //AddImageFrame(imageFrames);
             
         }
 
-        /* Horizontal slider */
-        public void HorizontalSlider(List<byte[]> imageFrames)
+        public void LightCrossSectionTest(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
         {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    switch (d)
+                    {
+                        case Direction.X:
+                            {
+                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
+                                break;
+                            }
+                        case Direction.Y:
+                            {
+                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
+                                break;
+                            }
+                        case Direction.Z:
+                            {
+                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
 
+                    }
+                }
+            }
+
+            AddImageFrame(imageFrames);
+        }
+
+        /* Shifts the entire image on the plane x. */
+        public void ShiftOnce(List<byte[]> imageFrames, Direction d)
+        {
+            //Shifting back in x direction
+            for (int x = 1; x < 8; x++ )
+            {
+                for (int y = 0; y < 8; y++ )
+                {
+                    for(int z = 0; z < 8; z++)
+                    {
+                        switch(d)
+                        {
+                            case Direction.X:
+                                {
+                                    //Get color of initial coordinate
+                                    int index = IndexFromCoord(new Coordinate(x,y,z));
+                                    byte red = colorArray[index];
+                                    byte green = colorArray[index + 1];
+                                    byte blue = colorArray[index + 2];
+
+                                    //Put whatever color was there into the space one x-value away from initial coordinate.
+                                    changeColorLED(new Coordinate((x-1), y, z), 
+                                        new RGBColor(red,green,blue), false);
+                                    break;
+                                }
+                            case Direction.Y:
+                                {
+                                    break;
+                                }
+                            case Direction.Z:
+                                {
+                                    
+                                    break;
+                                }
+                            default:
+                                {
+                                    break;
+                                }
+                        }
+                    }
+                }
+            }
+
+            LightCrossSection(new RGBColor(50,50,50), new Coordinate(7,0,0), d, false);
+
+
+            AddImageFrame(imageFrames);
+            
         }
 
     }
