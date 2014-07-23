@@ -74,10 +74,13 @@ namespace Autodesk_Interactive_Storytelling
                     //hc.BlinkLED(imageFrames, 0, 0, 7);
                     //Coordinate c = new Coordinate(7,0,0);
                     //hc.LightHorizontalStrip(imageFrames, c,4,255,0,0);
-                    //Coordinate c = new Coordinate(7,0,0);
-                    //RGBColor col = new RGBColor(255,0,0);
+                    Coordinate c = new Coordinate(7,0,0);
+                    RGBColor col = new RGBColor(255,0,0);
                     //hc.LightHorizontalStrip(imageFrames, c, 7, col);
-                    hc.LightIntersection(imageFrames);
+                    //hc.LightIntersection(imageFrames);
+                    //hc.LightCrossSection(imageFrames, col, c, HypnocubeImpl.Direction.X, false);
+                    //hc.LightCrossSection(imageFrames, col, c, HypnocubeImpl.Direction.Y, false);
+                    hc.LightCrossSection(imageFrames, col, c, HypnocubeImpl.Direction.Z, false);
                 }
                 else
                 {

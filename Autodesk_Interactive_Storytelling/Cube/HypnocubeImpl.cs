@@ -20,6 +20,8 @@ namespace Autodesk_Interactive_Storytelling
         private byte[] colorArray;
         private static int ARRAY_SIZE = 1536;
 
+        public enum Direction { X, Y, Z };
+
         /* Constructor */
         public HypnocubeImpl()
         {
@@ -33,8 +35,11 @@ namespace Autodesk_Interactive_Storytelling
             set { colorArray = value; }
         }
 
+
+        //////////////////////  BASIC HELPER METHODS //////////////////////
+
         /* Change color of a single LED at the position specified. */
-        public byte[] changeColorLED(Coordinate coord, RGBColor color, bool blend)
+        private byte[] changeColorLED(Coordinate coord, RGBColor color, bool blend)
         {
             int index = IndexFromCoord(coord);
 
@@ -75,7 +80,7 @@ namespace Autodesk_Interactive_Storytelling
             return new RGBColor(avgRed, avgGreen, avgBlue);
         }
 
-        //////////////////////// ANIMATION CODE ///////////////////////////////////////
+        //////////////////////// MORE INVOLVED HELPERS ///////////////////////////////////////
 
         /* Adds an image frame to the image frame queue. */
         private void AddImageFrame(List<byte[]> imageFrames)
@@ -86,7 +91,7 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Changes the whole cube to the specified color. */
-        public void SpecificColorWholeCube(RGBColor color)
+        public void SpecificColorWholeCube(RGBColor color, bool blend)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -94,31 +99,64 @@ namespace Autodesk_Interactive_Storytelling
                 {
                     for (int k = 0; k < 8; k++)
                     {
-                        changeColorLED(new Coordinate(i,j,k), color, false);
+                        changeColorLED(new Coordinate(i,j,k), color, blend);
                     }
                 }
             }
         }
 
         /* Changes the whole cube to a random color. */
-        public void ChangeToRandColor(Random rand)
+        public void ChangeToRandColor(Random rand, bool blend)
         {
             byte randR = (byte)rand.Next(0, 255);
             byte randG = (byte)rand.Next(0, 255);
             byte randB = (byte)rand.Next(0, 255);
 
 
-            SpecificColorWholeCube(new RGBColor(randR, randG, randB));
+            SpecificColorWholeCube(new RGBColor(randR, randG, randB), blend);
         }
 
+        /* Light up a vertical strip of LEDs between the two coordinates specified */
+        public void LightVerticalStrip(List<byte[]> imageFrames, Coordinate c, int y2, RGBColor color)
+        {
+            int yMax = Math.Max(c.Y, y2);
+            int yMin = Math.Min(c.Y, y2);
+
+            for (int i = yMin; i <= yMax; i++)
+            {
+                changeColorLED(new Coordinate(c.X, i, c.Z), color, false);
+            }
+
+            //AddImageFrame(imageFrames);
+        }
+
+        /* Light up a horizontal strip of LEDs between the two coordinates specified. */
+        public void LightHorizontalStrip(List<byte[]> imageFrames, Coordinate c, int z2, RGBColor color)
+        {
+            int zMax = Math.Max(c.Z, z2);
+            int zMin = Math.Min(c.Z, z2);
+
+            for (int i = zMin; i <= zMax; i++)
+            {
+                changeColorLED(new Coordinate(c.X, c.Y, i), color, true);
+            }
+
+            //AddImageFrame(imageFrames);
+        }
+
+        /////////////////////////// ANIMATION OPTIONS ////////////////////////////
+        /* Distinguished by using the AddImageFrame method and therefore actually adding 
+         * frames to the animation.
+         */
+
         /* Makes the cube blink quickly through 10 random colors */
-        public void RandomFullCubeColorChange(int count, List<byte[]> imageFrames)
+        public void RandomFullCubeColorChange(int count, List<byte[]> imageFrames, bool blend)
         {
             Random rand = new Random();
 
             for (int i = 0; i < count; i++)
             {
-                ChangeToRandColor(rand);
+                ChangeToRandColor(rand, blend);
                 AddImageFrame(imageFrames);
             }
         }
@@ -126,7 +164,7 @@ namespace Autodesk_Interactive_Storytelling
         /* Blink a specific LED */
         public void BlinkLED(List<byte[]> imageFrames, Coordinate c)
         {
-            SpecificColorWholeCube(new RGBColor(56, 56, 56));
+            SpecificColorWholeCube(new RGBColor(56, 56, 56), false);
             int counter = 0;
             for (int i = 0; i < 40; i++ )
             {
@@ -150,35 +188,10 @@ namespace Autodesk_Interactive_Storytelling
             }
         }
 
-        /* Light up a vertical strip of LEDs between the two coordinates specified */
-        public void LightVerticalStrip(List<byte[]> imageFrames, Coordinate c, int y2, RGBColor color)
-        {
-            int yMax = Math.Max(c.Y, y2);
-            int yMin = Math.Min(c.Y, y2);
-
-            for(int i = yMin; i <= yMax; i++)
-            {
-                changeColorLED(new Coordinate(c.X, i, c.Z), color, false);
-            }
-
-            //AddImageFrame(imageFrames);
-        }
-
-        /* Light up a horizontal strip of LEDs between the two coordinates specified. */
-        public void LightHorizontalStrip(List<byte[]> imageFrames, Coordinate c, int z2, RGBColor color)
-        {
-            int zMax = Math.Max(c.Z, z2);
-            int zMin = Math.Min(c.Z, z2);
-
-            for(int i = zMin; i <= zMax; i++)
-            {
-                changeColorLED(new Coordinate(c.X, c.Y, i), color, true);
-            }
-
-            //AddImageFrame(imageFrames);
-        }
-
-        /* Light up a cross section of the cube */
+        /* Light up a cross section of the cube
+         * 
+         * TODO: MAKE GENERIC
+         */
         public void LightIntersection(List<byte[]> imageFrames)
         {
             Coordinate c = new Coordinate(7,0,0);
@@ -188,6 +201,45 @@ namespace Autodesk_Interactive_Storytelling
             LightHorizontalStrip(imageFrames, c, 7, blue);
 
             AddImageFrame(imageFrames);
+        }
+
+        /* Light up a cross section, given a coordinate and a plane which the cross section
+         * should be on. Direction is an enum and can be x, y, or z.
+         * */
+        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for(int j = 0; j < 8; j++)
+                {
+                    switch (d)
+                    {
+                        case Direction.X:
+                            {
+                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
+                                break;
+                            }
+                        case Direction.Y:
+                            {
+                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
+                                break;
+                            }
+                        case Direction.Z:
+                            {
+                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+
+                    }
+                }
+            }
+
+            AddImageFrame(imageFrames);
+            
         }
 
         /* Horizontal slider */
