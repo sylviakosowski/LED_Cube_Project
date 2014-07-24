@@ -12,13 +12,14 @@ namespace Autodesk_Interactive_Storytelling
     public class Program
     {
         //Change to 0 for the OpenGL visualization, 1 for the actual cube.
-        private static int CUBE_MODE = 0;
+        private static int CUBE_MODE = 2;
 
         private static TwitterObj t;
         private static HypnocubeImpl hc;
         private static Game game;
         private static KeywordUtil ku;
         private static TweetListener tl;
+        private static Cube.TestingHarness th;
 
         //File name of the file containing keywords to use in keyword streaming mode.
         private static string keywordStreamPath = Path.Combine(Environment.CurrentDirectory, "keywordstream.txt");
@@ -34,16 +35,23 @@ namespace Autodesk_Interactive_Storytelling
         /* Creates a new Twitter instance and prompts for mode selection. */
         private static void Begin(int phys_mode)
         {
-            t = new TwitterObj();
+            //t = new TwitterObj();
             hc = new HypnocubeImpl();
 
-            t.DoEverything();
+            //t.DoEverything();
 
-            Console.Write("Welcome to the Tweeting Hypnocube!\n");
-            Console.Write("Please enter 0 for Passive Mode and 1 for Interactive Mode.\n");
-
-            if(phys_mode == 0)
+            Console.WriteLine("Welcome to the Tweeting Hypnocube!\n");
+            
+            if(phys_mode == 2)
             {
+                Console.WriteLine("Cube Visualization Mode: No Twitter");
+                VisualizationTestingMode();
+            }
+            else if(phys_mode == 0)
+            {
+                Console.WriteLine("Enter 0 for Passive Mode, 1 for Interactive Mode \n");
+                t = new TwitterObj();
+                t.DoEverything();
                 beginVisualizationMode();
             }
 
@@ -57,7 +65,7 @@ namespace Autodesk_Interactive_Storytelling
             DetermineResponse(response);
         }
 
-        /* Determines if input was 0, 1, or invalid, and acts accordingly. */
+        /* Determines if input was 0, 1 or invalid, and acts accordingly. */
         private static void DetermineResponse(int response)
         {
             if (response == 0)
@@ -112,7 +120,7 @@ namespace Autodesk_Interactive_Storytelling
 
         /*///////////////////////// MODES FOR VISUALIZATION /////////////////////////////*/
 
-        /* Run light animations on OpenGL visualization. */
+        /* Run light animations for Twitter on OpenGL visualization. */
         private static void beginVisualizationMode()
         {
             game = new Game();
@@ -124,10 +132,21 @@ namespace Autodesk_Interactive_Storytelling
             game.Run(30, 30);
         }
 
-        /* Run light animations on physical Hypnocube */
+        /* Run light animations for Twitter on physical Hypnocube */
         private static void beginPhysicalMode()
         {
             //Nothing here yet!
+        }
+
+        /* Stars a game without Twitter, useful for testing in visualization mode. */
+        private static void VisualizationTestingMode()
+        {
+            game = new Game();
+            tl = new TweetListener(game);
+            th = new Cube.TestingHarness(hc, tl);
+
+            th.BeginTests();
+            game.Run(30, 30);
         }
     }
 }
