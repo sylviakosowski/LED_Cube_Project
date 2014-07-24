@@ -28,10 +28,11 @@ namespace Autodesk_Interactive_Storytelling.Cube
 
             /* Tests you want to perform go here. */
             RandomFullColorCubeChangeTest();
-            ShiftOnceTest();
-            BlinkLEDTest();
-            LightIntersectionTest();
-            ShiftAlongCubeTest();
+            LightCrossSectionTest(HypnocubeImpl.Direction.Z, new Coordinate(7,7,7));
+            //ShiftOnceTest(HypnocubeImpl.Direction.Z);
+            //BlinkLEDTest();
+            //LightIntersectionTest();
+            ShiftAlongCubeTest(HypnocubeImpl.Direction.Z);
 
             tl.ReceiveAndSendSignal(imageFrames);
         }
@@ -54,19 +55,26 @@ namespace Autodesk_Interactive_Storytelling.Cube
             hc.LightIntersection(imageFrames);
         }
 
+        /* Test lighting cross section. */
+        private void LightCrossSectionTest(HypnocubeImpl.Direction d, Coordinate c)
+        {
+            RGBColor col = new RGBColor(255, 0, 0);
+            hc.LightCrossSection(imageFrames, col, c, d, false);
+        }
+
         /* Test shifting once. */
-        private void ShiftOnceTest()
+        private void ShiftOnceTest(HypnocubeImpl.Direction d)
         {
             Coordinate c = new Coordinate(7,0,0);
             RGBColor col = new RGBColor(255,0,0);
-            hc.LightCrossSection(col, c, HypnocubeImpl.Direction.X, false);
-            hc.ShiftOnce(imageFrames, HypnocubeImpl.Direction.X, true);
+            hc.LightCrossSection(imageFrames, col, c, d, false);
+            hc.ShiftOnce(imageFrames, d, true);
         }
 
         /* Test shifting along cube */
-        private void ShiftAlongCubeTest()
+        private void ShiftAlongCubeTest(HypnocubeImpl.Direction d)
         {
-            hc.ShiftAlongCube(imageFrames, HypnocubeImpl.Direction.X, true);
+            hc.ShiftAlongCube(imageFrames, d, true);
         }
 
     }

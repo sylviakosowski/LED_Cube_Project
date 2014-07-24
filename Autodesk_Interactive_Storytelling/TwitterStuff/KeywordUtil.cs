@@ -78,7 +78,7 @@ namespace Autodesk_Interactive_Storytelling
                     RGBColor col = new RGBColor(255,0,0);
                     //hc.LightHorizontalStrip(imageFrames, c, 7, col);
                     //hc.LightIntersection(imageFrames);
-                    hc.LightCrossSection(col, c, HypnocubeImpl.Direction.X, false);
+                    hc.LightCrossSection(imageFrames, col, c, HypnocubeImpl.Direction.X, false);
                     //hc.LightCrossSectionTest(imageFrames, col, c, HypnocubeImpl.Direction.Y, false);
                     //hc.LightCrossSectionTest(imageFrames, col, c, HypnocubeImpl.Direction.Z, false);
                     hc.ShiftOnce(imageFrames, HypnocubeImpl.Direction.X, true);

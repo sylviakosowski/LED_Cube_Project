@@ -153,7 +153,7 @@ namespace Autodesk_Interactive_Storytelling
         /* Light up a cross section, given a coordinate and a plane which the cross section
          * should be on. Direction is an enum and can be x, y, or z.
          * */
-        public void LightCrossSection(RGBColor col, Coordinate c, Direction d, bool blend)
+        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -184,6 +184,8 @@ namespace Autodesk_Interactive_Storytelling
                     }
                 }
             }
+
+            AddImageFrame(imageFrames);
         }
 
         /////////////////////////// ANIMATION OPTIONS ////////////////////////////
@@ -251,35 +253,59 @@ namespace Autodesk_Interactive_Storytelling
          */
         public void ShiftOnce(List<byte[]> imageFrames, Direction d, bool decreasing)
         {
-            //Shifting back in x direction
-            for (int x = 1; x < 8; x++ )
+            int xLowerBound = 0;
+            int yLowerBound = 0;
+            int zLowerBound = 0;
+
+            switch(d)
             {
-                for (int y = 0; y < 8; y++ )
-                {
-                    for(int z = 0; z < 8; z++)
+                case Direction.X:
                     {
+                        xLowerBound = 1;
+                        break;
+                    }
+                case Direction.Y:
+                    {
+                        yLowerBound = 1;
+                        break;
+                    }
+                case Direction.Z:
+                    {
+                        zLowerBound = 1;
+                        break;
+                    }
+            }
+
+            //Shifting back in x direction
+            for (int x = xLowerBound; x < 8; x++ )
+            {
+                for (int y = yLowerBound; y < 8; y++ )
+                {
+                    for(int z = zLowerBound; z < 8; z++)
+                    {
+                        //Get color of initial coordinate
+                        RGBColor color = ColorFromCoord(new Coordinate(x, y, z));
                         switch(d)
                         {
                             case Direction.X:
                                 {
-                                    //Get color of initial coordinate
-                                    RGBColor color = ColorFromCoord(new Coordinate(x,y,z));
-
                                     //Put whatever color was there into the space one x-value away from initial coordinate.
                                     changeColorLED(new Coordinate((x-1), y, z), color, false);
                                     break;
                                 }
                             case Direction.Y:
                                 {
+                                    changeColorLED(new Coordinate(x, (y-1), z), color, false);
                                     break;
                                 }
                             case Direction.Z:
                                 {
-                                    
+                                    changeColorLED(new Coordinate(x, y, (z-1)), color, false);
                                     break;
                                 }
                             default:
                                 {
+                                    //Do nothing
                                     break;
                                 }
                         }
@@ -287,13 +313,14 @@ namespace Autodesk_Interactive_Storytelling
                 }
             }
 
-            LightCrossSection(new RGBColor(50,50,50), new Coordinate(7,0,0), d, false);
+            LightCrossSection(imageFrames, new RGBColor(50,50,50), new Coordinate(7,7,7), d, false);
 
 
             AddImageFrame(imageFrames);
             
         }
 
+        /* Shift the LEDs of the cube according to d and decreasing. */
         public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing)
         {
             for(int i = 0; i < 8; i++)
