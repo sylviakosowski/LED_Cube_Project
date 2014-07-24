@@ -251,7 +251,7 @@ namespace Autodesk_Interactive_Storytelling
          * 
          * TODO: make more generic
          */
-        public void ShiftOnce(List<byte[]> imageFrames, Direction d, bool decreasing)
+        public void ShiftOnceDecreasing(List<byte[]> imageFrames, Direction d, bool decreasing)
         {
             int xLowerBound = 0;
             int yLowerBound = 0;
@@ -315,17 +315,99 @@ namespace Autodesk_Interactive_Storytelling
 
             LightCrossSection(imageFrames, new RGBColor(50,50,50), new Coordinate(7,7,7), d, false);
 
-
             AddImageFrame(imageFrames);
             
         }
 
+        public void ShiftOnceIncreasing(List<byte[]> imageFrames, Direction d, bool decreasing)
+        {
+            int xLowerBound = 0;
+            int yLowerBound = 0;
+            int zLowerBound = 0;
+
+            switch (d)
+            {
+                case Direction.X:
+                    {
+                        xLowerBound = 1;
+                        break;
+                    }
+                case Direction.Y:
+                    {
+                        yLowerBound = 1;
+                        break;
+                    }
+                case Direction.Z:
+                    {
+                        zLowerBound = 1;
+                        break;
+                    }
+            }
+
+            //Shifting back in x direction
+            for (int x = 7; xLowerBound <= x; x-- )
+            {
+                for (int y = 7; yLowerBound <= y; y--)
+                {
+                    for (int z = 7; zLowerBound <= z; z--)
+                    {
+                        //Get color of initial coordinate
+                        RGBColor color;
+                        
+                        switch (d)
+                        {
+                            case Direction.X:
+                                {
+                                    color = ColorFromCoord(new Coordinate((x-1), y, z));
+                                    //Put whatever color was there into the space one x-value away from initial coordinate.
+                                    //changeColorLED(new Coordinate((x - 1), y, z), color, false);
+                                    break;
+                                }
+                            case Direction.Y:
+                                {
+                                    color = ColorFromCoord(new Coordinate(x, (y-1), z));
+                                    //changeColorLED(new Coordinate(x, (y - 1), z), color, false);
+                                    break;
+                                }
+                            case Direction.Z:
+                                {
+                                    color = ColorFromCoord(new Coordinate(x, y, (z-1)));
+                                    //changeColorLED(new Coordinate(x, y, (z - 1)), color, false);
+                                    break;
+                                }
+                            default:
+                                {
+                                    //Do nothing
+                                    color = new RGBColor(0,0,0);
+                                    break;
+                                }
+                        }
+                        changeColorLED(new Coordinate(x, y, z), color, false);
+                    }
+                }
+            }
+
+            LightCrossSection(imageFrames, new RGBColor(50, 50, 50), new Coordinate(0, 0, 0), d, false);
+
+            AddImageFrame(imageFrames);
+
+        }
+
         /* Shift the LEDs of the cube according to d and decreasing. */
-        public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing)
+        public void ShiftAlongCubeDecreasing(List<byte[]> imageFrames, Direction d, bool decreasing)
         {
             for(int i = 0; i < 8; i++)
             {
-                ShiftOnce(imageFrames, d, decreasing);
+                ShiftOnceDecreasing(imageFrames, d, decreasing);
+            }
+        }
+
+        /* Shift the LEDs of the cube according to d and decreasing. */
+        public void ShiftAlongCubeIncreasing(List<byte[]> imageFrames, Direction d, bool decreasing)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                ShiftOnceIncreasing(imageFrames, d, decreasing);
             }
         }
     }

@@ -28,11 +28,14 @@ namespace Autodesk_Interactive_Storytelling.Cube
 
             /* Tests you want to perform go here. */
             RandomFullColorCubeChangeTest();
-            LightCrossSectionTest(HypnocubeImpl.Direction.Z, new Coordinate(7,7,7));
-            //ShiftOnceTest(HypnocubeImpl.Direction.Z);
             //BlinkLEDTest();
             //LightIntersectionTest();
-            ShiftAlongCubeTest(HypnocubeImpl.Direction.Z);
+
+            LightCrossSectionTest(HypnocubeImpl.Direction.X, new Coordinate(7,7,7));
+            ShiftAlongCubeDecreasingTest(HypnocubeImpl.Direction.X);
+
+            //LightCrossSectionTest(HypnocubeImpl.Direction.X, new Coordinate(0, 0, 0));
+            //ShiftAlongCubeIncreasingTest(HypnocubeImpl.Direction.X);
 
             tl.ReceiveAndSendSignal(imageFrames);
         }
@@ -63,18 +66,31 @@ namespace Autodesk_Interactive_Storytelling.Cube
         }
 
         /* Test shifting once. */
-        private void ShiftOnceTest(HypnocubeImpl.Direction d)
+        private void ShiftOnceDecreasingTest(HypnocubeImpl.Direction d)
         {
             Coordinate c = new Coordinate(7,0,0);
             RGBColor col = new RGBColor(255,0,0);
             hc.LightCrossSection(imageFrames, col, c, d, false);
-            hc.ShiftOnce(imageFrames, d, true);
+            hc.ShiftOnceDecreasing(imageFrames, d, true);
+        }
+
+        private void ShiftOnceIncreasingTest(HypnocubeImpl.Direction d)
+        {
+            Coordinate c = new Coordinate(0, 0, 7);
+            RGBColor col = new RGBColor(255, 0, 0);
+            hc.LightCrossSection(imageFrames, col, c, d, false);
+            hc.ShiftOnceIncreasing(imageFrames, d, true);
         }
 
         /* Test shifting along cube */
-        private void ShiftAlongCubeTest(HypnocubeImpl.Direction d)
+        private void ShiftAlongCubeDecreasingTest(HypnocubeImpl.Direction d)
         {
-            hc.ShiftAlongCube(imageFrames, d, true);
+            hc.ShiftAlongCubeDecreasing(imageFrames, d, true);
+        }
+
+        private void ShiftAlongCubeIncreasingTest(HypnocubeImpl.Direction d)
+        {
+            hc.ShiftAlongCubeIncreasing(imageFrames, d, true);
         }
 
     }
