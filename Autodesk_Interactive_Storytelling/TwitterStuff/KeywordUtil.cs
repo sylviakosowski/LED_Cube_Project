@@ -81,7 +81,7 @@ namespace Autodesk_Interactive_Storytelling
                     hc.LightCrossSection(col, c, HypnocubeImpl.Direction.X, false);
                     //hc.LightCrossSectionTest(imageFrames, col, c, HypnocubeImpl.Direction.Y, false);
                     //hc.LightCrossSectionTest(imageFrames, col, c, HypnocubeImpl.Direction.Z, false);
-                    hc.ShiftOnce(imageFrames, HypnocubeImpl.Direction.X);
+                    hc.ShiftOnce(imageFrames, HypnocubeImpl.Direction.X, true);
                 }
                 else
                 {

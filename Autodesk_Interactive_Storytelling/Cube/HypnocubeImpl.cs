@@ -58,10 +58,21 @@ namespace Autodesk_Interactive_Storytelling
             return colorArray;
         }
 
-        /* Method to obtain an index from a tuple of 3 dimensional coordinates. */
+        /* Method to obtain an index from a coordinate. */
         private int IndexFromCoord(Coordinate c)
         {
             return (c.X + 8 * c.Y + 64 * c.Z) * 3;
+        }
+
+        /* Method to get the color at a specific coordinate. */
+        private RGBColor ColorFromCoord(Coordinate c)
+        {
+            int index = IndexFromCoord(c);
+            byte red = colorArray[index];
+            byte green = colorArray[index + 1];
+            byte blue = colorArray[index + 2];
+
+            return new RGBColor(red, green, blue);
         }
 
         /* Takes the average of two bytes, used in blending. */
@@ -80,8 +91,6 @@ namespace Autodesk_Interactive_Storytelling
             return new RGBColor(avgRed, avgGreen, avgBlue);
         }
 
-        //////////////////////// MORE INVOLVED HELPERS ///////////////////////////////////////
-
         /* Adds an image frame to the image frame queue. */
         private void AddImageFrame(List<byte[]> imageFrames)
         {
@@ -89,6 +98,8 @@ namespace Autodesk_Interactive_Storytelling
             Array.Copy(ColorArray, newImage, ColorArray.Length);
             imageFrames.Add(newImage);
         }
+
+        //////////////////////// MORE INVOLVED HELPERS //////////////////////////
 
         /* Changes the whole cube to the specified color. */
         public void SpecificColorWholeCube(RGBColor color, bool blend)
@@ -112,7 +123,6 @@ namespace Autodesk_Interactive_Storytelling
             byte randG = (byte)rand.Next(0, 255);
             byte randB = (byte)rand.Next(0, 255);
 
-
             SpecificColorWholeCube(new RGBColor(randR, randG, randB), blend);
         }
 
@@ -126,8 +136,6 @@ namespace Autodesk_Interactive_Storytelling
             {
                 changeColorLED(new Coordinate(c.X, i, c.Z), color, false);
             }
-
-            //AddImageFrame(imageFrames);
         }
 
         /* Light up a horizontal strip of LEDs between the two coordinates specified. */
@@ -140,8 +148,42 @@ namespace Autodesk_Interactive_Storytelling
             {
                 changeColorLED(new Coordinate(c.X, c.Y, i), color, true);
             }
+        }
 
-            //AddImageFrame(imageFrames);
+        /* Light up a cross section, given a coordinate and a plane which the cross section
+         * should be on. Direction is an enum and can be x, y, or z.
+         * */
+        public void LightCrossSection(RGBColor col, Coordinate c, Direction d, bool blend)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    switch (d)
+                    {
+                        case Direction.X:
+                            {
+                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
+                                break;
+                            }
+                        case Direction.Y:
+                            {
+                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
+                                break;
+                            }
+                        case Direction.Z:
+                            {
+                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+
+                    }
+                }
+            }
         }
 
         /////////////////////////// ANIMATION OPTIONS ////////////////////////////
@@ -203,83 +245,11 @@ namespace Autodesk_Interactive_Storytelling
             AddImageFrame(imageFrames);
         }
 
-        /* Light up a cross section, given a coordinate and a plane which the cross section
-         * should be on. Direction is an enum and can be x, y, or z.
-         * */
-        //public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
-        public void LightCrossSection(RGBColor col, Coordinate c, Direction d, bool blend)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                for(int j = 0; j < 8; j++)
-                {
-                    switch (d)
-                    {
-                        case Direction.X:
-                            {
-                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
-                                break;
-                            }
-                        case Direction.Y:
-                            {
-                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
-                                break;
-                            }
-                        case Direction.Z:
-                            {
-                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
-
-                    }
-                }
-            }
-
-            //AddImageFrame(imageFrames);
-            
-        }
-
-        public void LightCrossSectionTest(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    switch (d)
-                    {
-                        case Direction.X:
-                            {
-                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
-                                break;
-                            }
-                        case Direction.Y:
-                            {
-                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
-                                break;
-                            }
-                        case Direction.Z:
-                            {
-                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
-
-                    }
-                }
-            }
-
-            AddImageFrame(imageFrames);
-        }
-
-        /* Shifts the entire image on the plane x. */
-        public void ShiftOnce(List<byte[]> imageFrames, Direction d)
+        /* Shifts the entire image on the plane x. 
+         * 
+         * TODO: make more generic
+         */
+        public void ShiftOnce(List<byte[]> imageFrames, Direction d, bool decreasing)
         {
             //Shifting back in x direction
             for (int x = 1; x < 8; x++ )
@@ -293,14 +263,10 @@ namespace Autodesk_Interactive_Storytelling
                             case Direction.X:
                                 {
                                     //Get color of initial coordinate
-                                    int index = IndexFromCoord(new Coordinate(x,y,z));
-                                    byte red = colorArray[index];
-                                    byte green = colorArray[index + 1];
-                                    byte blue = colorArray[index + 2];
+                                    RGBColor color = ColorFromCoord(new Coordinate(x,y,z));
 
                                     //Put whatever color was there into the space one x-value away from initial coordinate.
-                                    changeColorLED(new Coordinate((x-1), y, z), 
-                                        new RGBColor(red,green,blue), false);
+                                    changeColorLED(new Coordinate((x-1), y, z), color, false);
                                     break;
                                 }
                             case Direction.Y:
