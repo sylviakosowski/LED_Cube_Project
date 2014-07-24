@@ -40,15 +40,20 @@ namespace Autodesk_Interactive_Storytelling
         /* Makes the cube blink quickly through count number of random colors, with option
          * to make colors blend.
          */
-        public void RandomFullCubeColorChange(List<byte[]> imageFrames, int count, bool blend)
+        public List<byte[]> RandomFullCubeColorChange(List<byte[]> imageFrames, int count, bool blend)
         {
+            List<byte[]> newFrames = new List<byte[]>(0);
+
             Random rand = new Random();
 
             for (int i = 0; i < count; i++)
             {
                 ChangeToRandColor(rand, blend);
                 AddImageFrame(imageFrames);
+                AddImageFrame(newFrames);
             }
+
+            return newFrames;
         }
 
         /* Blink a specific LED at Coordinate c. */
@@ -179,6 +184,20 @@ namespace Autodesk_Interactive_Storytelling
             for (int i = 0; i < 8; i++)
             {
                 ShiftOnce(imageFrames, d, decreasing);
+            }
+        }
+
+        /* Given a list of frames to repeat and an int count which determines the number of
+         * times we repeat, repeat an animation.
+         */
+        public void RepeatFrames(List<byte[]> framesToRepeat, List<byte[]> imageFrames, int count)
+        {
+            for(int i = 0; i < count; i++)
+            {
+                foreach(byte[] frame in framesToRepeat)
+                {
+                    imageFrames.Add(frame);
+                }
             }
         }
 

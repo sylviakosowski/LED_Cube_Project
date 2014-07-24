@@ -25,7 +25,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
         public void BeginTests()
         {
             /* Tests you want to perform go here. */
-            RandomFullColorCubeChangeTest();
+            RandomFullColorCubeChangeRepeatTest();
             //BlinkLEDTest();
             //LightIntersectionTest();
 
@@ -40,6 +40,13 @@ namespace Autodesk_Interactive_Storytelling.Cube
         private void RandomFullColorCubeChangeTest()
         {
             hc.RandomFullCubeColorChange(imageFrames, 20, true);
+        }
+
+        /* Test repeat frames with random color cube */
+        private void RandomFullColorCubeChangeRepeatTest()
+        {
+            List<byte[]> test = hc.RandomFullCubeColorChange(imageFrames, 20, true);
+            hc.RepeatFrames(test, imageFrames, 3);
         }
 
         /* Test BlinkLED */
