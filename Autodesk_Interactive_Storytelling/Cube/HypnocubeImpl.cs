@@ -35,6 +35,129 @@ namespace Autodesk_Interactive_Storytelling
             set { colorArray = value; }
         }
 
+        /////////////////////////// PUBLIC INTERFACE ////////////////////////////
+
+        /* Makes the cube blink quickly through count number of random colors */
+        public void RandomFullCubeColorChange(List<byte[]> imageFrames, int count, bool blend)
+        {
+            Random rand = new Random();
+
+            for (int i = 0; i < count; i++)
+            {
+                ChangeToRandColor(rand, blend);
+                AddImageFrame(imageFrames);
+            }
+        }
+
+        /* Blink a specific LED */
+        public void BlinkLED(List<byte[]> imageFrames, Coordinate c)
+        {
+            SpecificColorWholeCube(new RGBColor(56, 56, 56), false);
+            int counter = 0;
+            for (int i = 0; i < 40; i++)
+            {
+                if (counter == 8)
+                {
+                    counter = 0;
+                }
+
+                if (counter < 4)
+                {
+                    changeColorLED(c, new RGBColor(255, 0, 0), false);
+                    AddImageFrame(imageFrames);
+                    counter++;
+                }
+                else
+                {
+                    changeColorLED(c, new RGBColor(56, 56, 56), false);
+                    AddImageFrame(imageFrames);
+                    counter++;
+                }
+            }
+        }
+
+        /* Light up a cross section of the cube
+         * 
+         * TODO: MAKE GENERIC
+         */
+        public void LightIntersection(List<byte[]> imageFrames)
+        {
+            Coordinate c = new Coordinate(7, 0, 0);
+            RGBColor red = new RGBColor(255, 0, 0);
+            RGBColor blue = new RGBColor(0, 0, 255);
+            LightVerticalStrip(imageFrames, c, 7, red);
+            LightHorizontalStrip(imageFrames, c, 7, blue);
+
+            AddImageFrame(imageFrames);
+        }
+
+        /* Light up a cross section, given a coordinate and a plane which the cross section
+         * should be on. Direction is an enum and can be x, y, or z.
+         * */
+        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    switch (d)
+                    {
+                        case Direction.X:
+                            {
+                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
+                                break;
+                            }
+                        case Direction.Y:
+                            {
+                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
+                                break;
+                            }
+                        case Direction.Z:
+                            {
+                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
+                                break;
+                            }
+                        default:
+                            {
+                                //meep?
+                                break;
+                            }
+
+                    }
+                }
+            }
+
+            AddImageFrame(imageFrames);
+        }
+
+        /*
+         * Method in interface 
+         * TODO: document better.
+         */
+        public void ShiftOnce(List<byte[]> imageFrames, Direction d, bool decreasing)
+        {
+            if (decreasing)
+            {
+                ShiftOnceDecreasing(imageFrames, d);
+            }
+            else
+            {
+                ShiftOnceIncreasing(imageFrames, d);
+            }
+        }
+
+        /* Shift along whole cube 
+         * TODO BETTER DOCUMENTATION
+         */
+        public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                ShiftOnce(imageFrames, d, decreasing);
+            }
+        }
+
+        ////////////////////// PRIVATE IMPLEMENTATION //////////////////////
 
         //////////////////////  BASIC HELPER METHODS //////////////////////
 
@@ -150,103 +273,6 @@ namespace Autodesk_Interactive_Storytelling
             }
         }
 
-        /* Light up a cross section, given a coordinate and a plane which the cross section
-         * should be on. Direction is an enum and can be x, y, or z.
-         * */
-        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    switch (d)
-                    {
-                        case Direction.X:
-                            {
-                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
-                                break;
-                            }
-                        case Direction.Y:
-                            {
-                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
-                                break;
-                            }
-                        case Direction.Z:
-                            {
-                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
-
-                    }
-                }
-            }
-
-            AddImageFrame(imageFrames);
-        }
-
-        /////////////////////////// ANIMATION OPTIONS ////////////////////////////
-        /* Distinguished by using the AddImageFrame method and therefore actually adding 
-         * frames to the animation.
-         */
-
-        /* Makes the cube blink quickly through count number of random colors */
-        public void RandomFullCubeColorChange(List<byte[]> imageFrames, int count, bool blend)
-        {
-            Random rand = new Random();
-
-            for (int i = 0; i < count; i++)
-            {
-                ChangeToRandColor(rand, blend);
-                AddImageFrame(imageFrames);
-            }
-        }
-
-        /* Blink a specific LED */
-        public void BlinkLED(List<byte[]> imageFrames, Coordinate c)
-        {
-            SpecificColorWholeCube(new RGBColor(56, 56, 56), false);
-            int counter = 0;
-            for (int i = 0; i < 40; i++ )
-            {
-                if(counter == 8)
-                {
-                    counter = 0;
-                }
-                
-                if(counter < 4)
-                {
-                    changeColorLED(c, new RGBColor(255, 0, 0), false);
-                    AddImageFrame(imageFrames);
-                    counter++;
-                }
-                else
-                {
-                    changeColorLED(c, new RGBColor(56, 56, 56), false);
-                    AddImageFrame(imageFrames);
-                    counter++;
-                }
-            }
-        }
-
-        /* Light up a cross section of the cube
-         * 
-         * TODO: MAKE GENERIC
-         */
-        public void LightIntersection(List<byte[]> imageFrames)
-        {
-            Coordinate c = new Coordinate(7,0,0);
-            RGBColor red = new RGBColor(255,0,0);
-            RGBColor blue = new RGBColor(0,0,255);
-            LightVerticalStrip(imageFrames, c, 7, red);
-            LightHorizontalStrip(imageFrames, c, 7, blue);
-
-            AddImageFrame(imageFrames);
-        }
-
         /* 
          * TODO: make more generic
          * TODO: DOCUMENT BETTER
@@ -257,7 +283,7 @@ namespace Autodesk_Interactive_Storytelling
             int yLowerBound = 0;
             int zLowerBound = 0;
 
-            switch(d)
+            switch (d)
             {
                 case Direction.X:
                     {
@@ -277,30 +303,30 @@ namespace Autodesk_Interactive_Storytelling
             }
 
             //Shifting back in x direction
-            for (int x = xLowerBound; x < 8; x++ )
+            for (int x = xLowerBound; x < 8; x++)
             {
-                for (int y = yLowerBound; y < 8; y++ )
+                for (int y = yLowerBound; y < 8; y++)
                 {
-                    for(int z = zLowerBound; z < 8; z++)
+                    for (int z = zLowerBound; z < 8; z++)
                     {
                         //Get color of initial coordinate
                         RGBColor color = ColorFromCoord(new Coordinate(x, y, z));
-                        switch(d)
+                        switch (d)
                         {
                             case Direction.X:
                                 {
                                     //Put whatever color was there into the space one x-value away from initial coordinate.
-                                    changeColorLED(new Coordinate((x-1), y, z), color, false);
+                                    changeColorLED(new Coordinate((x - 1), y, z), color, false);
                                     break;
                                 }
                             case Direction.Y:
                                 {
-                                    changeColorLED(new Coordinate(x, (y-1), z), color, false);
+                                    changeColorLED(new Coordinate(x, (y - 1), z), color, false);
                                     break;
                                 }
                             case Direction.Z:
                                 {
-                                    changeColorLED(new Coordinate(x, y, (z-1)), color, false);
+                                    changeColorLED(new Coordinate(x, y, (z - 1)), color, false);
                                     break;
                                 }
                             default:
@@ -313,10 +339,10 @@ namespace Autodesk_Interactive_Storytelling
                 }
             }
 
-            LightCrossSection(imageFrames, new RGBColor(50,50,50), new Coordinate(7,7,7), d, false);
+            LightCrossSection(imageFrames, new RGBColor(50, 50, 50), new Coordinate(7, 7, 7), d, false);
 
             AddImageFrame(imageFrames);
-            
+
         }
 
         /*
@@ -348,7 +374,7 @@ namespace Autodesk_Interactive_Storytelling
             }
 
             //Shifting back in x direction
-            for (int x = 7; xLowerBound <= x; x-- )
+            for (int x = 7; xLowerBound <= x; x--)
             {
                 for (int y = 7; yLowerBound <= y; y--)
                 {
@@ -356,32 +382,32 @@ namespace Autodesk_Interactive_Storytelling
                     {
                         //Get color of initial coordinate
                         RGBColor color;
-                        
+
                         switch (d)
                         {
                             case Direction.X:
                                 {
-                                    color = ColorFromCoord(new Coordinate((x-1), y, z));
+                                    color = ColorFromCoord(new Coordinate((x - 1), y, z));
                                     //Put whatever color was there into the space one x-value away from initial coordinate.
                                     //changeColorLED(new Coordinate((x - 1), y, z), color, false);
                                     break;
                                 }
                             case Direction.Y:
                                 {
-                                    color = ColorFromCoord(new Coordinate(x, (y-1), z));
+                                    color = ColorFromCoord(new Coordinate(x, (y - 1), z));
                                     //changeColorLED(new Coordinate(x, (y - 1), z), color, false);
                                     break;
                                 }
                             case Direction.Z:
                                 {
-                                    color = ColorFromCoord(new Coordinate(x, y, (z-1)));
+                                    color = ColorFromCoord(new Coordinate(x, y, (z - 1)));
                                     //changeColorLED(new Coordinate(x, y, (z - 1)), color, false);
                                     break;
                                 }
                             default:
                                 {
                                     //Do nothing
-                                    color = new RGBColor(0,0,0);
+                                    color = new RGBColor(0, 0, 0);
                                     break;
                                 }
                         }
@@ -393,33 +419,6 @@ namespace Autodesk_Interactive_Storytelling
             LightCrossSection(imageFrames, new RGBColor(50, 50, 50), new Coordinate(0, 0, 0), d, false);
 
             AddImageFrame(imageFrames);
-        }
-
-        /*
-         * Method in interface 
-         * TODO: document better.
-         */
-        public void ShiftOnce(List<byte[]> imageFrames, Direction d, bool decreasing)
-        {
-            if(decreasing)
-            {
-                ShiftOnceDecreasing(imageFrames, d);
-            }
-            else
-            {
-                ShiftOnceIncreasing(imageFrames, d);
-            }
-        }
-
-        /* Shift along whole cube 
-         * TODO BETTER DOCUMENTATION
-         */
-        public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                ShiftOnce(imageFrames, d, decreasing);
-            }
         }
     }
 }
