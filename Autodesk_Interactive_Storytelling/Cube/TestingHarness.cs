@@ -24,19 +24,15 @@ namespace Autodesk_Interactive_Storytelling.Cube
         /* Method to begin all the tests. */
         public void BeginTests()
         {
-            //List<byte[]> imageFrames = new List<byte[]>();
-
             /* Tests you want to perform go here. */
             RandomFullColorCubeChangeTest();
             //BlinkLEDTest();
             //LightIntersectionTest();
 
-            LightCrossSectionTest(HypnocubeImpl.Direction.X, new Coordinate(7,7,7));
-            ShiftAlongCubeDecreasingTest(HypnocubeImpl.Direction.X);
+            //ShiftOnceTest(HypnocubeImpl.Direction.X, true);
+            ShiftAlongCubeTest(HypnocubeImpl.Direction.Z, false);
 
-            //LightCrossSectionTest(HypnocubeImpl.Direction.X, new Coordinate(0, 0, 0));
-            //ShiftAlongCubeIncreasingTest(HypnocubeImpl.Direction.X);
-
+            //Need to keep this to send signal to visualization.
             tl.ReceiveAndSendSignal(imageFrames);
         }
 
@@ -66,31 +62,37 @@ namespace Autodesk_Interactive_Storytelling.Cube
         }
 
         /* Test shifting once. */
-        private void ShiftOnceDecreasingTest(HypnocubeImpl.Direction d)
+        private void ShiftOnceTest(HypnocubeImpl.Direction d, bool b)
         {
-            Coordinate c = new Coordinate(7,0,0);
-            RGBColor col = new RGBColor(255,0,0);
-            hc.LightCrossSection(imageFrames, col, c, d, false);
-            hc.ShiftOnceDecreasing(imageFrames, d, true);
-        }
-
-        private void ShiftOnceIncreasingTest(HypnocubeImpl.Direction d)
-        {
-            Coordinate c = new Coordinate(0, 0, 7);
+            Coordinate c;
             RGBColor col = new RGBColor(255, 0, 0);
-            hc.LightCrossSection(imageFrames, col, c, d, false);
-            hc.ShiftOnceIncreasing(imageFrames, d, true);
+            if(b)
+            {
+                c = new Coordinate(7, 0, 0);
+                hc.LightCrossSection(imageFrames, col, c, d, false);
+                hc.ShiftOnce(imageFrames, d, true);
+            }
+            else
+            {
+                c = new Coordinate(0, 0, 7);
+                hc.LightCrossSection(imageFrames, col, c, d, false);
+                hc.ShiftOnce(imageFrames, d, false);
+            }
         }
 
-        /* Test shifting along cube */
-        private void ShiftAlongCubeDecreasingTest(HypnocubeImpl.Direction d)
+        /* Test shifting along cube. */
+        private void ShiftAlongCubeTest(HypnocubeImpl.Direction d, bool b)
         {
-            hc.ShiftAlongCubeDecreasing(imageFrames, d, true);
-        }
+            if(b)
+            {
+                LightCrossSectionTest(d, new Coordinate(7,7,7));
+            }
+            else
+            {
+                LightCrossSectionTest(d, new Coordinate(0, 0, 0));
+            }
 
-        private void ShiftAlongCubeIncreasingTest(HypnocubeImpl.Direction d)
-        {
-            hc.ShiftAlongCubeIncreasing(imageFrames, d, true);
+            hc.ShiftAlongCube(imageFrames, d, b);
         }
 
     }

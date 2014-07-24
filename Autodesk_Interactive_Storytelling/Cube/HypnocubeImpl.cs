@@ -247,11 +247,11 @@ namespace Autodesk_Interactive_Storytelling
             AddImageFrame(imageFrames);
         }
 
-        /* Shifts the entire image on the plane x. 
-         * 
+        /* 
          * TODO: make more generic
+         * TODO: DOCUMENT BETTER
          */
-        public void ShiftOnceDecreasing(List<byte[]> imageFrames, Direction d, bool decreasing)
+        private void ShiftOnceDecreasing(List<byte[]> imageFrames, Direction d)
         {
             int xLowerBound = 0;
             int yLowerBound = 0;
@@ -319,7 +319,10 @@ namespace Autodesk_Interactive_Storytelling
             
         }
 
-        public void ShiftOnceIncreasing(List<byte[]> imageFrames, Direction d, bool decreasing)
+        /*
+         * TODO: DOCUMENT BETTER
+         */
+        private void ShiftOnceIncreasing(List<byte[]> imageFrames, Direction d)
         {
             int xLowerBound = 0;
             int yLowerBound = 0;
@@ -390,24 +393,32 @@ namespace Autodesk_Interactive_Storytelling
             LightCrossSection(imageFrames, new RGBColor(50, 50, 50), new Coordinate(0, 0, 0), d, false);
 
             AddImageFrame(imageFrames);
-
         }
 
-        /* Shift the LEDs of the cube according to d and decreasing. */
-        public void ShiftAlongCubeDecreasing(List<byte[]> imageFrames, Direction d, bool decreasing)
+        /*
+         * Method in interface 
+         * TODO: document better.
+         */
+        public void ShiftOnce(List<byte[]> imageFrames, Direction d, bool decreasing)
         {
-            for(int i = 0; i < 8; i++)
+            if(decreasing)
             {
-                ShiftOnceDecreasing(imageFrames, d, decreasing);
+                ShiftOnceDecreasing(imageFrames, d);
+            }
+            else
+            {
+                ShiftOnceIncreasing(imageFrames, d);
             }
         }
 
-        /* Shift the LEDs of the cube according to d and decreasing. */
-        public void ShiftAlongCubeIncreasing(List<byte[]> imageFrames, Direction d, bool decreasing)
+        /* Shift along whole cube 
+         * TODO BETTER DOCUMENTATION
+         */
+        public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing)
         {
             for (int i = 0; i < 8; i++)
             {
-                ShiftOnceIncreasing(imageFrames, d, decreasing);
+                ShiftOnce(imageFrames, d, decreasing);
             }
         }
     }
