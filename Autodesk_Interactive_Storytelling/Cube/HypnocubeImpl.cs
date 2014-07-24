@@ -102,7 +102,7 @@ namespace Autodesk_Interactive_Storytelling
         //////////////////////// MORE INVOLVED HELPERS //////////////////////////
 
         /* Changes the whole cube to the specified color. */
-        public void SpecificColorWholeCube(RGBColor color, bool blend)
+        private void SpecificColorWholeCube(RGBColor color, bool blend)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -117,7 +117,7 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Changes the whole cube to a random color. */
-        public void ChangeToRandColor(Random rand, bool blend)
+        private void ChangeToRandColor(Random rand, bool blend)
         {
             byte randR = (byte)rand.Next(0, 255);
             byte randG = (byte)rand.Next(0, 255);
@@ -127,7 +127,7 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Light up a vertical strip of LEDs between the two coordinates specified */
-        public void LightVerticalStrip(List<byte[]> imageFrames, Coordinate c, int y2, RGBColor color)
+        private void LightVerticalStrip(List<byte[]> imageFrames, Coordinate c, int y2, RGBColor color)
         {
             int yMax = Math.Max(c.Y, y2);
             int yMin = Math.Min(c.Y, y2);
@@ -139,7 +139,7 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Light up a horizontal strip of LEDs between the two coordinates specified. */
-        public void LightHorizontalStrip(List<byte[]> imageFrames, Coordinate c, int z2, RGBColor color)
+        private void LightHorizontalStrip(List<byte[]> imageFrames, Coordinate c, int z2, RGBColor color)
         {
             int zMax = Math.Max(c.Z, z2);
             int zMin = Math.Min(c.Z, z2);
@@ -191,8 +191,8 @@ namespace Autodesk_Interactive_Storytelling
          * frames to the animation.
          */
 
-        /* Makes the cube blink quickly through 10 random colors */
-        public void RandomFullCubeColorChange(int count, List<byte[]> imageFrames, bool blend)
+        /* Makes the cube blink quickly through count number of random colors */
+        public void RandomFullCubeColorChange(List<byte[]> imageFrames, int count, bool blend)
         {
             Random rand = new Random();
 
@@ -294,5 +294,12 @@ namespace Autodesk_Interactive_Storytelling
             
         }
 
+        public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing)
+        {
+            for(int i = 0; i < 8; i++)
+            {
+                ShiftOnce(imageFrames, d, decreasing);
+            }
+        }
     }
 }
