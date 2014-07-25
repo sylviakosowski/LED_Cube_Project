@@ -127,7 +127,6 @@ namespace CubeVisualization
             {
                 Vector3[] currentImage = imageFrames.Dequeue();
                 changeCubeColors(currentImage);
-                Console.WriteLine("meep");
             }
         }
 
