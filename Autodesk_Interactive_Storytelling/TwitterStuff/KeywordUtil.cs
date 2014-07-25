@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
-using CubeVisualization;
+using Cube_Visualization;
 
 namespace Autodesk_Interactive_Storytelling
 {

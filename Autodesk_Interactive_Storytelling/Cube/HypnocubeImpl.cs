@@ -59,7 +59,10 @@ namespace Autodesk_Interactive_Storytelling
         /* Blink a specific LED at Coordinate c. */
         public void BlinkLED(List<byte[]> imageFrames, Coordinate c)
         {
+
             SpecificColorWholeCube(new RGBColor(56, 56, 56), false);
+
+            
             int counter = 0;
             for (int i = 0; i < 40; i++)
             {
