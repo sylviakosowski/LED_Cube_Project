@@ -7,7 +7,7 @@ namespace UnitTests
     [TestClass]
     public class CubeTests
     {
-        private Hypnocube cube = new Hypnocube();
+        private HypnocubeImpl cube = new HypnocubeImpl();
 
         [TestMethod]
         /* Test that conversion from coordinates to index is working. */
