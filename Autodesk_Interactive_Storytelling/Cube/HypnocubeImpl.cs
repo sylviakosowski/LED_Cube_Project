@@ -209,7 +209,7 @@ namespace Autodesk_Interactive_Storytelling
         //////////////////////  BASIC HELPER METHODS //////////////////////
 
         /* Change color of a single LED at the position specified, with option to blend.*/
-        private byte[] changeColorLED(Coordinate coord, RGBColor color, bool blend)
+        public byte[] changeColorLED(Coordinate coord, RGBColor color, bool blend)
         {
             int index = IndexFromCoord(coord);
 
@@ -229,7 +229,7 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Method to obtain an index from a coordinate. */
-        private int IndexFromCoord(Coordinate c)
+        public int IndexFromCoord(Coordinate c)
         {
             return (c.X + 8 * c.Y + 64 * c.Z) * 3;
         }
@@ -259,6 +259,61 @@ namespace Autodesk_Interactive_Storytelling
             byte avgBlue = AverageBytes(c1.B, c2.B);
 
             return new RGBColor(avgRed, avgGreen, avgBlue);
+        }
+
+        /* Fade the LED from one color to another, using Linear
+         * Interpolation.
+         * 
+         * c is the coordinate of the LED we want to change.
+         * endColor is the final color we want the LED to be.
+         * Rate represents how fast it should fade from one color to
+         * another, and is given as the number of frames the fading
+         * should span across.
+         * 
+         * Returns a list of colors of length rate, which represents the
+         * color the LED will be at each of these frames.
+         */
+        private List<RGBColor> fadeLED(Coordinate c, RGBColor endColor, int rate)
+        {
+            List<RGBColor> fadeAnimation = new List<RGBColor>();
+            //Get old RGB value at c.
+            int index = IndexFromCoord(c);
+
+            int oldR = colorArray[index];
+            int oldG = colorArray[index + 1];
+            int oldB = colorArray[index + 2];
+
+            //Calculate difference between new color and old color.
+            int rDiff = endColor.R - oldR;
+            int gDiff = endColor.G - oldG;
+            int bDiff = endColor.B - oldB;
+
+            double increment = 1.0 / ((double)rate);
+
+            byte newR = 0;
+            byte newG = 0;
+            byte newB = 0;
+
+            for (int i = 0; i < rate; i++ )
+            {
+                newR = (byte) (oldR + (increment * (i + 1)) * rDiff);
+                newG = (byte) (oldG + (increment * (i + 1)) * gDiff);
+                newB = (byte) (oldB + (increment * (i + 1)) * bDiff);
+
+                fadeAnimation.Add(new RGBColor(newR, newG, newB));
+            }
+            
+            return fadeAnimation;
+        }
+
+        private void fadeLEDs(List<Coordinate> coords, List<RGBColor> endColors, List<int> rates)
+        {
+            List<RGBColor> fadeAnimation = new List<RGBColor>();
+
+            for(int i = 0; i < coords.Count; i++)
+            {
+                
+            }
         }
 
         /* Adds an image frame to the image frame queue. Every

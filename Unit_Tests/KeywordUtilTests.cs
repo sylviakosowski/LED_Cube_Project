@@ -15,6 +15,7 @@ namespace UnitTests
         string allKeysInString = "autodesk autocad autodesk maya buahaha";
         string onlyAKeyword = "autodesk";
         string noKeywords = "huehuehue no keywords here sucker!!!!!!!1!!!";
+        KeywordUtil ku = new KeywordUtil();
 
         [TestMethod]
         /* Given a string with one keyword, make sure determineKeywordsFromString 
@@ -22,7 +23,7 @@ namespace UnitTests
         public void TestDetermineKeywordsFromString_OneKeyword()
         {
             ArrayList keywordsPresent = 
-                    KeywordUtil.determineKeywordsFromString(keywords, oneKey);
+                    ku.determineKeywordsFromString(keywords, oneKey);
             Assert.AreEqual(keywordsPresent.Count, 1);
             Assert.AreEqual(keywordsPresent.Contains("autocad"), true);
         }
@@ -34,7 +35,7 @@ namespace UnitTests
         public void TestDetermineKeywordsFromString_TwoKeywordsDisconnected()
         {
             ArrayList keywordsPresent =
-                KeywordUtil.determineKeywordsFromString(keywords, twoKeyDis);
+                ku.determineKeywordsFromString(keywords, twoKeyDis);
             Assert.AreEqual(keywordsPresent.Count, 2);
             Assert.AreEqual(keywordsPresent.Contains("autocad"), true);
             Assert.AreEqual(keywordsPresent.Contains("autodesk"), true);
@@ -47,7 +48,7 @@ namespace UnitTests
         public void TestDetermineKeywordsFromString_TwoKeywordsConnected()
         {
             ArrayList keywordsPresent =
-                KeywordUtil.determineKeywordsFromString(keywords, twoKeyConn);
+                ku.determineKeywordsFromString(keywords, twoKeyConn);
             Assert.AreEqual(keywordsPresent.Count, 2);
             Assert.AreEqual(keywordsPresent.Contains("autodesk maya"), true);
             Assert.AreEqual(keywordsPresent.Contains("autodesk"), true);
@@ -60,7 +61,7 @@ namespace UnitTests
         public void TestDetermineKeywordsFromString_AllKeywords()
         {
             ArrayList keywordsPresent =
-                KeywordUtil.determineKeywordsFromString(keywords, allKeysInString);
+                ku.determineKeywordsFromString(keywords, allKeysInString);
             Assert.AreEqual(keywordsPresent.Count, 3);
             Assert.AreEqual(keywordsPresent.Contains("autodesk maya"), true);
             Assert.AreEqual(keywordsPresent.Contains("autodesk"), true);
@@ -74,7 +75,7 @@ namespace UnitTests
         public void TestDetermineKeywordsFromString_OnlyAKeyword()
         {
             ArrayList keywordsPresent =
-                KeywordUtil.determineKeywordsFromString(keywords, onlyAKeyword);
+                ku.determineKeywordsFromString(keywords, onlyAKeyword);
             Assert.AreEqual(keywordsPresent.Count, 1);
             Assert.AreEqual(keywordsPresent.Contains("autodesk"), true);
         }
@@ -86,7 +87,7 @@ namespace UnitTests
         public void TestDetermineKeywordsFromString_NoKeyword()
         {
             ArrayList keywordsPresent =
-                KeywordUtil.determineKeywordsFromString(keywords, noKeywords);
+                ku.determineKeywordsFromString(keywords, noKeywords);
             Assert.AreEqual(keywordsPresent.Count, 0);
         }
 
