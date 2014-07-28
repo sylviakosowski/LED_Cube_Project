@@ -307,7 +307,7 @@ namespace Autodesk_Interactive_Storytelling
         }
 
         /* Precondition: coords, endColors, and rates are all the same length. */
-        private void fadeLEDs(List<byte[]> imageFrames, List<Coordinate> coords, 
+        public void fadeLEDs(List<byte[]> imageFrames, List<Coordinate> coords, 
             List<RGBColor> endColors, List<int> rates)
         {
             List<RGBColor> fadeAnimation = new List<RGBColor>();

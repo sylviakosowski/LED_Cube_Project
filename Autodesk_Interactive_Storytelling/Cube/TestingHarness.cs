@@ -30,7 +30,11 @@ namespace Autodesk_Interactive_Storytelling.Cube
             //LightIntersectionTest();
 
             //ShiftOnceTest(HypnocubeImpl.Direction.X, true);
-            ShiftAlongCubeTest(HypnocubeImpl.Direction.Z, false);
+            //ShiftAlongCubeTest(HypnocubeImpl.Direction.Z, false);
+
+            //FadeLEDTest();
+            //FadeLEDsSameRateTest();
+            FadeLEDsDiffRatesTest();
 
             //Need to keep this to send signal to visualization.
             tl.ReceiveAndSendSignal(imageFrames);
@@ -100,6 +104,75 @@ namespace Autodesk_Interactive_Storytelling.Cube
             }
 
             hc.ShiftAlongCube(imageFrames, d, b);
+        }
+
+        /* Test fading a single LED. */
+        private void FadeLEDTest()
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+
+            Coordinate c = new Coordinate(7,7,7);
+            coords.Add(c);
+
+            RGBColor red = new RGBColor(255, 0, 0);
+            hc.changeColorLED(c, red, false);
+
+            RGBColor blue = new RGBColor(0, 0, 255);
+            colors.Add(blue);
+
+            rates.Add(50);
+
+            hc.fadeLEDs(imageFrames, coords, colors, rates);
+        }
+
+        /* Test fading multiple LEDs with the same rate. */
+        private void FadeLEDsSameRateTest()
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+            RGBColor blue = new RGBColor(0, 0, 255);
+
+            for(int i = 0; i < 8; i++)
+            {
+                for(int j = 0; j < 8; j++)
+                {
+                    for(int k = 0; k < 8; k++)
+                    {
+                        coords.Add(new Coordinate(i,j,k));
+                        colors.Add(blue);
+                        rates.Add(50);
+                    }
+                }
+            }
+
+            hc.fadeLEDs(imageFrames, coords, colors, rates);
+        }
+
+        /* Test fading multiple LEDs with different rates. */
+        private void FadeLEDsDiffRatesTest()
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+            RGBColor blue = new RGBColor(0, 0, 255);
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        coords.Add(new Coordinate(i, j, k));
+                        colors.Add(blue);
+                        rates.Add((i+j+k) * 10);
+                    }
+                }
+            }
+
+            hc.fadeLEDs(imageFrames, coords, colors, rates);
         }
 
     }
