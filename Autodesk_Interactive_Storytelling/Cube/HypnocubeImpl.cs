@@ -306,13 +306,43 @@ namespace Autodesk_Interactive_Storytelling
             return fadeAnimation;
         }
 
-        private void fadeLEDs(List<Coordinate> coords, List<RGBColor> endColors, List<int> rates)
+        /* Precondition: coords, endColors, and rates are all the same length. */
+        private void fadeLEDs(List<byte[]> imageFrames, List<Coordinate> coords, 
+            List<RGBColor> endColors, List<int> rates)
         {
             List<RGBColor> fadeAnimation = new List<RGBColor>();
-
+            Dictionary<Coordinate, List<RGBColor>> animDict = 
+                new Dictionary<Coordinate, List<RGBColor>>();
+            int longestAnim = 0;
+            
+            /* Create fading animation for each specific LED in coords, map it
+             * to each coordinate in a dictionary.
+             */
             for(int i = 0; i < coords.Count; i++)
             {
-                
+                fadeAnimation = fadeLED(coords[i], endColors[i], rates[i]);
+                animDict.Add(coords[i], fadeAnimation);
+                longestAnim = Math.Max(longestAnim, fadeAnimation.Count);
+            }
+
+            int index;
+            RGBColor color;
+
+            /* For each animation frame, update the behavior of each LED in coords. */
+            for (int i = 0; i < longestAnim; i++)
+            {
+                foreach (KeyValuePair<Coordinate, List<RGBColor>> entry in animDict)
+                {
+                    if( i < entry.Value.Count)
+                    {
+                        index = IndexFromCoord(entry.Key);
+                        color = entry.Value[i];
+                        colorArray[index] = color.R;
+                        colorArray[index + 1] = color.G;
+                        colorArray[index + 2] = color.B;
+                    }
+                }
+                AddImageFrame(imageFrames);
             }
         }
 
