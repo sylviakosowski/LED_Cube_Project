@@ -29,17 +29,24 @@ namespace Autodesk_Interactive_Storytelling.Cube
             //BlinkLEDTest();
             //LightIntersectionTest();
 
+            /* SHIFTING TESTS */
             //ShiftOnceTest(HypnocubeImpl.Direction.X, true);
             //ShiftAlongCubeTest(HypnocubeImpl.Direction.Z, false);
 
+            /* FADING TESTS */
             //FadeLEDTest();
             //FadeLEDsSameRateTest();
             FadeLEDsDiffRatesTest();
             
+            /* BLINKING TESTS */
             //BlinkLEDTest();
             //BlinkLEDsTest();
 
+            /* BLOCK TESTS */
+            LightBlockTest();
+
             //Need to keep this to send signal to visualization.
+            //Won't need for actual cube.
             tl.ReceiveAndSendSignal(imageFrames);
         }
 
@@ -181,8 +188,6 @@ namespace Autodesk_Interactive_Storytelling.Cube
             }
 
             hc.FadeLEDs(imageFrames, coords, colors, rates);
-
-            BlinkLEDTest();
         }
 
         /* Test blinking a single LED */
@@ -233,5 +238,14 @@ namespace Autodesk_Interactive_Storytelling.Cube
             hc.BlinkLEDs(imageFrames, coords, colors, rates, numBlinks);
         }
 
+        /* Test lighting up a block. */
+        private void LightBlockTest()
+        {
+            hc.LightBlock(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), new RGBColor(255, 0, 0));
+            hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), new RGBColor(0, 255, 0));
+            hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), new RGBColor(255, 255, 0));
+            hc.LightBlock(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), new RGBColor(0, 255, 255));
+            hc.LightBlock(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), new RGBColor(255, 0, 255));
+        }
     }
 }

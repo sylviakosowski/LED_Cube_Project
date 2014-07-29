@@ -309,80 +309,6 @@ namespace Autodesk_Interactive_Storytelling
             return new RGBColor(avgRed, avgGreen, avgBlue);
         }
 
-        /* Fade a single LED from one color to another, using Linear
-         * Interpolation.
-         * 
-         * c is the coordinate of the LED we want to change.
-         * endColor is the final color we want the LED to be.
-         * Rate represents how fast it should fade from one color to
-         * another, and is given as the number of frames the fading
-         * should span across.
-         * 
-         * Returns a list of colors of length rate, which represents the
-         * color the LED will be at each of these frames.
-         */
-        private List<RGBColor> fadeLED(Coordinate c, RGBColor endColor, int rate)
-        {
-            List<RGBColor> fadeAnimation = new List<RGBColor>();
-            //Get old RGB value at c.
-            int index = IndexFromCoord(c);
-
-            int oldR = colorArray[index];
-            int oldG = colorArray[index + 1];
-            int oldB = colorArray[index + 2];
-
-            //Calculate difference between new color and old color.
-            int rDiff = endColor.R - oldR;
-            int gDiff = endColor.G - oldG;
-            int bDiff = endColor.B - oldB;
-
-
-            //Calculate increment for each frame
-            double increment = 1.0 / ((double)rate);
-
-            byte newR = 0;
-            byte newG = 0;
-            byte newB = 0;
-
-            for (int i = 0; i < rate; i++ )
-            {
-                newR = (byte) (oldR + (increment * (i + 1)) * rDiff);
-                newG = (byte) (oldG + (increment * (i + 1)) * gDiff);
-                newB = (byte) (oldB + (increment * (i + 1)) * bDiff);
-
-                fadeAnimation.Add(new RGBColor(newR, newG, newB));
-            }
-
-            return fadeAnimation;
-        }
-
-        /* Blink a specific LED at Coordinate c, with speed of blink
-         * determined by rate. (rate = the number of frames the LED
-         * should be lighted up in the blink)
-         */
-        public List<RGBColor> BlinkLED(Coordinate c, RGBColor color, int rate, int numBlinks)
-        {
-            List<RGBColor> colors = new List<RGBColor>();
-            RGBColor black = new RGBColor(0,0,0);
-
-            for (int j = 0; j < numBlinks; j++ )
-            { 
-                for (int i = 0; i < rate * 2; i++)
-                {
-                    if (i < rate)
-                    {
-                        colors.Add(color);
-                    }
-                    else
-                    {
-                        colors.Add(black);
-                    }
-                }
-            }
-
-            return colors;
-        }
-
         /* Adds an image frame to the image frame queue. Every
          * frame of animation that you want sent to the cube 
          * must be added to imageFrames using this method, or it
@@ -422,6 +348,80 @@ namespace Autodesk_Interactive_Storytelling
             SpecificColorWholeCube(new RGBColor(randR, randG, randB), blend);
         }
 
+        /* Fade a single LED from one color to another, using Linear
+         * Interpolation.
+         * 
+         * c is the coordinate of the LED we want to change.
+         * endColor is the final color we want the LED to be.
+         * Rate represents how fast it should fade from one color to
+         * another, and is given as the number of frames the fading
+         * should span across.
+         * 
+         * Returns a list of colors of length rate, which represents the
+         * color the LED will be at each of these frames.
+         */
+        private List<RGBColor> fadeLED(Coordinate c, RGBColor endColor, int rate)
+        {
+            List<RGBColor> fadeAnimation = new List<RGBColor>();
+            //Get old RGB value at c.
+            int index = IndexFromCoord(c);
+
+            int oldR = colorArray[index];
+            int oldG = colorArray[index + 1];
+            int oldB = colorArray[index + 2];
+
+            //Calculate difference between new color and old color.
+            int rDiff = endColor.R - oldR;
+            int gDiff = endColor.G - oldG;
+            int bDiff = endColor.B - oldB;
+
+
+            //Calculate increment for each frame
+            double increment = 1.0 / ((double)rate);
+
+            byte newR = 0;
+            byte newG = 0;
+            byte newB = 0;
+
+            for (int i = 0; i < rate; i++)
+            {
+                newR = (byte)(oldR + (increment * (i + 1)) * rDiff);
+                newG = (byte)(oldG + (increment * (i + 1)) * gDiff);
+                newB = (byte)(oldB + (increment * (i + 1)) * bDiff);
+
+                fadeAnimation.Add(new RGBColor(newR, newG, newB));
+            }
+
+            return fadeAnimation;
+        }
+
+        /* Blink a specific LED at Coordinate c, with speed of blink
+         * determined by rate. (rate = the number of frames the LED
+         * should be lighted up in the blink)
+         */
+        public List<RGBColor> BlinkLED(Coordinate c, RGBColor color, int rate, int numBlinks)
+        {
+            List<RGBColor> colors = new List<RGBColor>();
+            RGBColor black = new RGBColor(0, 0, 0);
+
+            for (int j = 0; j < numBlinks; j++)
+            {
+                for (int i = 0; i < rate * 2; i++)
+                {
+                    if (i < rate)
+                    {
+                        colors.Add(color);
+                    }
+                    else
+                    {
+                        colors.Add(black);
+                    }
+                }
+            }
+
+            return colors;
+        }
+
         /* Light up a vertical strip of LEDs between the two coordinates specified */
         private void LightVerticalStrip(List<byte[]> imageFrames, Coordinate c, int y2, RGBColor color)
         {
@@ -444,6 +444,40 @@ namespace Autodesk_Interactive_Storytelling
             {
                 changeColorLED(new Coordinate(c.X, c.Y, i), color, true);
             }
+        }
+
+        /* Light up a rectangular sub-block of the cube in a specific color.
+         *
+         * The rectangular block is specified by two coordinates, which are the corners which
+         * are diagonally across from each other in the block.
+         * 
+         * TODO: Light up whole cube could be seen as LightBlock from (0,0,0) to (7,7,7)
+         *       Make this change for better implementation code reuse, but still provide
+         *       changeFullColor in code interface for user use.
+         */
+        public void LightBlock(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, RGBColor color)
+        {
+            int xMax = Math.Max(c1.X, c2.X);
+            int xMin = Math.Min(c1.X, c2.X);
+
+            int yMax = Math.Max(c1.Y, c2.Y);
+            int yMin = Math.Min(c1.Y, c2.Y);
+
+            int zMax = Math.Max(c1.Z, c2.Z);
+            int zMin = Math.Min(c1.Z, c2.Z);
+
+            for(int x = xMin; x <= xMax; x++)
+            {
+                for(int y = yMin; y <= yMax; y++)
+                {
+                    for(int z = zMin; z <= zMax; z++)
+                    {
+                        changeColorLED(new Coordinate(x,y,z), color, false);
+                    }
+                }
+            }
+
+            AddImageFrame(imageFrames);
         }
 
         /* 
