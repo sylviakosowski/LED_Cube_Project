@@ -56,36 +56,6 @@ namespace Autodesk_Interactive_Storytelling
             return newFrames;
         }
 
-        /* Blink a specific LED at Coordinate c. */
-        public void BlinkLED(List<byte[]> imageFrames, Coordinate c)
-        {
-
-            SpecificColorWholeCube(new RGBColor(56, 56, 56), false);
-
-            
-            int counter = 0;
-            for (int i = 0; i < 40; i++)
-            {
-                if (counter == 8)
-                {
-                    counter = 0;
-                }
-
-                if (counter < 4)
-                {
-                    changeColorLED(c, new RGBColor(255, 0, 0), false);
-                    AddImageFrame(imageFrames);
-                    counter++;
-                }
-                else
-                {
-                    changeColorLED(c, new RGBColor(56, 56, 56), false);
-                    AddImageFrame(imageFrames);
-                    counter++;
-                }
-            }
-        }
-
         /* Light up an intersection of the cube.
          * 
          * TODO: MAKE GENERIC
@@ -112,7 +82,8 @@ namespace Autodesk_Interactive_Storytelling
          *      
          *      TODO: A DIAGRAM WILL BE PROVIDED FOR POTENTIAL FUTURE USERS
          */
-        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, Coordinate c, Direction d, bool blend)
+        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, 
+            Coordinate c, Direction d, bool blend)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -204,6 +175,83 @@ namespace Autodesk_Interactive_Storytelling
             }
         }
 
+        /* Precondition: coords, endColors, and rates are all the same length. */
+        public void FadeLEDs(List<byte[]> imageFrames, List<Coordinate> coords,
+            List<RGBColor> endColors, List<int> rates)
+        {
+            List<RGBColor> fadeAnimation = new List<RGBColor>();
+            Dictionary<Coordinate, List<RGBColor>> animDict =
+                new Dictionary<Coordinate, List<RGBColor>>();
+            int longestAnim = 0;
+
+            /* Create fading animation for each specific LED in coords, map it
+             * to each coordinate in a dictionary.
+             */
+            for (int i = 0; i < coords.Count; i++)
+            {
+                fadeAnimation = fadeLED(coords[i], endColors[i], rates[i]);
+                animDict.Add(coords[i], fadeAnimation);
+                longestAnim = Math.Max(longestAnim, fadeAnimation.Count);
+            }
+
+            int index;
+            RGBColor color;
+
+            /* For each animation frame, update the behavior of each LED in coords. */
+            for (int i = 0; i < longestAnim; i++)
+            {
+                foreach (KeyValuePair<Coordinate, List<RGBColor>> entry in animDict)
+                {
+                    if (i < entry.Value.Count)
+                    {
+                        index = IndexFromCoord(entry.Key);
+                        color = entry.Value[i];
+                        colorArray[index] = color.R;
+                        colorArray[index + 1] = color.G;
+                        colorArray[index + 2] = color.B;
+                    }
+                }
+                AddImageFrame(imageFrames);
+            }
+        }
+
+        public void BlinkLEDs(List<byte[]> imageFrames, List<Coordinate> coords,
+            List<RGBColor> colors, List<int> rates, List<int> numBlinks)
+        {
+            List<RGBColor> blinkAnimation = new List<RGBColor>();
+            Dictionary<Coordinate, List<RGBColor>> animDict =
+                new Dictionary<Coordinate, List<RGBColor>>();
+            int longestAnim = 0;
+
+            /* Create blinking animation for each LED in the coords. */
+            for (int i = 0; i < coords.Count; i++)
+            {
+                blinkAnimation = BlinkLED(coords[i], colors[i], rates[i], numBlinks[i]);
+                animDict.Add(coords[i], blinkAnimation);
+                longestAnim = Math.Max(longestAnim, blinkAnimation.Count);
+            }
+
+            int index;
+            RGBColor color;
+
+            /* For each animation frame, update the behavior of each LED in coords. */
+            for (int i = 0; i < longestAnim; i++)
+            {
+                foreach (KeyValuePair<Coordinate, List<RGBColor>> entry in animDict)
+                {
+                    if (i < entry.Value.Count)
+                    {
+                        index = IndexFromCoord(entry.Key);
+                        color = entry.Value[i];
+                        colorArray[index] = color.R;
+                        colorArray[index + 1] = color.G;
+                        colorArray[index + 2] = color.B;
+                    }
+                }
+                AddImageFrame(imageFrames);
+            }
+        }
+
         ////////////////////// PRIVATE IMPLEMENTATION //////////////////////
 
         //////////////////////  BASIC HELPER METHODS //////////////////////
@@ -261,7 +309,7 @@ namespace Autodesk_Interactive_Storytelling
             return new RGBColor(avgRed, avgGreen, avgBlue);
         }
 
-        /* Fade the LED from one color to another, using Linear
+        /* Fade a single LED from one color to another, using Linear
          * Interpolation.
          * 
          * c is the coordinate of the LED we want to change.
@@ -288,6 +336,8 @@ namespace Autodesk_Interactive_Storytelling
             int gDiff = endColor.G - oldG;
             int bDiff = endColor.B - oldB;
 
+
+            //Calculate increment for each frame
             double increment = 1.0 / ((double)rate);
 
             byte newR = 0;
@@ -302,48 +352,35 @@ namespace Autodesk_Interactive_Storytelling
 
                 fadeAnimation.Add(new RGBColor(newR, newG, newB));
             }
-            
+
             return fadeAnimation;
         }
 
-        /* Precondition: coords, endColors, and rates are all the same length. */
-        public void fadeLEDs(List<byte[]> imageFrames, List<Coordinate> coords, 
-            List<RGBColor> endColors, List<int> rates)
+        /* Blink a specific LED at Coordinate c, with speed of blink
+         * determined by rate. (rate = the number of frames the LED
+         * should be lighted up in the blink)
+         */
+        public List<RGBColor> BlinkLED(Coordinate c, RGBColor color, int rate, int numBlinks)
         {
-            List<RGBColor> fadeAnimation = new List<RGBColor>();
-            Dictionary<Coordinate, List<RGBColor>> animDict = 
-                new Dictionary<Coordinate, List<RGBColor>>();
-            int longestAnim = 0;
-            
-            /* Create fading animation for each specific LED in coords, map it
-             * to each coordinate in a dictionary.
-             */
-            for(int i = 0; i < coords.Count; i++)
-            {
-                fadeAnimation = fadeLED(coords[i], endColors[i], rates[i]);
-                animDict.Add(coords[i], fadeAnimation);
-                longestAnim = Math.Max(longestAnim, fadeAnimation.Count);
-            }
+            List<RGBColor> colors = new List<RGBColor>();
+            RGBColor black = new RGBColor(0,0,0);
 
-            int index;
-            RGBColor color;
-
-            /* For each animation frame, update the behavior of each LED in coords. */
-            for (int i = 0; i < longestAnim; i++)
-            {
-                foreach (KeyValuePair<Coordinate, List<RGBColor>> entry in animDict)
+            for (int j = 0; j < numBlinks; j++ )
+            { 
+                for (int i = 0; i < rate * 2; i++)
                 {
-                    if( i < entry.Value.Count)
+                    if (i < rate)
                     {
-                        index = IndexFromCoord(entry.Key);
-                        color = entry.Value[i];
-                        colorArray[index] = color.R;
-                        colorArray[index + 1] = color.G;
-                        colorArray[index + 2] = color.B;
+                        colors.Add(color);
+                    }
+                    else
+                    {
+                        colors.Add(black);
                     }
                 }
-                AddImageFrame(imageFrames);
             }
+
+            return colors;
         }
 
         /* Adds an image frame to the image frame queue. Every
