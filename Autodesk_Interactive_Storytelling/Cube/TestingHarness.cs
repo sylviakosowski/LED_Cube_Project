@@ -37,14 +37,15 @@ namespace Autodesk_Interactive_Storytelling.Cube
             //FadeLEDTest();
             //FadeLEDsSameRateTest();
             FadeLEDsDiffRatesTest();
-            
-            /* BLINKING TESTS */
-            //BlinkLEDTest();
-            //BlinkLEDsTest();
 
             /* BLOCK TESTS */
             LightBlockTest();
             LightLEDsTest();
+
+
+            /* BLINKING TESTS */
+            //BlinkLEDTest();
+            BlinkLEDsTest();
 
             //Need to keep this to send signal to visualization.
             //Won't need for actual cube.
@@ -194,8 +195,9 @@ namespace Autodesk_Interactive_Storytelling.Cube
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
             List<int> numBlinks = new List<int>();
+            
 
-            Coordinate c = new Coordinate(0, 0, 0);
+            Coordinate c = new Coordinate(7, 0, 7);
             coords.Add(c);
 
             RGBColor red = new RGBColor(255, 0, 0);
@@ -204,8 +206,9 @@ namespace Autodesk_Interactive_Storytelling.Cube
             rates.Add(5);
             numBlinks.Add(10);
 
-            hc.BlinkLEDs(imageFrames, coords, colors, rates, numBlinks);
-            //hc.BlinkLED(imageFrames, new Coordinate(7,0,0));
+
+            LightingMethod blinker = new Blinking(hc, numBlinks);
+            hc.LightLEDs(imageFrames, coords, colors, rates, blinker);
         }
         
         /* Test blinking multiple LEDs */
@@ -232,7 +235,8 @@ namespace Autodesk_Interactive_Storytelling.Cube
                 }
             }
 
-            hc.BlinkLEDs(imageFrames, coords, colors, rates, numBlinks);
+            LightingMethod blinker = new Blinking(hc, numBlinks);
+            hc.LightLEDs(imageFrames, coords, colors, rates, blinker);
         }
 
         /* Test lighting up a block. */

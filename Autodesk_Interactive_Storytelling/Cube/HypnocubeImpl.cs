@@ -17,7 +17,7 @@ namespace Autodesk_Interactive_Storytelling
          * Each byte in array is one RGB value for LED.
          * Therefore, each LED takes up 3 bytes and therefore, 3 positions in array.
          */
-        private byte[] colorArray; //CHANGED TO STATIC TEMPORARILY MIGHT MESS THINGS UP LATER
+        private byte[] colorArray; 
         private static int ARRAY_SIZE = 1536;
 
         public enum Direction { X, Y, Z };
@@ -113,43 +113,6 @@ namespace Autodesk_Interactive_Storytelling
             }
         }
 
-        public void BlinkLEDs(List<byte[]> imageFrames, List<Coordinate> coords,
-            List<RGBColor> colors, List<int> rates, List<int> numBlinks)
-        {
-            List<RGBColor> blinkAnimation = new List<RGBColor>();
-            Dictionary<Coordinate, List<RGBColor>> animDict =
-                new Dictionary<Coordinate, List<RGBColor>>();
-            int longestAnim = 0;
-
-            /* Create blinking animation for each LED in the coords. */
-            for (int i = 0; i < coords.Count; i++)
-            {
-                blinkAnimation = BlinkLED(coords[i], colors[i], rates[i], numBlinks[i]);
-                animDict.Add(coords[i], blinkAnimation);
-                longestAnim = Math.Max(longestAnim, blinkAnimation.Count);
-            }
-
-            int index;
-            RGBColor color;
-
-            /* For each animation frame, update the behavior of each LED in coords. */
-            for (int i = 0; i < longestAnim; i++)
-            {
-                foreach (KeyValuePair<Coordinate, List<RGBColor>> entry in animDict)
-                {
-                    if (i < entry.Value.Count)
-                    {
-                        index = IndexFromCoord(entry.Key);
-                        color = entry.Value[i];
-                        colorArray[index] = color.R;
-                        colorArray[index + 1] = color.G;
-                        colorArray[index + 2] = color.B;
-                    }
-                }
-                AddImageFrame(imageFrames);
-            }
-        }
-
         ////////////////////// PRIVATE IMPLEMENTATION //////////////////////
 
         //////////////////////  BASIC HELPER METHODS //////////////////////
@@ -174,7 +137,6 @@ namespace Autodesk_Interactive_Storytelling
             return colorArray;
         }
 
-        //CHANGED TO STATIC TEMPORARILY MIGHT MESS THINGS UP LATER
         /* Method to obtain an index from a coordinate. */
         public int IndexFromCoord(Coordinate c)
         {
@@ -208,7 +170,6 @@ namespace Autodesk_Interactive_Storytelling
             return new RGBColor(avgRed, avgGreen, avgBlue);
         }
 
-        /* CHANGED TO STATIC REVERT IF SOMETHING BREAKS */
         /* Adds an image frame to the image frame queue. Every
          * frame of animation that you want sent to the cube 
          * must be added to imageFrames using this method, or it
@@ -249,33 +210,6 @@ namespace Autodesk_Interactive_Storytelling
             byte randB = (byte)rand.Next(0, 255);
 
             SpecificColorWholeCube(new RGBColor(randR, randG, randB), blend);
-        }
-
-        /* Blink a specific LED at Coordinate c, with speed of blink
-         * determined by rate. (rate = the number of frames the LED
-         * should be lighted up in the blink)
-         */
-        public List<RGBColor> BlinkLED(Coordinate c, RGBColor color, int rate, int numBlinks)
-        {
-            List<RGBColor> colors = new List<RGBColor>();
-            RGBColor black = new RGBColor(0, 0, 0);
-
-            for (int j = 0; j < numBlinks; j++)
-            {
-                for (int i = 0; i < rate * 2; i++)
-                {
-                    if (i < rate)
-                    {
-                        colors.Add(color);
-                    }
-                    else
-                    {
-                        colors.Add(black);
-                    }
-                }
-            }
-
-            return colors;
         }
 
         /* Light up a rectangular sub-block of the cube in a specific color.

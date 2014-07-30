@@ -19,7 +19,7 @@ namespace Autodesk_Interactive_Storytelling
                 this.hc = hc;
             }
 
-            public override List<RGBColor> CreateSingleLEDBehavior(Coordinate c, RGBColor endColor, int rate)
+            public override List<RGBColor> CreateSingleLEDBehavior(Coordinate c, RGBColor endColor, int rate, int count)
             {
                 return fadeLED(c, endColor, rate);
             }
@@ -69,13 +69,6 @@ namespace Autodesk_Interactive_Storytelling
                 }
 
                 return fadeAnimation;
-            }
-
-            public override Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
-            List<Coordinate> coords, List<RGBColor> colors, List<int> rates,
-            List<int> numBlinks)
-            {
-                return base.CreateAnimation(coords, colors, rates);
             }
         }
 }

@@ -25,15 +25,6 @@ namespace Autodesk_Interactive_Storytelling
         Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
             List<Coordinate> coords, List<RGBColor> colors, List<int> rates);
 
-        /* 
-         * Overloaded method. This overload used primarily if the LightingMethod
-         * is BLINKING as there is an extra list of ints, numBlinks, to be used
-         * in implementing blinking.
-         */
-        Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
-            List<Coordinate> coords, List<RGBColor> colors, List<int> rates,
-            List<int> numBlinks);
-
         void CreateFrames(List<byte[]> imageFrames,
                 Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim);
 

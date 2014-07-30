@@ -58,7 +58,7 @@ namespace Autodesk_Interactive_Storytelling
              */
             for (int i = 0; i < coords.Count; i++)
             {
-                animation = CreateSingleLEDBehavior(coords[i], endColors[i], rates[i]);
+                animation = CreateSingleLEDBehavior(coords[i], endColors[i], rates[i], i);
                 animDict.Add(coords[i], animation);
                 longestAnim = Math.Max(longestAnim, animation.Count);
             }
@@ -66,11 +66,7 @@ namespace Autodesk_Interactive_Storytelling
             return animDict;
         }
 
-        public abstract Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
-        List<Coordinate> coords, List<RGBColor> colors, List<int> rates,
-        List<int> numBlinks);
-
-        public abstract List<RGBColor> CreateSingleLEDBehavior(Coordinate c, RGBColor endColor, int rate);
+        public abstract List<RGBColor> CreateSingleLEDBehavior(Coordinate c, RGBColor endColor, int rate, int count);
 
         public void CreateFrames(List<byte[]> imageFrames,
             Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim)
