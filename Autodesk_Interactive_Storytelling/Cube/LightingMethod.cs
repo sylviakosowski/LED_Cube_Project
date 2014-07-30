@@ -28,5 +28,10 @@ namespace Autodesk_Interactive_Storytelling
         Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
             List<Coordinate> coords, List<RGBColor> colors, List<int> rates,
             List<int> numBlinks);
+
+        void CreateFrames(List<byte[]> imageFrames,
+                Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim);
+
+        int GetLongestAnim();
     }
 }

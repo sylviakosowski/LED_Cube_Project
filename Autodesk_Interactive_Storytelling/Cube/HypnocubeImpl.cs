@@ -17,7 +17,7 @@ namespace Autodesk_Interactive_Storytelling
          * Each byte in array is one RGB value for LED.
          * Therefore, each LED takes up 3 bytes and therefore, 3 positions in array.
          */
-        private static byte[] colorArray; //CHANGED TO STATIC TEMPORARILY MIGHT MESS THINGS UP LATER
+        private byte[] colorArray; //CHANGED TO STATIC TEMPORARILY MIGHT MESS THINGS UP LATER
         private static int ARRAY_SIZE = 1536;
 
         public enum Direction { X, Y, Z };
@@ -216,7 +216,7 @@ namespace Autodesk_Interactive_Storytelling
 
         //CHANGED TO STATIC TEMPORARILY MIGHT MESS THINGS UP LATER
         /* Method to obtain an index from a coordinate. */
-        public static int IndexFromCoord(Coordinate c)
+        public int IndexFromCoord(Coordinate c)
         {
             return (c.X + 8 * c.Y + 64 * c.Z) * 3;
         }
@@ -248,6 +248,7 @@ namespace Autodesk_Interactive_Storytelling
             return new RGBColor(avgRed, avgGreen, avgBlue);
         }
 
+        /* CHANGED TO STATIC REVERT IF SOMETHING BREAKS */
         /* Adds an image frame to the image frame queue. Every
          * frame of animation that you want sent to the cube 
          * must be added to imageFrames using this method, or it
@@ -613,11 +614,103 @@ namespace Autodesk_Interactive_Storytelling
 
             AddImageFrame(imageFrames);
         }
-    
-    
-        private class Fading : LightingMethod
+
+
+        public void LightLEDs(List<byte[]> imageFrames, List<Coordinate> coords, 
+            List<RGBColor> endColors, List<int> rates, LightingMethod lm)
         {
+            Dictionary<Coordinate, List<RGBColor>> animDict = lm.CreateAnimation(coords, endColors, rates);
+            lm.CreateFrames(imageFrames, animDict, lm.GetLongestAnim());
+        }
+
+        public abstract class AbstractLightingMethod : LightingMethod
+        {
+            private HypnocubeImpl hc;
+            private int longestAnim;
+
+            
+            public AbstractLightingMethod(HypnocubeImpl hc)
+            {
+                this.hc = hc;
+            }
+            
+
+            public int LongestAnim
+            {
+                get { return longestAnim; }
+                set { longestAnim = value;}
+            }
+
+            public int GetLongestAnim()
+            {
+                return longestAnim;
+            }
+
             public Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
+            List<Coordinate> coords, List<RGBColor> endColors, List<int> rates)
+            {
+
+                List<RGBColor> animation = new List<RGBColor>();
+                Dictionary<Coordinate, List<RGBColor>> animDict =
+                    new Dictionary<Coordinate, List<RGBColor>>();
+                longestAnim = 0;
+
+                /* Create fading animation for each specific LED in coords, map it
+                 * to each coordinate in a dictionary.
+                 */
+                for (int i = 0; i < coords.Count; i++)
+                {
+                    animation = CreateSingleLEDBehavior(coords[i], endColors[i], rates[i]);
+                    animDict.Add(coords[i], animation);
+                    longestAnim = Math.Max(longestAnim, animation.Count);
+                }
+
+                return animDict;
+            }
+
+            public abstract Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
+            List<Coordinate> coords, List<RGBColor> colors, List<int> rates,
+            List<int> numBlinks);
+
+            public abstract List<RGBColor> CreateSingleLEDBehavior(Coordinate c, RGBColor endColor, int rate);
+
+            public void CreateFrames(List<byte[]> imageFrames,
+                Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim)
+            {
+                int index;
+                RGBColor color;
+
+                /* For each animation frame, update the behavior of each LED in coords. */
+                for (int i = 0; i < longestAnim; i++)
+                {
+                    foreach (KeyValuePair<Coordinate, List<RGBColor>> entry in animDict)
+                    {
+                        if (i < entry.Value.Count)
+                        {
+                            index = hc.IndexFromCoord(entry.Key);
+                            color = entry.Value[i];
+                            hc.ColorArray[index] = color.R;
+                            hc.ColorArray[index + 1] = color.G;
+                            hc.ColorArray[index + 2] = color.B;
+                        }
+                    }
+                    hc.AddImageFrame(imageFrames);
+                }
+            }
+        }
+
+        public class Fading : AbstractLightingMethod
+        {
+            HypnocubeImpl hc;
+
+            public Fading(HypnocubeImpl hc) : base(hc)
+            {
+                this.hc = hc;
+                //meep
+            }
+
+            /*
+            public override Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
             List<Coordinate> coords, List<RGBColor> endColors, List<int> rates)
             {
                 List<RGBColor> fadeAnimation = new List<RGBColor>();
@@ -625,9 +718,6 @@ namespace Autodesk_Interactive_Storytelling
                     new Dictionary<Coordinate, List<RGBColor>>();
                 int longestAnim = 0;
 
-                /* Create fading animation for each specific LED in coords, map it
-                 * to each coordinate in a dictionary.
-                 */
                 for (int i = 0; i < coords.Count; i++)
                 {
                     fadeAnimation = fadeLED(coords[i], endColors[i], rates[i]);
@@ -636,6 +726,12 @@ namespace Autodesk_Interactive_Storytelling
                 }
 
                 return animDict;
+            }
+             * */
+
+            public override List<RGBColor> CreateSingleLEDBehavior(Coordinate c, RGBColor endColor, int rate)
+            {
+                return fadeLED(c, endColor, rate);
             }
 
             /* Fade a single LED from one color to another, using Linear
@@ -654,11 +750,11 @@ namespace Autodesk_Interactive_Storytelling
             {
                 List<RGBColor> fadeAnimation = new List<RGBColor>();
                 //Get old RGB value at c.
-                int index = IndexFromCoord(c);
+                int index = hc.IndexFromCoord(c);
 
-                int oldR = colorArray[index];
-                int oldG = colorArray[index + 1];
-                int oldB = colorArray[index + 2];
+                int oldR = hc.ColorArray[index];
+                int oldG = hc.ColorArray[index + 1];
+                int oldB = hc.ColorArray[index + 2];
 
                 //Calculate difference between new color and old color.
                 int rDiff = endColor.R - oldR;
@@ -685,11 +781,11 @@ namespace Autodesk_Interactive_Storytelling
                 return fadeAnimation;
             }
 
-            public Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
+            public override Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
             List<Coordinate> coords, List<RGBColor> colors, List<int> rates,
             List<int> numBlinks)
             {
-                return CreateAnimation(coords, colors, rates);
+                return base.CreateAnimation(coords, colors, rates);
             }
         }
     

@@ -44,6 +44,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
 
             /* BLOCK TESTS */
             LightBlockTest();
+            LIghtLEDsTest();
 
             //Need to keep this to send signal to visualization.
             //Won't need for actual cube.
@@ -239,6 +240,29 @@ namespace Autodesk_Interactive_Storytelling.Cube
             hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), new RGBColor(255, 255, 0));
             hc.LightBlock(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), new RGBColor(0, 255, 255));
             hc.LightBlock(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), new RGBColor(255, 0, 255));
+        }
+
+        /* Test LightLEDs */
+        private void LIghtLEDsTest()
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+            LightingMethod fader = new HypnocubeImpl.Fading(hc);
+
+            Coordinate c = new Coordinate(7,7,7);
+            coords.Add(c);
+
+            RGBColor green = new RGBColor(0, 255, 0);
+            hc.changeColorLED(c, green, false);
+
+            RGBColor red = new RGBColor(255, 0, 0);
+            colors.Add(red);
+
+            rates.Add(50);
+
+
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader);
         }
     }
 }
