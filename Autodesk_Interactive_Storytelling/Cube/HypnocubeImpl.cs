@@ -17,7 +17,7 @@ namespace Autodesk_Interactive_Storytelling
          * Each byte in array is one RGB value for LED.
          * Therefore, each LED takes up 3 bytes and therefore, 3 positions in array.
          */
-        private byte[] colorArray;
+        private static byte[] colorArray; //CHANGED TO STATIC TEMPORARILY MIGHT MESS THINGS UP LATER
         private static int ARRAY_SIZE = 1536;
 
         public enum Direction { X, Y, Z };
@@ -54,68 +54,6 @@ namespace Autodesk_Interactive_Storytelling
             }
 
             return newFrames;
-        }
-
-        /* Light up an intersection of the cube.
-         * 
-         * TODO: MAKE GENERIC
-         */
-        public void LightIntersection(List<byte[]> imageFrames)
-        {
-            Coordinate c = new Coordinate(7, 0, 0);
-            RGBColor red = new RGBColor(255, 0, 0);
-            RGBColor blue = new RGBColor(0, 0, 255);
-            LightVerticalStrip(imageFrames, c, 7, red);
-            LightHorizontalStrip(imageFrames, c, 7, blue);
-
-            AddImageFrame(imageFrames);
-        }
-
-        /* 
-         * Light up a cross section of the cube.
-         * 
-         * col = the color the cross section should be
-         * c = a single coordinate belonging to the desired cross section. Can be any coordinate in the cross section.
-         * d = X, Y, or Z (enum). Specifies the value which does not change among all the coordinates in this cross-
-         *      section. X will make the cross-section be on the YZ plane. Y will make the cross-section be on the XZ
-         *      plane. Z will make the cross-section be on the XY plane.
-         *      
-         *      TODO: A DIAGRAM WILL BE PROVIDED FOR POTENTIAL FUTURE USERS
-         */
-        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col, 
-            Coordinate c, Direction d, bool blend)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    switch (d)
-                    {
-                        case Direction.X:
-                            {
-                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
-                                break;
-                            }
-                        case Direction.Y:
-                            {
-                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
-                                break;
-                            }
-                        case Direction.Z:
-                            {
-                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
-
-                    }
-                }
-            }
-
-            AddImageFrame(imageFrames);
         }
 
         /*
@@ -276,8 +214,9 @@ namespace Autodesk_Interactive_Storytelling
             return colorArray;
         }
 
+        //CHANGED TO STATIC TEMPORARILY MIGHT MESS THINGS UP LATER
         /* Method to obtain an index from a coordinate. */
-        public int IndexFromCoord(Coordinate c)
+        public static int IndexFromCoord(Coordinate c)
         {
             return (c.X + 8 * c.Y + 64 * c.Z) * 3;
         }
@@ -323,7 +262,10 @@ namespace Autodesk_Interactive_Storytelling
 
         //////////////////////// MORE INVOLVED HELPERS //////////////////////////
 
-        /* Changes the whole cube to the specified color. */
+        /* Changes the whole cube to the specified color. 
+         *
+         * TODO: Change to use LightBlock in implementation
+         */
         private void SpecificColorWholeCube(RGBColor color, bool blend)
         {
             for (int i = 0; i < 8; i++)
@@ -422,30 +364,6 @@ namespace Autodesk_Interactive_Storytelling
             return colors;
         }
 
-        /* Light up a vertical strip of LEDs between the two coordinates specified */
-        private void LightVerticalStrip(List<byte[]> imageFrames, Coordinate c, int y2, RGBColor color)
-        {
-            int yMax = Math.Max(c.Y, y2);
-            int yMin = Math.Min(c.Y, y2);
-
-            for (int i = yMin; i <= yMax; i++)
-            {
-                changeColorLED(new Coordinate(c.X, i, c.Z), color, false);
-            }
-        }
-
-        /* Light up a horizontal strip of LEDs between the two coordinates specified. */
-        private void LightHorizontalStrip(List<byte[]> imageFrames, Coordinate c, int z2, RGBColor color)
-        {
-            int zMax = Math.Max(c.Z, z2);
-            int zMin = Math.Min(c.Z, z2);
-
-            for (int i = zMin; i <= zMax; i++)
-            {
-                changeColorLED(new Coordinate(c.X, c.Y, i), color, true);
-            }
-        }
-
         /* Light up a rectangular sub-block of the cube in a specific color.
          *
          * The rectangular block is specified by two coordinates, which are the corners which
@@ -473,6 +391,55 @@ namespace Autodesk_Interactive_Storytelling
                     for(int z = zMin; z <= zMax; z++)
                     {
                         changeColorLED(new Coordinate(x,y,z), color, false);
+                    }
+                }
+            }
+
+            AddImageFrame(imageFrames);
+        }
+
+        /* 
+         * TODO: Get rid of this function.
+         * 
+        * Light up a cross section of the cube.
+        * 
+        * col = the color the cross section should be
+        * c = a single coordinate belonging to the desired cross section. Can be any coordinate in the cross section.
+        * d = X, Y, or Z (enum). Specifies the value which does not change among all the coordinates in this cross-
+        *      section. X will make the cross-section be on the YZ plane. Y will make the cross-section be on the XZ
+        *      plane. Z will make the cross-section be on the XY plane.
+        *      
+        *      TODO: A DIAGRAM WILL BE PROVIDED FOR POTENTIAL FUTURE USERS
+        */
+        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col,
+            Coordinate c, Direction d, bool blend)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    switch (d)
+                    {
+                        case Direction.X:
+                            {
+                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
+                                break;
+                            }
+                        case Direction.Y:
+                            {
+                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
+                                break;
+                            }
+                        case Direction.Z:
+                            {
+                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+
                     }
                 }
             }
@@ -646,5 +613,85 @@ namespace Autodesk_Interactive_Storytelling
 
             AddImageFrame(imageFrames);
         }
+    
+    
+        private class Fading : LightingMethod
+        {
+            public Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
+            List<Coordinate> coords, List<RGBColor> endColors, List<int> rates)
+            {
+                List<RGBColor> fadeAnimation = new List<RGBColor>();
+                Dictionary<Coordinate, List<RGBColor>> animDict =
+                    new Dictionary<Coordinate, List<RGBColor>>();
+                int longestAnim = 0;
+
+                /* Create fading animation for each specific LED in coords, map it
+                 * to each coordinate in a dictionary.
+                 */
+                for (int i = 0; i < coords.Count; i++)
+                {
+                    fadeAnimation = fadeLED(coords[i], endColors[i], rates[i]);
+                    animDict.Add(coords[i], fadeAnimation);
+                    longestAnim = Math.Max(longestAnim, fadeAnimation.Count);
+                }
+
+                return animDict;
+            }
+
+            /* Fade a single LED from one color to another, using Linear
+         * Interpolation.
+         * 
+         * c is the coordinate of the LED we want to change.
+         * endColor is the final color we want the LED to be.
+         * Rate represents how fast it should fade from one color to
+         * another, and is given as the number of frames the fading
+         * should span across.
+         * 
+         * Returns a list of colors of length rate, which represents the
+         * color the LED will be at each of these frames.
+         */
+            private List<RGBColor> fadeLED(Coordinate c, RGBColor endColor, int rate)
+            {
+                List<RGBColor> fadeAnimation = new List<RGBColor>();
+                //Get old RGB value at c.
+                int index = IndexFromCoord(c);
+
+                int oldR = colorArray[index];
+                int oldG = colorArray[index + 1];
+                int oldB = colorArray[index + 2];
+
+                //Calculate difference between new color and old color.
+                int rDiff = endColor.R - oldR;
+                int gDiff = endColor.G - oldG;
+                int bDiff = endColor.B - oldB;
+
+
+                //Calculate increment for each frame
+                double increment = 1.0 / ((double)rate);
+
+                byte newR = 0;
+                byte newG = 0;
+                byte newB = 0;
+
+                for (int i = 0; i < rate; i++)
+                {
+                    newR = (byte)(oldR + (increment * (i + 1)) * rDiff);
+                    newG = (byte)(oldG + (increment * (i + 1)) * gDiff);
+                    newB = (byte)(oldB + (increment * (i + 1)) * bDiff);
+
+                    fadeAnimation.Add(new RGBColor(newR, newG, newB));
+                }
+
+                return fadeAnimation;
+            }
+
+            public Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
+            List<Coordinate> coords, List<RGBColor> colors, List<int> rates,
+            List<int> numBlinks)
+            {
+                return CreateAnimation(coords, colors, rates);
+            }
+        }
+    
     }
 }

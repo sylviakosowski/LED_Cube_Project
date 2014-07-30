@@ -63,28 +63,17 @@ namespace Autodesk_Interactive_Storytelling.Cube
             hc.RepeatFrames(test, imageFrames, 2);
         }
 
-        /* Test LightIntersection */
-        private void LightIntersectionTest()
-        {
-            hc.LightIntersection(imageFrames);
-        }
-
-        /* Test lighting cross section. */
-        private void LightCrossSectionTest(HypnocubeImpl.Direction d, Coordinate c)
-        {
-            RGBColor col = new RGBColor(255, 0, 0);
-            hc.LightCrossSection(imageFrames, col, c, d, false);
-        }
-
         /* Test shifting once. */
+        /* TODO: Redo this section to use LightBlock instead of LightCrossSection */
         private void ShiftOnceTest(HypnocubeImpl.Direction d, bool b)
         {
+            /*
             Coordinate c;
             RGBColor col = new RGBColor(255, 0, 0);
             if(b)
             {
                 c = new Coordinate(7, 0, 0);
-                hc.LightCrossSection(imageFrames, col, c, d, false);
+                hc.LightBlock(imageFrames, c, );
                 hc.ShiftOnce(imageFrames, d, true);
             }
             else
@@ -93,11 +82,14 @@ namespace Autodesk_Interactive_Storytelling.Cube
                 hc.LightCrossSection(imageFrames, col, c, d, false);
                 hc.ShiftOnce(imageFrames, d, false);
             }
+             */
         }
 
         /* Test shifting along cube. */
+        /* TODO: Redo this test to use LightBlock instead of LightCrossSection */
         private void ShiftAlongCubeTest(HypnocubeImpl.Direction d, bool b)
         {
+            /*
             if(b)
             {
                 LightCrossSectionTest(d, new Coordinate(7,7,7));
@@ -108,6 +100,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
             }
 
             hc.ShiftAlongCube(imageFrames, d, b);
+             */
         }
 
         /* Test fading a single LED. */
