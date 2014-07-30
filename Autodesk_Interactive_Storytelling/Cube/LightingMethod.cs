@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Autodesk_Interactive_Storytelling
 {
+    /* A LightingMethod determines the way in which LEDs are lit up. It determines
+     * how animations for the cube are created. Most notable use is passing it into
+     * the LightLEDS function. A LightingMethod can implement behaviors such as making
+     * LEDS fade, blink, or even more simply, shine in a solid color.
+     */
     public interface LightingMethod
     {
         /* 

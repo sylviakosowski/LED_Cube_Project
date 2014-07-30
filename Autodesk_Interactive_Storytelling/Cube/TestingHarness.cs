@@ -44,7 +44,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
 
             /* BLOCK TESTS */
             LightBlockTest();
-            LIghtLEDsTest();
+            LightLEDsTest();
 
             //Need to keep this to send signal to visualization.
             //Won't need for actual cube.
@@ -110,6 +110,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
             List<Coordinate> coords = new List<Coordinate>();
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
+            LightingMethod fader = new Fading(hc);
 
             Coordinate c = new Coordinate(7,7,7);
             coords.Add(c);
@@ -122,7 +123,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
 
             rates.Add(50);
 
-            hc.FadeLEDs(imageFrames, coords, colors, rates);
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader);
         }
 
         /* Test fading multiple LEDs with the same rate. */
@@ -132,6 +133,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
             RGBColor blue = new RGBColor(0, 0, 255);
+            LightingMethod fader = new Fading(hc);
 
             for(int i = 0; i < 8; i++)
             {
@@ -146,7 +148,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
                 }
             }
 
-            hc.FadeLEDs(imageFrames, coords, colors, rates);
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader);
         }
 
         /* Test fading multiple LEDs with different rates. 
@@ -160,6 +162,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
             RGBColor blue = new RGBColor(0, 0, 255);
+            LightingMethod fader = new Fading(hc);
 
             for (int i = 0; i < 8; i++)
             {
@@ -181,7 +184,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
                 }
             }
 
-            hc.FadeLEDs(imageFrames, coords, colors, rates);
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader);
         }
 
         /* Test blinking a single LED */
@@ -243,12 +246,12 @@ namespace Autodesk_Interactive_Storytelling.Cube
         }
 
         /* Test LightLEDs */
-        private void LIghtLEDsTest()
+        private void LightLEDsTest()
         {
             List<Coordinate> coords = new List<Coordinate>();
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
-            LightingMethod fader = new HypnocubeImpl.Fading(hc);
+            LightingMethod fader = new Fading(hc);
 
             Coordinate c = new Coordinate(7,7,7);
             coords.Add(c);
@@ -260,7 +263,6 @@ namespace Autodesk_Interactive_Storytelling.Cube
             colors.Add(red);
 
             rates.Add(50);
-
 
             hc.LightLEDs(imageFrames, coords, colors, rates, fader);
         }
