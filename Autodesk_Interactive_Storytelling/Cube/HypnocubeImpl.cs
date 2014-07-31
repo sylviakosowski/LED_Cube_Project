@@ -212,17 +212,13 @@ namespace Autodesk_Interactive_Storytelling
             SpecificColorWholeCube(new RGBColor(randR, randG, randB), blend);
         }
 
-        /* Light up a rectangular sub-block of the cube in a specific color.
-         *
-         * The rectangular block is specified by two coordinates, which are the corners which
-         * are diagonally across from each other in the block.
-         * 
-         * TODO: Light up whole cube could be seen as LightBlock from (0,0,0) to (7,7,7)
-         *       Make this change for better implementation code reuse, but still provide
-         *       changeFullColor in code interface for user use.
+        /* Given two coordinates, generates a list of all the coordinates in the block
+         * delimited by the coordinates.
          */
-        public void LightBlock(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, RGBColor color)
+        private List<Coordinate> GenerateCoordBlock(Coordinate c1, Coordinate c2)
         {
+            List<Coordinate> coords = new List<Coordinate>();
+
             int xMax = Math.Max(c1.X, c2.X);
             int xMin = Math.Min(c1.X, c2.X);
 
@@ -238,9 +234,30 @@ namespace Autodesk_Interactive_Storytelling
                 {
                     for (int z = zMin; z <= zMax; z++)
                     {
-                        changeColorLED(new Coordinate(x, y, z), color, false);
+                        coords.Add(new Coordinate(x,y,z));
                     }
                 }
+            }
+
+            return coords;
+        }
+
+        /* Light up a rectangular sub-block of the cube in a specific color.
+         *
+         * The rectangular block is specified by two coordinates, which are the corners which
+         * are diagonally across from each other in the block.
+         * 
+         * TODO: Light up whole cube could be seen as LightBlock from (0,0,0) to (7,7,7)
+         *       Make this change for better implementation code reuse, but still provide
+         *       changeFullColor in code interface for user use.
+         */
+        public void LightBlock(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, RGBColor color)
+        {
+            List<Coordinate> coords = GenerateCoordBlock(c1, c2);
+
+            foreach(Coordinate c in coords)
+            {
+                changeColorLED(c, color, false);
             }
 
             AddImageFrame(imageFrames);
