@@ -20,12 +20,16 @@ namespace Autodesk_Interactive_Storytelling
         private byte[] colorArray; 
         private static int ARRAY_SIZE = 1536;
 
+        //True if using physical cube, false if using OpenGL visualization.
+        private bool physical;
+
         public enum Direction { X, Y, Z };
 
         /* Constructor */
-        public HypnocubeImpl()
+        public HypnocubeImpl(bool physical)
         {
             colorArray = new byte[ARRAY_SIZE];
+            this.physical = physical;
         }
 
         /* Getter/setter for image */
@@ -140,11 +144,18 @@ namespace Autodesk_Interactive_Storytelling
         /* Method to obtain an index from a coordinate. */
         public int IndexFromCoord(Coordinate c)
         {
-            //For Actual Cube
-            return (c.Z + 8 * c.X + 64 * c.Y) * 3;
-
-            //For OpenGL
-            //return (c.X + 8 * c.Y + 64 * c.Z) * 3;
+            /* Coordinates of visualization and actual cube are a  bit different,
+             * need to test what mode we're in and return index accordingly. */
+            if(physical)
+            {
+                //Using physical cube.
+                return (c.Z + 8 * c.X + 64 * c.Y) * 3;
+            }
+            else
+            {
+                //Using OpenGL visualization
+                return (c.X + 8 * c.Y + 64 * c.Z) * 3;
+            }
         }
 
         /* Method to get the color at a specific coordinate. */

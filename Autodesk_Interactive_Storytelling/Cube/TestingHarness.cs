@@ -14,13 +14,15 @@ namespace Autodesk_Interactive_Storytelling.Cube
         private TweetListener tl;
         private PIC32 port;
         private List<byte[]> imageFrames;
+        private bool physical;
 
-        public TestingHarness(HypnocubeImpl hc, TweetListener tl, PIC32 port)
+        public TestingHarness(HypnocubeImpl hc, TweetListener tl, PIC32 port, bool physical)
         {
             this.hc = hc;
             this.tl = tl;
             this.port = port;
             imageFrames = new List<byte[]>();
+            this.physical = physical;
         }
 
         /* Method to begin all the tests. */
@@ -52,8 +54,14 @@ namespace Autodesk_Interactive_Storytelling.Cube
 
             //Need to keep this to send signal to visualization.
             //Won't need for actual cube.
-            tl.ReceiveAndSendSignal(imageFrames);
-            DataTransfer.SendImagesToCube(port, imageFrames);
+            if(physical)
+            {
+                DataTransfer.SendImagesToCube(port, imageFrames);
+            }
+            else
+            {
+                tl.ReceiveAndSendSignal(imageFrames);
+            }
         }
 
         /* Test RandomFullColorCubeChange */

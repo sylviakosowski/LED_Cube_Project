@@ -58,7 +58,7 @@ namespace Autodesk_Interactive_Storytelling
             ArrayList keywordsPresent)
         {
             List<byte[]> imageFrames = new List<byte[]>();
-            HypnocubeImpl hc = new HypnocubeImpl();
+            //HypnocubeImpl hc = new HypnocubeImpl();
 
             foreach( string element in keywordsPresent )
             {

@@ -11,8 +11,11 @@ namespace Autodesk_Interactive_Storytelling
     /* Run this class to begin everything.*/
     public class Program
     {
-        //Change to 0 for the OpenGL visualization, 1 for the actual cube.
-        private static int CUBE_MODE = 2;
+        /* Cube Mode: 0 for starting cube (opengl or phys) with Twitter.
+         * 1 for Visualization Mode, No Twitter
+         * 2 for Physical Mode, No Twitter
+         */
+        private static int CUBE_MODE = 1;
 
         private static TwitterObj t;
         private static HypnocubeImpl hc;
@@ -36,10 +39,6 @@ namespace Autodesk_Interactive_Storytelling
         /* Creates a new Twitter instance and prompts for mode selection. */
         private static void Begin(int phys_mode)
         {
-            //t = new TwitterObj();
-            hc = new HypnocubeImpl();
-
-            //t.DoEverything();
 
             Console.WriteLine("Welcome to the Tweeting Hypnocube!\n");
             
@@ -129,6 +128,7 @@ namespace Autodesk_Interactive_Storytelling
         /* Run light animations for Twitter on OpenGL visualization. */
         private static void beginVisualizationMode()
         {
+            hc = new HypnocubeImpl(false);
             game = new Game();
             tl = new TweetListener(game);
             ku = new KeywordUtil(tl, CUBE_MODE);
@@ -141,18 +141,18 @@ namespace Autodesk_Interactive_Storytelling
         /* Run light animations for Twitter on physical Hypnocube */
         private static void beginPhysicalMode()
         {
+            hc = new HypnocubeImpl(true);
             //Nothing here yet!
         }
 
         /* Stars a game without Twitter, useful for testing in visualization mode. */
         private static void VisualizationTestingMode()
         {
+            hc = new HypnocubeImpl(false);
             game = new Game();
             port = new PIC32();
             tl = new TweetListener(game);
-            th = new Cube.TestingHarness(hc, tl, port);
-
-            Console.WriteLine("meep?");
+            th = new Cube.TestingHarness(hc, tl, port, false);
 
             th.BeginTests();
             game.Run(30, 30);
@@ -163,17 +163,18 @@ namespace Autodesk_Interactive_Storytelling
          */
         private static void HypnocubeTestingMode()
         {
+            hc = new HypnocubeImpl(true);
             port = new PIC32();
             game = new Game();
             tl = new TweetListener(game);
-            th = new Cube.TestingHarness(hc, tl, port);
+            th = new Cube.TestingHarness(hc, tl, port, true);
 
             port.Open("COM5");
 
             Console.WriteLine(port.IsConnected);
 
             th.BeginTests();
-            game.Run(30, 30);
+            //game.Run(30, 30);
 
 
             port.ClosePort();
