@@ -79,6 +79,7 @@ namespace Interactive_LED_Cube
             {
                 foreach (KeyValuePair<Coordinate, List<RGBColor>> entry in animDict)
                 {
+                    /* TODO: Change this to ChangeColorLED */
                     if (i < entry.Value.Count)
                     {
                         index = hc.IndexFromCoord(entry.Key);

@@ -10,11 +10,11 @@ namespace Interactive_LED_Cube
      * LightingMethod which implements Fading behavior for LEDs. Allows an LED to fade 
      * to a specific color, at a speed indicated by a given rate.
      */
-    public class Fading : AbstractLightingMethod
+    public class Fader : AbstractLightingMethod
         {
             HypnocubeImpl hc;
 
-            public Fading(HypnocubeImpl hc) : base(hc)
+            public Fader(HypnocubeImpl hc) : base(hc)
             {
                 this.hc = hc;
             }

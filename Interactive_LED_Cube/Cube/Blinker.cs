@@ -12,12 +12,12 @@ namespace Interactive_LED_Cube.Cube
      * an int list value numBlinks is passed in which helps determine blink speed and indicates
      * the number of times the LEDs should blink.
      */
-    class Blinking : AbstractLightingMethod
+    class Blinker : AbstractLightingMethod
     {
         HypnocubeImpl hc;
         List<int> numBlinks;
 
-        public Blinking(HypnocubeImpl hc, List<int> numBlinks) : base(hc)
+        public Blinker(HypnocubeImpl hc, List<int> numBlinks) : base(hc)
         {
             this.hc = hc;
             this.numBlinks = numBlinks;

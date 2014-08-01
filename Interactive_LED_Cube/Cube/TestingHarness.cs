@@ -43,7 +43,7 @@ namespace Interactive_LED_Cube.Cube
             //FadeLEDsDiffRatesTest();
 
             /* BLOCK TESTS */
-            LightBlockTest();
+            LightBlockSingleColorTest();
             //LightLEDsTest();
 
 
@@ -123,7 +123,7 @@ namespace Interactive_LED_Cube.Cube
             List<Coordinate> coords = new List<Coordinate>();
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
-            LightingMethod fader = new Fading(hc);
+            LightingMethod fader = new Fader(hc);
 
             Coordinate c = new Coordinate(7,7,7);
             coords.Add(c);
@@ -146,7 +146,7 @@ namespace Interactive_LED_Cube.Cube
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
             RGBColor blue = new RGBColor(0, 0, 255);
-            LightingMethod fader = new Fading(hc);
+            LightingMethod fader = new Fader(hc);
 
             for(int i = 0; i < 8; i++)
             {
@@ -175,7 +175,7 @@ namespace Interactive_LED_Cube.Cube
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
             RGBColor blue = new RGBColor(0, 0, 255);
-            LightingMethod fader = new Fading(hc);
+            LightingMethod fader = new Fader(hc);
 
             for (int i = 0; i < 8; i++)
             {
@@ -219,7 +219,7 @@ namespace Interactive_LED_Cube.Cube
             numBlinks.Add(10);
 
 
-            LightingMethod blinker = new Blinking(hc, numBlinks);
+            LightingMethod blinker = new Blinker(hc, numBlinks);
             hc.LightLEDs(imageFrames, coords, colors, rates, blinker);
         }
         
@@ -247,18 +247,52 @@ namespace Interactive_LED_Cube.Cube
                 }
             }
 
-            LightingMethod blinker = new Blinking(hc, numBlinks);
+            LightingMethod blinker = new Blinker(hc, numBlinks);
             hc.LightLEDs(imageFrames, coords, colors, rates, blinker);
         }
 
         /* Test lighting up a block. */
-        private void LightBlockTest()
+        private void LightBlockSingleColorTest()
         {
-            hc.LightBlock(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), new RGBColor(255, 0, 0));
-            hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), new RGBColor(0, 255, 0));
-            hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), new RGBColor(255, 255, 0));
-            hc.LightBlock(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), new RGBColor(0, 255, 255));
-            hc.LightBlock(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), new RGBColor(255, 0, 255));
+            ColorFiller filler = new ColorFiller(hc);
+
+            List<Coordinate> coords1 = hc.GenerateCoordBlock(new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
+            List<Coordinate> coords2 = hc.GenerateCoordBlock(new Coordinate(0, 0, 0), new Coordinate(0, 7, 7));
+            List<Coordinate> coords3 = hc.GenerateCoordBlock(new Coordinate(0, 0, 0), new Coordinate(7, 0, 0));
+            List<Coordinate> coords4 = hc.GenerateCoordBlock(new Coordinate(7, 3, 4), new Coordinate(7, 3, 3));
+            List<Coordinate> coords5 = hc.GenerateCoordBlock(new Coordinate(7, 7, 0), new Coordinate(7, 7, 0));
+
+            RGBColor red = new RGBColor(255,0,0);
+            RGBColor green = new RGBColor(0, 255, 0);
+            RGBColor yellow = new RGBColor(255,255,0);
+            RGBColor cyan = new RGBColor(0, 255, 255);
+            RGBColor purple = new RGBColor(255, 0, 255);
+
+            List<RGBColor> colors1 = new List<RGBColor>();
+            List<int> rates1 = new List<int>();
+            filler.UniformColorRate(coords1.Count, red, 20, colors1, rates1);
+
+            List<RGBColor> colors2 = new List<RGBColor>();
+            List<int> rates2 = new List<int>();
+            filler.UniformColorRate(coords2.Count, green, 20, colors2, rates2);
+
+            List<RGBColor> colors3 = new List<RGBColor>();
+            List<int> rates3 = new List<int>();
+            filler.UniformColorRate(coords3.Count, yellow, 20, colors3, rates3);
+
+            List<RGBColor> colors4 = new List<RGBColor>();
+            List<int> rates4 = new List<int>();
+            filler.UniformColorRate(coords4.Count, cyan, 20, colors4, rates4);
+
+            List<RGBColor> colors5 = new List<RGBColor>();
+            List<int> rates5 = new List<int>();
+            filler.UniformColorRate(coords5.Count, purple, 20, colors5, rates5);
+
+            hc.LightBlock(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), colors1, rates1, filler);
+            hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), colors2, rates2, filler);
+            hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), colors3, rates3, filler);
+            hc.LightBlock(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), colors4, rates4, filler);
+            hc.LightBlock(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), colors5, rates5, filler);
         }
 
         /* Test LightLEDs */
@@ -267,7 +301,7 @@ namespace Interactive_LED_Cube.Cube
             List<Coordinate> coords = new List<Coordinate>();
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
-            LightingMethod fader = new Fading(hc);
+            LightingMethod fader = new Fader(hc);
 
             Coordinate c = new Coordinate(7,7,7);
             coords.Add(c);

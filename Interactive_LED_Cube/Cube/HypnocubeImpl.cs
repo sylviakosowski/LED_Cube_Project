@@ -230,7 +230,7 @@ namespace Interactive_LED_Cube
         /* Given two coordinates, generates a list of all the coordinates in the block
          * delimited by the coordinates.
          */
-        private List<Coordinate> GenerateCoordBlock(Coordinate c1, Coordinate c2)
+        public List<Coordinate> GenerateCoordBlock(Coordinate c1, Coordinate c2)
         {
             List<Coordinate> coords = new List<Coordinate>();
 
@@ -266,16 +266,21 @@ namespace Interactive_LED_Cube
          *       Make this change for better implementation code reuse, but still provide
          *       changeFullColor in code interface for user use.
          */
-        public void LightBlock(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, RGBColor color)
+        public void LightBlock(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, 
+            List<RGBColor> colors, List<int> rates, LightingMethod lm)
         {
             List<Coordinate> coords = GenerateCoordBlock(c1, c2);
 
+            /*
             foreach(Coordinate c in coords)
             {
                 changeColorLED(c, color, false);
             }
+             * */
 
-            AddImageFrame(imageFrames);
+            LightLEDs(imageFrames, coords, colors, rates, lm);
+
+            //AddImageFrame(imageFrames);
         }
 
         /* 
