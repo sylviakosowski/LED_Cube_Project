@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace Autodesk_Interactive_Storytelling
+namespace Interactive_LED_Cube
 {
     /* 
      * Class to read keywords from a text file and organize them in such

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 
-namespace CubeVisualization
+namespace Cube_Visualization
 {
     /* The link between the twitter code in Autodesk_Interactive_Storytelling and
      * the visualization in CubeVisualization. Provides methods for converting

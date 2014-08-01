@@ -10,7 +10,7 @@ using OpenTK.Input;
 using System.Drawing;
 using System.IO;
 
-namespace CubeVisualization
+namespace Cube_Visualization
 {
     /* Class which handles the entire Cube Visualization. */
     public class Game : GameWindow

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Autodesk_Interactive_Storytelling.Cube
+namespace Interactive_LED_Cube.Cube
 {
     /* 
      * LightingMethod which implements Blinking behavior for LEDs. Allows an LED to blink 

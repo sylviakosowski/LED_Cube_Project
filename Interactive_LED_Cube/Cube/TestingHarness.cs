@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cube_Visualization;
 
-namespace Autodesk_Interactive_Storytelling.Cube
+namespace Interactive_LED_Cube.Cube
 {
     /* Tests various HypnocubeImpl animations. */
     public class TestingHarness

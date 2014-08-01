@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CubeVisualization
+namespace Cube_Visualization
 {
     public class Program
     {

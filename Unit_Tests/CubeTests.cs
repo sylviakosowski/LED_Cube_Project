@@ -1,13 +1,13 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Autodesk_Interactive_Storytelling;
+using Interactive_LED_Cube;
 
 namespace UnitTests
 {
     [TestClass]
     public class CubeTests
     {
-        private HypnocubeImpl cube = new HypnocubeImpl();
+        private HypnocubeImpl cube = new HypnocubeImpl(true);
 
         [TestMethod]
         /* Test that conversion from coordinates to index is working. */

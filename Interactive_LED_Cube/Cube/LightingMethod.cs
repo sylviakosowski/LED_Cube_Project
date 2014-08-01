@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Autodesk_Interactive_Storytelling
+namespace Interactive_LED_Cube
 {
     /* A LightingMethod determines the way in which LEDs are lit up. It determines
      * how animations for the cube are created. Most notable use is passing it into

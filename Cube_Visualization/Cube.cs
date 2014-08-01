@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 
-namespace CubeVisualization
+namespace Cube_Visualization
 {
     public class Cube
     {

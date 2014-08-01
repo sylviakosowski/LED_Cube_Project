@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Autodesk_Interactive_Storytelling
+namespace Interactive_LED_Cube
 {
     /* Represents an RGB color. */
     public class RGBColor

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using LinqToTwitter;
 using LinqToTwitter.Common;
 
-namespace Autodesk_Interactive_Storytelling
+namespace Interactive_LED_Cube
 {
     /* 
      * This class is used to authenticate Twitter with OAuth and create 

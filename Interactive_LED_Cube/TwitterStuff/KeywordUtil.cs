@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using Cube_Visualization;
 
-namespace Autodesk_Interactive_Storytelling
+namespace Interactive_LED_Cube
 {
     /* Provides utilities for working with Twitter keywords and statuses, and the
      * animations that correspond to them in the cube.
