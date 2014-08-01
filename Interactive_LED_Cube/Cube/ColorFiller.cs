@@ -13,11 +13,27 @@ namespace Interactive_LED_Cube.Cube
     class ColorFiller : AbstractLightingMethod
     {
         HypnocubeImpl hc;
+        private Coordinate c1;
+        private Coordinate c2;
 
         public ColorFiller(HypnocubeImpl hc)
             : base(hc)
         {
             this.hc = hc;
+            c1 = null;
+            c2 = null;
+        }
+
+        public Coordinate C1
+        {
+            get { return c1; }
+            set { c1 = value; }
+        }
+
+        public Coordinate C2
+        {
+            get { return c2; }
+            set { c2 = value; }
         }
 
         public override List<RGBColor> CreateSingleLEDBehavior(Coordinate c, RGBColor color, int rate, int count)

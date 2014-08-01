@@ -141,6 +141,26 @@ namespace Interactive_LED_Cube
             return colorArray;
         }
 
+        public byte[] changeColorLEDImage(byte[] imageFrame, Coordinate coord, RGBColor color)
+        {
+            int index = IndexFromCoord(coord);
+
+            RGBColor newColor = color;
+            /*
+            if (blend == true)
+            {
+                RGBColor existingColor =
+                    new RGBColor(colorArray[index], colorArray[index + 1], colorArray[index + 2]);
+                newColor = Blend(existingColor, color);
+            }*/
+
+            imageFrame[index] = newColor.R;
+            imageFrame[index + 1] = newColor.G;
+            imageFrame[index + 2] = newColor.B;
+
+            return imageFrame;
+        }
+
         /* Method to obtain an index from a coordinate. */
         public int IndexFromCoord(Coordinate c)
         {
@@ -165,6 +185,16 @@ namespace Interactive_LED_Cube
             byte red = colorArray[index];
             byte green = colorArray[index + 1];
             byte blue = colorArray[index + 2];
+
+            return new RGBColor(red, green, blue);
+        }
+
+       private RGBColor ImageColorFromCoord(byte[] imageFrame, Coordinate c)
+        {
+            int index = IndexFromCoord(c);
+            byte red = imageFrame[index];
+            byte green = imageFrame[index + 1];
+            byte blue = imageFrame[index + 2];
 
             return new RGBColor(red, green, blue);
         }
@@ -332,12 +362,143 @@ namespace Interactive_LED_Cube
             AddImageFrame(imageFrames);
         }
 
+
+        public void ShiftBlockOnceDecreasing(byte[] imageFrame, Direction d, Coordinate c1, Coordinate c2)
+        {
+            int xMax = Math.Max(c1.X, c2.X);
+            int xMin = Math.Min(c1.X, c2.X);
+
+            int yMax = Math.Max(c1.Y, c2.Y);
+            int yMin = Math.Min(c1.Y, c2.Y);
+
+            int zMax = Math.Max(c1.Z, c2.Z);
+            int zMin = Math.Min(c1.Z, c2.Z);
+
+            /* Depending on d, one cross-section of the cube will be 
+             * effectively "pushed off" the cube as the color data is
+             * shifted by one. This switch statement is necessary to 
+             * determine correct pushing off behavior in the for loops
+             * below.
+             */
+            //int xLowerBound = 0;
+            //int yLowerBound = 0;
+            //int zLowerBound = 0;
+
+            switch (d)
+            {
+                case Direction.X:
+                    {
+                        if(xMin == 0)
+                        {
+                            xMin = 1;
+                        }
+                        break;
+                    }
+                case Direction.Y:
+                    {
+                        if(yMin == 0)
+                        {
+                            yMin = 1;
+                        }
+                        break;
+                    }
+                case Direction.Z:
+                    {
+                        if(zMin == 1)
+                        {
+                            zMin = 1;
+                        }
+                        break;
+                    }
+            }
+
+            for (int x = xMin; x <= xMax; x++)
+            {
+                for (int y = yMin; y <= yMax; y++)
+                {
+                    for (int z = zMin; z <= zMax; z++)
+                    {
+                        //Get color of initial coordinate
+                        RGBColor color = ImageColorFromCoord(imageFrame, new Coordinate(x, y, z));
+                        switch (d)
+                        {
+                            //Put whatever color was there into the space one d-value away from initial coordinate.
+                            case Direction.X:
+                                {
+                                    changeColorLEDImage(imageFrame, new Coordinate((x - 1), y, z), color);
+                                    break;
+                                }
+                            case Direction.Y:
+                                {
+                                    changeColorLEDImage(imageFrame, new Coordinate(x, (y - 1), z), color);
+                                    break;
+                                }
+                            case Direction.Z:
+                                {
+                                    changeColorLEDImage(imageFrame, new Coordinate(x, y, (z - 1)), color);
+                                    break;
+                                }
+                            default:
+                                {
+                                    //Do nothing
+                                    break;
+                                }
+                        }
+                    }
+                }
+            }
+
+            /* Since the cube shifted, one cross-section has been shifted off the cube, and an
+             * empty cross section has been added on to the other end. For now, fill with blank vals.
+             * 
+             * TODO: Make it so this behavior can be easily changed
+             */
+            RGBColor black = new RGBColor(0,0,0);
+            switch(d)
+            {
+                case Direction.X:
+                    {
+                        for (int y = yMin; y <= yMax; y++ )
+                        {
+                            for(int z = zMin; z <= zMax; z++ )
+                            {
+                                changeColorLEDImage(imageFrame, new Coordinate(xMax, y, z), black);
+                            }
+                        }
+                        break;
+                    }
+                case Direction.Y:
+                    {
+                        for (int x = xMin; x <= xMax; x++)
+                        {
+                            for (int z = zMin; z <= zMax; z++)
+                            {
+                                changeColorLEDImage(imageFrame, new Coordinate(x, yMax, z), black);
+                            }
+                        }
+                        break;
+                    }
+                case Direction.Z:
+                    {
+                        for (int x = xMin; x <= xMax; x++)
+                        {
+                            for (int y = yMin; y <= yMax; y++)
+                            {
+                                changeColorLEDImage(imageFrame, new Coordinate(x, y, zMax), black);
+                            }
+                        }
+                        break;
+                    }
+            }
+        }
+
         /* 
          * Makes the colors of the cube be shifted so that the d-coordinates
          * decrease by one.
          */
         private void ShiftOnceDecreasing(List<byte[]> imageFrames, Direction d)
         {
+
             /* Depending on d, one cross-section of the cube will be 
              * effectively "pushed off" the cube as the color data is
              * shifted by one. This switch statement is necessary to 

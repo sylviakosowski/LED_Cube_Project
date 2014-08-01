@@ -50,10 +50,11 @@ namespace Interactive_LED_Cube.Cube
 
             /* BLOCK TESTS */
             //LightBlockSingleColorTest();
-            FadeBlockSingleColorRateTest();
-            BlinkBlockSingleColorRateTest();
+            //FadeBlockSingleColorRateTest();
+            //BlinkBlockSingleColorRateTest();
             //LightLEDsTest();
 
+            ShiftBlockOnceDecreasingTest();
 
             /* BLINKING TESTS */
             //
@@ -344,7 +345,18 @@ namespace Interactive_LED_Cube.Cube
         {
             Blinker blinker = new Blinker(hc, null);
 
-            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 10);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 3);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 1, 10);
+        }
+
+        private void ShiftBlockOnceDecreasingTest()
+        {
+            ColorFiller filler = new ColorFiller(hc);
+
+            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20);
+
+            hc.ShiftBlockOnceDecreasing(imageFrames[imageFrames.Count - 1], HypnocubeImpl.Direction.X,
+                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
 
         }
     }
