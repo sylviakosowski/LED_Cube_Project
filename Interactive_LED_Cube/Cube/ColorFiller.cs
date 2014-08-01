@@ -46,5 +46,18 @@ namespace Interactive_LED_Cube.Cube
                 rates.Add(rate);
             }
         }
+
+        /* Light an entire block with the same color and rate. */
+        public void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, 
+            RGBColor color, int rate)
+        {
+            List<Coordinate> coords = hc.GenerateCoordBlock(c1, c2);
+
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+
+            UniformColorRate(coords.Count, color, rate, colors, rates);
+            hc.LightLEDs(imageFrames, coords, colors, rates, this);
+        }
     }
 }
