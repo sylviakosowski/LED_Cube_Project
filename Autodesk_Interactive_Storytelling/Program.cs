@@ -20,6 +20,7 @@ namespace Autodesk_Interactive_Storytelling
         private static KeywordUtil ku;
         private static TweetListener tl;
         private static Cube.TestingHarness th;
+        private static PIC32 port;
 
         //File name of the file containing keywords to use in keyword streaming mode.
         private static string keywordStreamPath = Path.Combine(Environment.CurrentDirectory, "keywordstream.txt");
@@ -42,10 +43,15 @@ namespace Autodesk_Interactive_Storytelling
 
             Console.WriteLine("Welcome to the Tweeting Hypnocube!\n");
             
-            if(phys_mode == 2)
+            if(phys_mode == 1)
             {
                 Console.WriteLine("Cube Visualization Mode: No Twitter");
                 VisualizationTestingMode();
+            }
+            else if(phys_mode == 2)
+            {
+                Console.WriteLine("Physical Hypnocube Mode: No Twitter");
+                HypnocubeTestingMode();
             }
             else if(phys_mode == 0)
             {
@@ -142,11 +148,35 @@ namespace Autodesk_Interactive_Storytelling
         private static void VisualizationTestingMode()
         {
             game = new Game();
+            port = new PIC32();
             tl = new TweetListener(game);
-            th = new Cube.TestingHarness(hc, tl);
+            th = new Cube.TestingHarness(hc, tl, port);
+
+            Console.WriteLine("meep?");
 
             th.BeginTests();
             game.Run(30, 30);
+        }
+
+        /* Starts the actual cube without Twitter, useful for testing animations on the
+         * physical cube itself.
+         */
+        private static void HypnocubeTestingMode()
+        {
+            port = new PIC32();
+            game = new Game();
+            tl = new TweetListener(game);
+            th = new Cube.TestingHarness(hc, tl, port);
+
+            port.Open("COM5");
+
+            Console.WriteLine(port.IsConnected);
+
+            th.BeginTests();
+            game.Run(30, 30);
+
+
+            port.ClosePort();
         }
     }
 }

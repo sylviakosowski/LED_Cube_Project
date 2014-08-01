@@ -12,12 +12,14 @@ namespace Autodesk_Interactive_Storytelling.Cube
     {
         private HypnocubeImpl hc;
         private TweetListener tl;
+        private PIC32 port;
         private List<byte[]> imageFrames;
 
-        public TestingHarness(HypnocubeImpl hc, TweetListener tl)
+        public TestingHarness(HypnocubeImpl hc, TweetListener tl, PIC32 port)
         {
             this.hc = hc;
             this.tl = tl;
+            this.port = port;
             imageFrames = new List<byte[]>();
         }
 
@@ -25,7 +27,7 @@ namespace Autodesk_Interactive_Storytelling.Cube
         public void BeginTests()
         {
             /* Tests you want to perform go here. */
-            RandomFullColorCubeChangeRepeatTest();
+            //RandomFullColorCubeChangeRepeatTest();
             //BlinkLEDTest();
             //LightIntersectionTest();
 
@@ -36,20 +38,22 @@ namespace Autodesk_Interactive_Storytelling.Cube
             /* FADING TESTS */
             //FadeLEDTest();
             //FadeLEDsSameRateTest();
-            FadeLEDsDiffRatesTest();
+            //FadeLEDsDiffRatesTest();
 
             /* BLOCK TESTS */
             LightBlockTest();
-            LightLEDsTest();
+            //LightLEDsTest();
 
 
             /* BLINKING TESTS */
+            //
             //BlinkLEDTest();
-            BlinkLEDsTest();
+            //BlinkLEDsTest();
 
             //Need to keep this to send signal to visualization.
             //Won't need for actual cube.
             tl.ReceiveAndSendSignal(imageFrames);
+            DataTransfer.SendImagesToCube(port, imageFrames);
         }
 
         /* Test RandomFullColorCubeChange */

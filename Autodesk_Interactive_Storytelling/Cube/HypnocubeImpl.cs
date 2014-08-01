@@ -140,7 +140,11 @@ namespace Autodesk_Interactive_Storytelling
         /* Method to obtain an index from a coordinate. */
         public int IndexFromCoord(Coordinate c)
         {
-            return (c.X + 8 * c.Y + 64 * c.Z) * 3;
+            //For Actual Cube
+            return (c.Z + 8 * c.X + 64 * c.Y) * 3;
+
+            //For OpenGL
+            //return (c.X + 8 * c.Y + 64 * c.Z) * 3;
         }
 
         /* Method to get the color at a specific coordinate. */
