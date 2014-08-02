@@ -161,6 +161,19 @@ namespace Interactive_LED_Cube
             return imageFrame;
         }
 
+        public List<byte[]> changeColorLEDImages(List<byte[]> imageFrames, int imageIndex, Coordinate coord, RGBColor color)
+        {
+            int index = IndexFromCoord(coord);
+
+            for (int i = imageIndex; i < imageFrames.Count; i++ )
+            {
+                imageFrames[i][index] = color.R;
+                imageFrames[i][index + 1] = color.G;
+                imageFrames[i][index + 2] = color.B;
+            }
+            return imageFrames;
+        }
+
         /* Method to obtain an index from a coordinate. */
         public int IndexFromCoord(Coordinate c)
         {
@@ -363,8 +376,10 @@ namespace Interactive_LED_Cube
         }
 
 
-        public void ShiftBlockOnceDecreasing(byte[] imageFrame, Direction d, Coordinate c1, Coordinate c2)
+        public List<byte[]> ShiftBlockOnceDecreasing(List<byte[]> imageFrames, int imageIndex, 
+            Direction d, Coordinate c1, Coordinate c2)
         {
+
             int xMax = Math.Max(c1.X, c2.X);
             int xMin = Math.Min(c1.X, c2.X);
 
@@ -380,9 +395,6 @@ namespace Interactive_LED_Cube
              * determine correct pushing off behavior in the for loops
              * below.
              */
-            //int xLowerBound = 0;
-            //int yLowerBound = 0;
-            //int zLowerBound = 0;
 
             switch (d)
             {
@@ -412,37 +424,41 @@ namespace Interactive_LED_Cube
                     }
             }
 
-            for (int x = xMin; x <= xMax; x++)
+
+            for (int i = imageIndex; i < imageFrames.Count; i++)
             {
-                for (int y = yMin; y <= yMax; y++)
+                for (int x = xMin; x <= xMax; x++)
                 {
-                    for (int z = zMin; z <= zMax; z++)
+                    for (int y = yMin; y <= yMax; y++)
                     {
-                        //Get color of initial coordinate
-                        RGBColor color = ImageColorFromCoord(imageFrame, new Coordinate(x, y, z));
-                        switch (d)
+                        for (int z = zMin; z <= zMax; z++)
                         {
-                            //Put whatever color was there into the space one d-value away from initial coordinate.
-                            case Direction.X:
-                                {
-                                    changeColorLEDImage(imageFrame, new Coordinate((x - 1), y, z), color);
-                                    break;
-                                }
-                            case Direction.Y:
-                                {
-                                    changeColorLEDImage(imageFrame, new Coordinate(x, (y - 1), z), color);
-                                    break;
-                                }
-                            case Direction.Z:
-                                {
-                                    changeColorLEDImage(imageFrame, new Coordinate(x, y, (z - 1)), color);
-                                    break;
-                                }
-                            default:
-                                {
-                                    //Do nothing
-                                    break;
-                                }
+                            //Get color of initial coordinate
+                            RGBColor color = ImageColorFromCoord(imageFrames[i], new Coordinate(x, y, z));
+                            switch (d)
+                            {
+                                //Put whatever color was there into the space one d-value away from initial coordinate.
+                                case Direction.X:
+                                    {
+                                        changeColorLEDImage(imageFrames[i], new Coordinate((x - 1), y, z), color);
+                                        break;
+                                    }
+                                case Direction.Y:
+                                    {
+                                        changeColorLEDImage(imageFrames[i], new Coordinate(x, (y - 1), z), color);
+                                        break;
+                                    }
+                                case Direction.Z:
+                                    {
+                                        changeColorLEDImage(imageFrames[i], new Coordinate(x, y, (z - 1)), color);
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        //Do nothing
+                                        break;
+                                    }
+                            }
                         }
                     }
                 }
@@ -462,7 +478,7 @@ namespace Interactive_LED_Cube
                         {
                             for(int z = zMin; z <= zMax; z++ )
                             {
-                                changeColorLEDImage(imageFrame, new Coordinate(xMax, y, z), black);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(xMax, y, z), black);
                             }
                         }
                         break;
@@ -473,7 +489,7 @@ namespace Interactive_LED_Cube
                         {
                             for (int z = zMin; z <= zMax; z++)
                             {
-                                changeColorLEDImage(imageFrame, new Coordinate(x, yMax, z), black);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, yMax, z), black);
                             }
                         }
                         break;
@@ -484,12 +500,14 @@ namespace Interactive_LED_Cube
                         {
                             for (int y = yMin; y <= yMax; y++)
                             {
-                                changeColorLEDImage(imageFrame, new Coordinate(x, y, zMax), black);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, y, zMax), black);
                             }
                         }
                         break;
                     }
             }
+
+            return imageFrames;
         }
 
         /* 

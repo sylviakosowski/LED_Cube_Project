@@ -352,10 +352,17 @@ namespace Interactive_LED_Cube.Cube
         private void ShiftBlockOnceDecreasingTest()
         {
             ColorFiller filler = new ColorFiller(hc);
+            Blinker blinker = new Blinker(hc, null);
+            Fader fader = new Fader(hc);
 
-            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20);
+            //filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 40);
 
-            hc.ShiftBlockOnceDecreasing(imageFrames[imageFrames.Count - 1], HypnocubeImpl.Direction.X,
+            hc.ShiftBlockOnceDecreasing(imageFrames, (imageFrames.Count - 35), HypnocubeImpl.Direction.X,
                 new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
 
         }
