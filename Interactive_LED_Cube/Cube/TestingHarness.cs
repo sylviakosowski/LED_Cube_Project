@@ -287,42 +287,6 @@ namespace Interactive_LED_Cube.Cube
         {
             ColorFiller filler = new ColorFiller(hc);
 
-            /*
-            List<Coordinate> coords1 = hc.GenerateCoordBlock(new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
-            List<Coordinate> coords2 = hc.GenerateCoordBlock(new Coordinate(0, 0, 0), new Coordinate(0, 7, 7));
-            List<Coordinate> coords3 = hc.GenerateCoordBlock(new Coordinate(0, 0, 0), new Coordinate(7, 0, 0));
-            List<Coordinate> coords4 = hc.GenerateCoordBlock(new Coordinate(7, 3, 4), new Coordinate(7, 3, 3));
-            List<Coordinate> coords5 = hc.GenerateCoordBlock(new Coordinate(7, 7, 0), new Coordinate(7, 7, 0));
-             */
-
-            /*
-            List<RGBColor> colors1 = new List<RGBColor>();
-            List<int> rates1 = new List<int>();
-            filler.UniformColorRate(coords1.Count, red, 20, colors1, rates1);
-
-            List<RGBColor> colors2 = new List<RGBColor>();
-            List<int> rates2 = new List<int>();
-            filler.UniformColorRate(coords2.Count, green, 20, colors2, rates2);
-
-            List<RGBColor> colors3 = new List<RGBColor>();
-            List<int> rates3 = new List<int>();
-            filler.UniformColorRate(coords3.Count, yellow, 20, colors3, rates3);
-
-            List<RGBColor> colors4 = new List<RGBColor>();
-            List<int> rates4 = new List<int>();
-            filler.UniformColorRate(coords4.Count, cyan, 20, colors4, rates4);
-
-            List<RGBColor> colors5 = new List<RGBColor>();
-            List<int> rates5 = new List<int>();
-            filler.UniformColorRate(coords5.Count, purple, 20, colors5, rates5);
-
-            hc.LightBlock(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), colors1, rates1, filler);
-            hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), colors2, rates2, filler);
-            hc.LightBlock(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), colors3, rates3, filler);
-            hc.LightBlock(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), colors4, rates4, filler);
-            hc.LightBlock(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), colors5, rates5, filler);
-             */
-
             filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20);
             filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
             filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
@@ -361,10 +325,18 @@ namespace Interactive_LED_Cube.Cube
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 40);
+            //blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 10);
 
-            hc.ShiftBlockOnceDecreasing(imageFrames, (imageFrames.Count - 35), HypnocubeImpl.Direction.X,
+            
+            hc.ShiftOnce(imageFrames, (imageFrames.Count - 25), HypnocubeImpl.Direction.X, true,
                 new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
+            hc.ShiftOnce(imageFrames, (imageFrames.Count - 15), HypnocubeImpl.Direction.X, true,
+                new Coordinate(6, 7, 7), new Coordinate(4, 5, 5));
 
+            /*
+            hc.ShiftAlongCube(imageFrames, HypnocubeImpl.Direction.X, true,
+                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
+            */
         }
     }
 }

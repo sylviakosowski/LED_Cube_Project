@@ -78,11 +78,13 @@ namespace Interactive_LED_Cube
          * decreasing = true if we are decreasing the d-coordinates specified,
          *      false if we are increasing the d-coordinates specified.
          */
-        public void ShiftOnce(List<byte[]> imageFrames, Direction d, bool decreasing)
+        public void ShiftOnce(List<byte[]> imageFrames, int imageIndex, Direction d, bool decreasing,
+            Coordinate c1, Coordinate c2)
         {
             if (decreasing)
             {
-                ShiftOnceDecreasing(imageFrames, d);
+                //ShiftOnceDecreasing(imageFrames, d);
+                ShiftBlockOnceDecreasing(imageFrames, imageIndex, d, c1, c2);
             }
             else
             {
@@ -95,11 +97,12 @@ namespace Interactive_LED_Cube
          * entire cube from one side to another. d and decreasing behave as described
          * in ShiftOnce.
          */
-        public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing)
+        public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing,
+            Coordinate c1, Coordinate c2)
         {
             for (int i = 0; i < 8; i++)
             {
-                ShiftOnce(imageFrames, d, decreasing);
+                //ShiftOnce(imageFrames, 5, d, decreasing, c1, c2);
             }
         }
 
