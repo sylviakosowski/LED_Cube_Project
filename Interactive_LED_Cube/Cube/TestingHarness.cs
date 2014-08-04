@@ -89,46 +89,6 @@ namespace Interactive_LED_Cube.Cube
             hc.RepeatFrames(test, imageFrames, 2);
         }
 
-        /* Test shifting once. */
-        /* TODO: Redo this section to use LightBlock instead of LightCrossSection */
-        private void ShiftOnceTest(HypnocubeImpl.Direction d, bool b)
-        {
-            /*
-            Coordinate c;
-            RGBColor col = new RGBColor(255, 0, 0);
-            if(b)
-            {
-                c = new Coordinate(7, 0, 0);
-                hc.LightBlock(imageFrames, c, );
-                hc.ShiftOnce(imageFrames, d, true);
-            }
-            else
-            {
-                c = new Coordinate(0, 0, 7);
-                hc.LightCrossSection(imageFrames, col, c, d, false);
-                hc.ShiftOnce(imageFrames, d, false);
-            }
-             */
-        }
-
-        /* Test shifting along cube. */
-        /* TODO: Redo this test to use LightBlock instead of LightCrossSection */
-        private void ShiftAlongCubeTest(HypnocubeImpl.Direction d, bool b)
-        {
-            /*
-            if(b)
-            {
-                LightCrossSectionTest(d, new Coordinate(7,7,7));
-            }
-            else
-            {
-                LightCrossSectionTest(d, new Coordinate(0, 0, 0));
-            }
-
-            hc.ShiftAlongCube(imageFrames, d, b);
-             */
-        }
-
         /* Test fading a single LED. */
         private void FadeLEDTest()
         {
@@ -297,6 +257,7 @@ namespace Interactive_LED_Cube.Cube
             filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
         }
 
+        /* Fade a block into a single color at a uniform rate */
         private void FadeBlockSingleColorRateTest()
         {
             Fader fader = new Fader(hc);
@@ -308,6 +269,7 @@ namespace Interactive_LED_Cube.Cube
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);            
         }
 
+        /* Blink a block in a single color at a uniform rate */
         private void BlinkBlockSingleColorRateTest()
         {
             Blinker blinker = new Blinker(hc, null);
@@ -316,13 +278,13 @@ namespace Interactive_LED_Cube.Cube
             blinker.BlinkBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 1, 10);
         }
 
+        /* Shift a block in a decreasing direction once. */
         private void ShiftBlockOnceDecreasingTest()
         {
             ColorFiller filler = new ColorFiller(hc);
             Blinker blinker = new Blinker(hc, null);
             Fader fader = new Fader(hc);
 
-            //filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
@@ -339,37 +301,45 @@ namespace Interactive_LED_Cube.Cube
 
             hc.ShiftOnce(imageFrames, (imageFrames.Count - 15), HypnocubeImpl.Direction.X, true,
                 meep.Item1, meep.Item2);
-
-            /*
-            hc.ShiftAlongCube(imageFrames, HypnocubeImpl.Direction.X, true,
-                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
-            */
         }
 
+        /* Shift a block in a decreasing direction multiple times. */
         private void ShiftBlockAlongCubeDecreasingTest()
         {
             Fader fader = new Fader(hc);
+            Blinker blinker = new Blinker(hc, null);
+
             fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+
+            /* UNCOMMENT TO TEST A FADING SHIFTING BLOCK, COMMENT OUT BLINK CODE BELOW*/
+            
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 60);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 60);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), yellow, 60);
+            
 
+            /* UNCOMMENT TO TEST A BLINKING SHIFTING BLOCK, COMMENT OUT FADE CODE ABOVE */
+            /*
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 5, 5);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 5, 5);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), yellow, 5, 5);
+            */
 
             Console.WriteLine(imageFrames.Count);
 
             
             Tuple<Coordinate,Coordinate> meep1 = 
                 hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 150), HypnocubeImpl.Direction.X, true,
-                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 4);
+                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 4, 4);
             Tuple<Coordinate,Coordinate> meep2 = 
                 hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 90), HypnocubeImpl.Direction.Y, true,
-                meep1.Item1, meep1.Item2, 4);
+                meep1.Item1, meep1.Item2, 4, 4);
             Tuple<Coordinate, Coordinate> meep3 =
                 hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 30), HypnocubeImpl.Direction.Z, true,
-                meep2.Item1, meep2.Item2, 4);
+                meep2.Item1, meep2.Item2, 4, 4);
         }
     }
 }

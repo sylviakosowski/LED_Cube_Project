@@ -102,12 +102,16 @@ namespace Interactive_LED_Cube
          * in ShiftOnce.
          */
         public Tuple<Coordinate,Coordinate> ShiftAlongCube(List<byte[]> imageFrames, int imageIndex, 
-            Direction d, bool decreasing, Coordinate c1, Coordinate c2, int speedIncr)
+            Direction d, bool decreasing, Coordinate c1, Coordinate c2, int speedIncr, int numShift)
         {
             Tuple<Coordinate, Coordinate> coords = new Tuple<Coordinate, Coordinate>(c1,c2);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < numShift; i++)
             {
+                if(coords.Item1 == null && coords.Item2 == null)
+                {
+                    break;
+                }
                 coords = ShiftOnce(imageFrames, imageIndex, d, decreasing, coords.Item1, coords.Item2);
                 imageIndex = imageIndex + speedIncr;
                 //ShiftOnce(imageFrames, 5, d, decreasing, c1, c2);
@@ -165,6 +169,10 @@ namespace Interactive_LED_Cube
                     new RGBColor(colorArray[index], colorArray[index + 1], colorArray[index + 2]);
                 newColor = Blend(existingColor, color);
             }*/
+            if(index < 0)
+            {
+                Console.WriteLine(coord.ToString());
+            }
 
             imageFrame[index] = newColor.R;
             imageFrame[index + 1] = newColor.G;
@@ -338,56 +346,6 @@ namespace Interactive_LED_Cube
             //AddImageFrame(imageFrames);
         }
 
-        /* 
-         * TODO: Get rid of this function.
-         * 
-        * Light up a cross section of the cube.
-        * 
-        * col = the color the cross section should be
-        * c = a single coordinate belonging to the desired cross section. Can be any coordinate in the cross section.
-        * d = X, Y, or Z (enum). Specifies the value which does not change among all the coordinates in this cross-
-        *      section. X will make the cross-section be on the YZ plane. Y will make the cross-section be on the XZ
-        *      plane. Z will make the cross-section be on the XY plane.
-        *      
-        *      TODO: A DIAGRAM WILL BE PROVIDED FOR POTENTIAL FUTURE USERS
-        */
-        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col,
-            Coordinate c, Direction d, bool blend)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    switch (d)
-                    {
-                        case Direction.X:
-                            {
-                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
-                                break;
-                            }
-                        case Direction.Y:
-                            {
-                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
-                                break;
-                            }
-                        case Direction.Z:
-                            {
-                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
-
-                    }
-                }
-            }
-
-            AddImageFrame(imageFrames);
-        }
-
-
         public Tuple<Coordinate, Coordinate> ShiftBlockOnceDecreasing(List<byte[]> imageFrames, int imageIndex, 
             Direction d, Coordinate c1, Coordinate c2)
         {
@@ -401,13 +359,11 @@ namespace Interactive_LED_Cube
             int zMax = Math.Max(c1.Z, c2.Z);
             int zMin = Math.Min(c1.Z, c2.Z);
 
-            /* Depending on d, one cross-section of the cube will be 
-             * effectively "pushed off" the cube as the color data is
-             * shifted by one. This switch statement is necessary to 
-             * determine correct pushing off behavior in the for loops
-             * below.
+            /* Depending on the direction we are shifting, the indices
+             * of the nested for loops below this will need to be changed.
+             * This switch statement takes care of this. It also determines 
+             * the coordinates that indicate where the block was shifted to.
              */
-
             switch (d)
             {
                 case Direction.X:
@@ -415,12 +371,20 @@ namespace Interactive_LED_Cube
                         if(xMin == 0)
                         {
                             xMin = 1;
-                            //c1 = new Coordinate(0, yMin, zMin);
                         }
-                        c1.X = c1.X - 1;
-                        c2.X = c2.X - 1;
-                        //c1 = new Coordinate(xMin - 1, yMin, zMin);
-                        //c2 = new Coordinate(xMax - 1, yMax, zMax);
+
+                        if(c1.X == 0 && c2.X == 0)
+                        {
+                            EraseLEDs(imageFrames, imageIndex, new RGBColor(0,0,0), d, 0, xMax, yMin, yMax, zMin, zMax);
+                            return new Tuple<Coordinate, Coordinate>(null, null);
+                        }
+
+                        if (c1.X == 0) { break; }
+                        else { c1.X = c1.X - 1; }
+
+                        if (c2.X == 0) { break; }
+                        else { c2.X = c2.X - 1; }
+
                         break;
                     }
                 case Direction.Y:
@@ -430,19 +394,37 @@ namespace Interactive_LED_Cube
                             yMin = 1;
                         }
 
-                        c1.Y = c1.Y - 1;
-                        c2.Y = c2.Y - 1;
+                        if (c1.Y == 0 && c2.Y == 0)
+                        {
+                            EraseLEDs(imageFrames, imageIndex, new RGBColor(0, 0, 0), d, xMin, xMax, 0, yMax, zMin, zMax);
+                            return new Tuple<Coordinate, Coordinate>(null, null);
+                        }
+
+                        if (c1.Y == 0) { break; }
+                        else { c1.Y = c1.Y - 1; }
+
+                        if (c2.Y == 0) { break; }
+                        else { c2.Y = c2.Y - 1; }
                         break;
                     }
                 case Direction.Z:
                     {
-                        if(zMin == 1)
+                        if(zMin == 0)
                         {
                             zMin = 1;
                         }
 
-                        c1.Z = c1.Z - 1;
-                        c2.Z = c2.Z - 1;
+                        if (c1.Z == 0 && c2.Z == 0)
+                        {
+                            EraseLEDs(imageFrames, imageIndex, new RGBColor(0, 0, 0), d, 0, xMax, yMin, yMax, 0, zMax);
+                            return new Tuple<Coordinate, Coordinate>(null, null);
+                        }
+
+                        if (c1.Z == 0) { break; }
+                        else { c1.Z = c1.Z - 1; }
+
+                        if (c2.Z == 0) { break; }
+                        else { c2.Z = c2.Z - 1; }
                         break;
                     }
             }
@@ -532,6 +514,48 @@ namespace Interactive_LED_Cube
 
             return Tuple.Create<Coordinate, Coordinate>(c1, c2);
         }
+
+        private void EraseLEDs(List<byte[]> imageFrames, int imageIndex, RGBColor black, Direction d, 
+            int xMin, int xMax, int yMin, int yMax, int zMin, int zMax)
+        {
+            switch (d)
+            {
+                case Direction.X:
+                    {
+                        for (int y = yMin; y <= yMax; y++)
+                        {
+                            for (int z = zMin; z <= zMax; z++)
+                            {
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(xMax, y, z), black);
+                            }
+                        }
+                        break;
+                    }
+                case Direction.Y:
+                    {
+                        for (int x = xMin; x <= xMax; x++)
+                        {
+                            for (int z = zMin; z <= zMax; z++)
+                            {
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, yMax, z), black);
+                            }
+                        }
+                        break;
+                    }
+                case Direction.Z:
+                    {
+                        for (int x = xMin; x <= xMax; x++)
+                        {
+                            for (int y = yMin; y <= yMax; y++)
+                            {
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, y, zMax), black);
+                            }
+                        }
+                        break;
+                    }
+            }
+        }
+
 
         /* 
          * Makes the colors of the cube be shifted so that the d-coordinates
@@ -709,6 +733,55 @@ namespace Interactive_LED_Cube
         {
             Dictionary<Coordinate, List<RGBColor>> animDict = lm.CreateAnimation(coords, colors, rates);
             lm.CreateFrames(imageFrames, animDict, lm.GetLongestAnim());
+        }
+
+        /* 
+         * TODO: Get rid of this function.
+         * 
+        * Light up a cross section of the cube.
+        * 
+        * col = the color the cross section should be
+        * c = a single coordinate belonging to the desired cross section. Can be any coordinate in the cross section.
+        * d = X, Y, or Z (enum). Specifies the value which does not change among all the coordinates in this cross-
+        *      section. X will make the cross-section be on the YZ plane. Y will make the cross-section be on the XZ
+        *      plane. Z will make the cross-section be on the XY plane.
+        *      
+        *      TODO: A DIAGRAM WILL BE PROVIDED FOR POTENTIAL FUTURE USERS
+        */
+        public void LightCrossSection(List<byte[]> imageFrames, RGBColor col,
+            Coordinate c, Direction d, bool blend)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    switch (d)
+                    {
+                        case Direction.X:
+                            {
+                                changeColorLED(new Coordinate(c.X, i, j), col, blend);
+                                break;
+                            }
+                        case Direction.Y:
+                            {
+                                changeColorLED(new Coordinate(i, c.Y, j), col, blend);
+                                break;
+                            }
+                        case Direction.Z:
+                            {
+                                changeColorLED(new Coordinate(i, j, c.Z), col, blend);
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+
+                    }
+                }
+            }
+
+            AddImageFrame(imageFrames);
         }
     }
 }
