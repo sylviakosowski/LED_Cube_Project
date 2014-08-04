@@ -101,17 +101,18 @@ namespace Interactive_LED_Cube
          * entire cube from one side to another. d and decreasing behave as described
          * in ShiftOnce.
          */
-        public void ShiftAlongCube(List<byte[]> imageFrames, int imageIndex, Direction d, bool decreasing,
-            Coordinate c1, Coordinate c2, int speedIncr)
+        public Tuple<Coordinate,Coordinate> ShiftAlongCube(List<byte[]> imageFrames, int imageIndex, 
+            Direction d, bool decreasing, Coordinate c1, Coordinate c2, int speedIncr)
         {
             Tuple<Coordinate, Coordinate> coords = new Tuple<Coordinate, Coordinate>(c1,c2);
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 4; i++)
             {
                 coords = ShiftOnce(imageFrames, imageIndex, d, decreasing, coords.Item1, coords.Item2);
                 imageIndex = imageIndex + speedIncr;
                 //ShiftOnce(imageFrames, 5, d, decreasing, c1, c2);
             }
+            return coords;
         }
 
         /* Given a list of frames to repeat and an int count which determines the number of
@@ -414,10 +415,12 @@ namespace Interactive_LED_Cube
                         if(xMin == 0)
                         {
                             xMin = 1;
-                            c1 = new Coordinate(0, yMin, zMin);
+                            //c1 = new Coordinate(0, yMin, zMin);
                         }
-                        c1 = new Coordinate(xMin - 1, yMin, zMin);
-                        c2 = new Coordinate(xMax - 1, yMax, zMax);
+                        c1.X = c1.X - 1;
+                        c2.X = c2.X - 1;
+                        //c1 = new Coordinate(xMin - 1, yMin, zMin);
+                        //c2 = new Coordinate(xMax - 1, yMax, zMax);
                         break;
                     }
                 case Direction.Y:
@@ -426,6 +429,9 @@ namespace Interactive_LED_Cube
                         {
                             yMin = 1;
                         }
+
+                        c1.Y = c1.Y - 1;
+                        c2.Y = c2.Y - 1;
                         break;
                     }
                 case Direction.Z:
@@ -434,6 +440,9 @@ namespace Interactive_LED_Cube
                         {
                             zMin = 1;
                         }
+
+                        c1.Z = c1.Z - 1;
+                        c2.Z = c2.Z - 1;
                         break;
                     }
             }

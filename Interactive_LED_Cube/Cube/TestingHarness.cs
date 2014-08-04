@@ -355,13 +355,21 @@ namespace Interactive_LED_Cube.Cube
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 60);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 60);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), yellow, 60);
 
 
             Console.WriteLine(imageFrames.Count);
 
             
-            hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 60), HypnocubeImpl.Direction.X, true,
+            Tuple<Coordinate,Coordinate> meep1 = 
+                hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 150), HypnocubeImpl.Direction.X, true,
                 new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 4);
+            Tuple<Coordinate,Coordinate> meep2 = 
+                hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 90), HypnocubeImpl.Direction.Y, true,
+                meep1.Item1, meep1.Item2, 4);
+            Tuple<Coordinate, Coordinate> meep3 =
+                hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 30), HypnocubeImpl.Direction.Z, true,
+                meep2.Item1, meep2.Item2, 4);
         }
     }
 }
