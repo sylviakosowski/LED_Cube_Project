@@ -21,6 +21,7 @@ namespace Interactive_LED_Cube.Cube
         private RGBColor yellow = new RGBColor(255, 255, 0);
         private RGBColor cyan = new RGBColor(0, 255, 255);
         private RGBColor purple = new RGBColor(255, 0, 255);
+        private RGBColor blue = new RGBColor(0, 0, 255);
 
         public TestingHarness(HypnocubeImpl hc, TweetListener tl, PIC32 port, bool physical)
         {
@@ -54,7 +55,9 @@ namespace Interactive_LED_Cube.Cube
             //BlinkBlockSingleColorRateTest();
             //LightLEDsTest();
 
-            ShiftBlockOnceDecreasingTest();
+            /* SHIFT TESTS*/
+            //ShiftBlockOnceDecreasingTest();
+            ShiftBlockAlongCubeDecreasingTest();
 
             /* BLINKING TESTS */
             //
@@ -328,15 +331,37 @@ namespace Interactive_LED_Cube.Cube
             //blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 10);
 
             
-            hc.ShiftOnce(imageFrames, (imageFrames.Count - 25), HypnocubeImpl.Direction.X, true,
+            Tuple<Coordinate, Coordinate> meep = 
+                hc.ShiftOnce(imageFrames, (imageFrames.Count - 25), HypnocubeImpl.Direction.X, true,
                 new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
+
+            Console.WriteLine("Tuple is: " + meep.Item1.ToString() + ", " + meep.Item2.ToString());
+
             hc.ShiftOnce(imageFrames, (imageFrames.Count - 15), HypnocubeImpl.Direction.X, true,
-                new Coordinate(6, 7, 7), new Coordinate(4, 5, 5));
+                meep.Item1, meep.Item2);
 
             /*
             hc.ShiftAlongCube(imageFrames, HypnocubeImpl.Direction.X, true,
                 new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
             */
+        }
+
+        private void ShiftBlockAlongCubeDecreasingTest()
+        {
+            Fader fader = new Fader(hc);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 60);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 60);
+
+
+            Console.WriteLine(imageFrames.Count);
+
+            
+            hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 60), HypnocubeImpl.Direction.X, true,
+                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 4);
         }
     }
 }

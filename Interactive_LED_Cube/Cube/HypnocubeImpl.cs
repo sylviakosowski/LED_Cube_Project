@@ -78,18 +78,22 @@ namespace Interactive_LED_Cube
          * decreasing = true if we are decreasing the d-coordinates specified,
          *      false if we are increasing the d-coordinates specified.
          */
-        public void ShiftOnce(List<byte[]> imageFrames, int imageIndex, Direction d, bool decreasing,
-            Coordinate c1, Coordinate c2)
+        public Tuple<Coordinate, Coordinate> ShiftOnce(List<byte[]> imageFrames, int imageIndex, 
+            Direction d, bool decreasing, Coordinate c1, Coordinate c2)
         {
             if (decreasing)
             {
                 //ShiftOnceDecreasing(imageFrames, d);
-                ShiftBlockOnceDecreasing(imageFrames, imageIndex, d, c1, c2);
+                return ShiftBlockOnceDecreasing(imageFrames, imageIndex, d, c1, c2);
             }
+
+            return new Tuple<Coordinate, Coordinate>(c1, c2);
+            /*
             else
             {
                 ShiftOnceIncreasing(imageFrames, d);
             }
+             * */
         }
 
         /* 
@@ -97,11 +101,15 @@ namespace Interactive_LED_Cube
          * entire cube from one side to another. d and decreasing behave as described
          * in ShiftOnce.
          */
-        public void ShiftAlongCube(List<byte[]> imageFrames, Direction d, bool decreasing,
-            Coordinate c1, Coordinate c2)
+        public void ShiftAlongCube(List<byte[]> imageFrames, int imageIndex, Direction d, bool decreasing,
+            Coordinate c1, Coordinate c2, int speedIncr)
         {
-            for (int i = 0; i < 8; i++)
+            Tuple<Coordinate, Coordinate> coords = new Tuple<Coordinate, Coordinate>(c1,c2);
+
+            for (int i = 0; i < 6; i++)
             {
+                coords = ShiftOnce(imageFrames, imageIndex, d, decreasing, coords.Item1, coords.Item2);
+                imageIndex = imageIndex + speedIncr;
                 //ShiftOnce(imageFrames, 5, d, decreasing, c1, c2);
             }
         }
@@ -379,7 +387,7 @@ namespace Interactive_LED_Cube
         }
 
 
-        public List<byte[]> ShiftBlockOnceDecreasing(List<byte[]> imageFrames, int imageIndex, 
+        public Tuple<Coordinate, Coordinate> ShiftBlockOnceDecreasing(List<byte[]> imageFrames, int imageIndex, 
             Direction d, Coordinate c1, Coordinate c2)
         {
 
@@ -406,7 +414,10 @@ namespace Interactive_LED_Cube
                         if(xMin == 0)
                         {
                             xMin = 1;
+                            c1 = new Coordinate(0, yMin, zMin);
                         }
+                        c1 = new Coordinate(xMin - 1, yMin, zMin);
+                        c2 = new Coordinate(xMax - 1, yMax, zMax);
                         break;
                     }
                 case Direction.Y:
@@ -510,7 +521,7 @@ namespace Interactive_LED_Cube
                     }
             }
 
-            return imageFrames;
+            return Tuple.Create<Coordinate, Coordinate>(c1, c2);
         }
 
         /* 

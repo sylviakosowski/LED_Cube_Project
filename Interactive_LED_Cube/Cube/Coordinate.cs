@@ -37,5 +37,10 @@ namespace Interactive_LED_Cube
             get { return z; }
             set { z = value; }
         }
+
+        public override string ToString()
+        {
+            return "(" + x.ToString() + ", " + y.ToString() + ", " + z.ToString() + ")";
+        }
     }
 }
