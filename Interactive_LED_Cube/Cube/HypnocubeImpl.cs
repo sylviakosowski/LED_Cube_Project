@@ -86,14 +86,10 @@ namespace Interactive_LED_Cube
                 //ShiftOnceDecreasing(imageFrames, d);
                 return ShiftBlockOnceDecreasing(imageFrames, imageIndex, d, c1, c2, eraseColor);
             }
-
-            return new Tuple<Coordinate, Coordinate>(c1, c2);
-            /*
             else
             {
-                ShiftOnceIncreasing(imageFrames, d);
+                return ShiftBlockOnceIncreasing(imageFrames, imageIndex, d, c1, c2, eraseColor);
             }
-             * */
         }
 
         /* 
@@ -380,7 +376,7 @@ namespace Interactive_LED_Cube
 
                         if(c1.X == 0 && c2.X == 0)
                         {
-                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, 0, xMax, yMin, yMax, zMin, zMax);
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, 0, xMax, yMin, yMax, zMin, zMax, true);
                             return new Tuple<Coordinate, Coordinate>(null, null);
                         }
 
@@ -401,7 +397,7 @@ namespace Interactive_LED_Cube
 
                         if (c1.Y == 0 && c2.Y == 0)
                         {
-                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, 0, yMax, zMin, zMax);
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, 0, yMax, zMin, zMax, true);
                             return new Tuple<Coordinate, Coordinate>(null, null);
                         }
 
@@ -421,7 +417,7 @@ namespace Interactive_LED_Cube
 
                         if (c1.Z == 0 && c2.Z == 0)
                         {
-                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, 0, xMax, yMin, yMax, 0, zMax);
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, 0, xMax, yMin, yMax, 0, zMax, true);
                             return new Tuple<Coordinate, Coordinate>(null, null);
                         }
 
@@ -478,46 +474,190 @@ namespace Interactive_LED_Cube
              * 
              * TODO: Make it so this behavior can be easily changed
              */
-            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, yMin, yMax, zMin, zMax);
+            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, yMin, yMax, zMin, zMax, true);
 
             return Tuple.Create<Coordinate, Coordinate>(c1, c2);
         }
 
-        /* Used when shifting blocks, fills the part of the block that was shifted with an erase color. */
-        private void EraseLEDs(List<byte[]> imageFrames, int imageIndex, RGBColor eraseColor, Direction d, 
-            int xMin, int xMax, int yMin, int yMax, int zMin, int zMax)
+        public Tuple<Coordinate, Coordinate> ShiftBlockOnceIncreasing(List<byte[]> imageFrames, int imageIndex,
+            Direction d, Coordinate c1, Coordinate c2, RGBColor eraseColor)
         {
+            int xMax = Math.Max(c1.X, c2.X);
+            int xMin = Math.Min(c1.X, c2.X);
+
+            int yMax = Math.Max(c1.Y, c2.Y);
+            int yMin = Math.Min(c1.Y, c2.Y);
+
+            int zMax = Math.Max(c1.Z, c2.Z);
+            int zMin = Math.Min(c1.Z, c2.Z);
+
+            /* Depending on the direction we are shifting, the indices
+             * of the nested for loops below this will need to be changed.
+             * This switch statement takes care of this. It also determines 
+             * the coordinates that indicate where the block was shifted to.
+             * 
+             */
             switch (d)
             {
                 case Direction.X:
                     {
+                        if (xMin == 7)
+                        {
+                            xMin = 6;
+                        }
+
+                        if (c1.X == 7 && c2.X == 7)
+                        {
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, yMin, yMax, zMin, zMax, false);
+                            return new Tuple<Coordinate, Coordinate>(null, null);
+                        }
+
+                        if (c1.X == 7) { break; }
+                        else { c1.X = c1.X + 1; }
+
+                        if (c2.X == 7) { break; }
+                        else { c2.X = c2.X + 1; }
+
+                        break;
+                    }
+                case Direction.Y:
+                    {
+                        if (yMin == 7)
+                        {
+                            yMin = 6;
+                        }
+
+                        if (c1.Y == 7 && c2.Y == 7)
+                        {
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, yMin, yMax, zMin, zMax, false);
+                            return new Tuple<Coordinate, Coordinate>(null, null);
+                        }
+
+                        if (c1.Y == 7) { break; }
+                        else { c1.Y = c1.Y + 1; }
+
+                        if (c2.Y == 7) { break; }
+                        else { c2.Y = c2.Y + 1; }
+                        break;
+                    }
+                case Direction.Z:
+                    {
+                        if (zMin == 7)
+                        {
+                            zMin = 6;
+                        }
+
+                        if (c1.Z == 7 && c2.Z == 7)
+                        {
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, yMin, yMax, zMin, zMax, false);
+                            return new Tuple<Coordinate, Coordinate>(null, null);
+                        }
+
+                        if (c1.Z == 7) { break; }
+                        else { c1.Z = c1.Z + 1; }
+
+                        if (c2.Z == 7) { break; }
+                        else { c2.Z = c2.Z + 1; }
+                        break;
+                    }
+            }
+
+
+            for (int i = imageIndex; i < imageFrames.Count; i++)
+            {
+                for (int x = xMax; xMin <= x; x--)
+                {
+                    for (int y = yMax; yMin <= y; y--)
+                    {
+                        for (int z = zMax; xMin <= z; z--)
+                        {
+                            //Get color of initial coordinate
+                            RGBColor color = ImageColorFromCoord(imageFrames[i], new Coordinate(x, y, z));
+                            switch (d)
+                            {
+                                //Put whatever color was there into the space one d-value away from initial coordinate.
+                                case Direction.X:
+                                    {
+                                        changeColorLEDImage(imageFrames[i], new Coordinate((x + 1), y, z), color);
+                                        break;
+                                    }
+                                case Direction.Y:
+                                    {
+                                        changeColorLEDImage(imageFrames[i], new Coordinate(x, (y + 1), z), color);
+                                        break;
+                                    }
+                                case Direction.Z:
+                                    {
+                                        changeColorLEDImage(imageFrames[i], new Coordinate(x, y, (z + 1)), color);
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        //Do nothing
+                                        break;
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* Erase the part of the block that was shifted.
+             * 
+             * TODO: Make it so this behavior can be easily changed
+             */
+            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, yMin, yMax, zMin, zMax, false);
+
+            return Tuple.Create<Coordinate, Coordinate>(c1, c2);
+        }
+
+
+        /* Used when shifting blocks, fills the part of the block that was shifted with an erase color. */
+        private void EraseLEDs(List<byte[]> imageFrames, int imageIndex, RGBColor eraseColor, Direction d, 
+            int xMin, int xMax, int yMin, int yMax, int zMin, int zMax, bool decreasing)
+        {
+            int value = 0;
+
+            switch (d)
+            {
+                case Direction.X:
+                    {
+                        if (decreasing) { value = xMax; }
+                        else { value = xMin; }
+
                         for (int y = yMin; y <= yMax; y++)
                         {
                             for (int z = zMin; z <= zMax; z++)
                             {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(xMax, y, z), eraseColor);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(value, y, z), eraseColor);
                             }
                         }
                         break;
                     }
                 case Direction.Y:
                     {
+                        if (decreasing) { value = yMax; }
+                        else { value = yMin; }
+
                         for (int x = xMin; x <= xMax; x++)
                         {
                             for (int z = zMin; z <= zMax; z++)
                             {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, yMax, z), eraseColor);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, value, z), eraseColor);
                             }
                         }
                         break;
                     }
                 case Direction.Z:
                     {
+                        if (decreasing) { value = zMax; }
+                        else { value = zMin; }
+
                         for (int x = xMin; x <= xMax; x++)
                         {
                             for (int y = yMin; y <= yMax; y++)
                             {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, y, zMax), eraseColor);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, y, value), eraseColor);
                             }
                         }
                         break;

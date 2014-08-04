@@ -58,7 +58,8 @@ namespace Interactive_LED_Cube.Cube
 
             /* SHIFT TESTS*/
             //ShiftBlockOnceDecreasingTest();
-            ShiftBlockAlongCubeDecreasingTest();
+            //ShiftBlockAlongCubeDecreasingTest();
+            ShiftBlockOnceIncreasingTest();
 
             /* BLINKING TESTS */
             //
@@ -341,6 +342,32 @@ namespace Interactive_LED_Cube.Cube
             Tuple<Coordinate, Coordinate> meep3 =
                 hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 30), HypnocubeImpl.Direction.Z, true,
                 meep2.Item1, meep2.Item2, 4, 4, black);
+        }
+
+        private void ShiftBlockOnceIncreasingTest()
+        {
+            ColorFiller filler = new ColorFiller(hc);
+            Blinker blinker = new Blinker(hc, null);
+            Fader fader = new Fader(hc);
+
+            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 7, 7), new Coordinate(3, 5, 5), red, 40);
+            //blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(2,2,2), red, 10, 10);
+
+
+            Tuple<Coordinate, Coordinate> meep =
+                hc.ShiftOnce(imageFrames, (imageFrames.Count - 25), HypnocubeImpl.Direction.X, false,
+                new Coordinate(1, 7, 7), new Coordinate(3, 5, 5), black);
+
+            Console.WriteLine("Tuple is: " + meep.Item1.ToString() + ", " + meep.Item2.ToString());
+
+            /*
+            hc.ShiftOnce(imageFrames, (imageFrames.Count - 15), HypnocubeImpl.Direction.X, false,
+                meep.Item1, meep.Item2, black);
+             * */
         }
     }
 }
