@@ -22,6 +22,7 @@ namespace Interactive_LED_Cube.Cube
         private RGBColor cyan = new RGBColor(0, 255, 255);
         private RGBColor purple = new RGBColor(255, 0, 255);
         private RGBColor blue = new RGBColor(0, 0, 255);
+        private RGBColor black = new RGBColor(0,0,0);
 
         public TestingHarness(HypnocubeImpl hc, TweetListener tl, PIC32 port, bool physical)
         {
@@ -295,12 +296,12 @@ namespace Interactive_LED_Cube.Cube
             
             Tuple<Coordinate, Coordinate> meep = 
                 hc.ShiftOnce(imageFrames, (imageFrames.Count - 25), HypnocubeImpl.Direction.X, true,
-                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5));
+                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), black);
 
             Console.WriteLine("Tuple is: " + meep.Item1.ToString() + ", " + meep.Item2.ToString());
 
             hc.ShiftOnce(imageFrames, (imageFrames.Count - 15), HypnocubeImpl.Direction.X, true,
-                meep.Item1, meep.Item2);
+                meep.Item1, meep.Item2, black);
         }
 
         /* Shift a block in a decreasing direction multiple times. */
@@ -319,9 +320,9 @@ namespace Interactive_LED_Cube.Cube
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 60);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 60);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), yellow, 60);
-            
 
             /* UNCOMMENT TO TEST A BLINKING SHIFTING BLOCK, COMMENT OUT FADE CODE ABOVE */
+            
             /*
             blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 5, 5);
             blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 5, 5);
@@ -333,13 +334,13 @@ namespace Interactive_LED_Cube.Cube
             
             Tuple<Coordinate,Coordinate> meep1 = 
                 hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 150), HypnocubeImpl.Direction.X, true,
-                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 4, 4);
+                new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 4, 4, black);
             Tuple<Coordinate,Coordinate> meep2 = 
                 hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 90), HypnocubeImpl.Direction.Y, true,
-                meep1.Item1, meep1.Item2, 4, 4);
+                meep1.Item1, meep1.Item2, 4, 4, black);
             Tuple<Coordinate, Coordinate> meep3 =
                 hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 30), HypnocubeImpl.Direction.Z, true,
-                meep2.Item1, meep2.Item2, 4, 4);
+                meep2.Item1, meep2.Item2, 4, 4, black);
         }
     }
 }

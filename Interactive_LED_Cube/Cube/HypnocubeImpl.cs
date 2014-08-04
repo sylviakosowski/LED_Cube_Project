@@ -79,12 +79,12 @@ namespace Interactive_LED_Cube
          *      false if we are increasing the d-coordinates specified.
          */
         public Tuple<Coordinate, Coordinate> ShiftOnce(List<byte[]> imageFrames, int imageIndex, 
-            Direction d, bool decreasing, Coordinate c1, Coordinate c2)
+            Direction d, bool decreasing, Coordinate c1, Coordinate c2, RGBColor eraseColor)
         {
             if (decreasing)
             {
                 //ShiftOnceDecreasing(imageFrames, d);
-                return ShiftBlockOnceDecreasing(imageFrames, imageIndex, d, c1, c2);
+                return ShiftBlockOnceDecreasing(imageFrames, imageIndex, d, c1, c2, eraseColor);
             }
 
             return new Tuple<Coordinate, Coordinate>(c1, c2);
@@ -97,12 +97,11 @@ namespace Interactive_LED_Cube
         }
 
         /* 
-         * Iterate ShiftOnce 8 times so that the lights in the cube pass through the
-         * entire cube from one side to another. d and decreasing behave as described
-         * in ShiftOnce.
+         * Iterate ShiftOnce numShift times so that the block shifts multiple times.
          */
         public Tuple<Coordinate,Coordinate> ShiftAlongCube(List<byte[]> imageFrames, int imageIndex, 
-            Direction d, bool decreasing, Coordinate c1, Coordinate c2, int speedIncr, int numShift)
+            Direction d, bool decreasing, Coordinate c1, Coordinate c2, int speedIncr, int numShift,
+            RGBColor eraseColor)
         {
             Tuple<Coordinate, Coordinate> coords = new Tuple<Coordinate, Coordinate>(c1,c2);
 
@@ -112,9 +111,8 @@ namespace Interactive_LED_Cube
                 {
                     break;
                 }
-                coords = ShiftOnce(imageFrames, imageIndex, d, decreasing, coords.Item1, coords.Item2);
+                coords = ShiftOnce(imageFrames, imageIndex, d, decreasing, coords.Item1, coords.Item2, eraseColor);
                 imageIndex = imageIndex + speedIncr;
-                //ShiftOnce(imageFrames, 5, d, decreasing, c1, c2);
             }
             return coords;
         }
@@ -346,8 +344,15 @@ namespace Interactive_LED_Cube
             //AddImageFrame(imageFrames);
         }
 
+
+        /* Shift a block of coordinates as determined by c1 and c2, in a direction d, filling in the 
+         * empty space that is left by the shifting with eraseColor. Shifts the block in the imageFrame array
+         * at index imageIndex.
+         * 
+         * TODO: If time, make this less hacky and cut & paste-y.
+         */
         public Tuple<Coordinate, Coordinate> ShiftBlockOnceDecreasing(List<byte[]> imageFrames, int imageIndex, 
-            Direction d, Coordinate c1, Coordinate c2)
+            Direction d, Coordinate c1, Coordinate c2, RGBColor eraseColor)
         {
 
             int xMax = Math.Max(c1.X, c2.X);
@@ -375,7 +380,7 @@ namespace Interactive_LED_Cube
 
                         if(c1.X == 0 && c2.X == 0)
                         {
-                            EraseLEDs(imageFrames, imageIndex, new RGBColor(0,0,0), d, 0, xMax, yMin, yMax, zMin, zMax);
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, 0, xMax, yMin, yMax, zMin, zMax);
                             return new Tuple<Coordinate, Coordinate>(null, null);
                         }
 
@@ -396,7 +401,7 @@ namespace Interactive_LED_Cube
 
                         if (c1.Y == 0 && c2.Y == 0)
                         {
-                            EraseLEDs(imageFrames, imageIndex, new RGBColor(0, 0, 0), d, xMin, xMax, 0, yMax, zMin, zMax);
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, 0, yMax, zMin, zMax);
                             return new Tuple<Coordinate, Coordinate>(null, null);
                         }
 
@@ -416,7 +421,7 @@ namespace Interactive_LED_Cube
 
                         if (c1.Z == 0 && c2.Z == 0)
                         {
-                            EraseLEDs(imageFrames, imageIndex, new RGBColor(0, 0, 0), d, 0, xMax, yMin, yMax, 0, zMax);
+                            EraseLEDs(imageFrames, imageIndex, eraseColor, d, 0, xMax, yMin, yMax, 0, zMax);
                             return new Tuple<Coordinate, Coordinate>(null, null);
                         }
 
@@ -469,53 +474,17 @@ namespace Interactive_LED_Cube
                 }
             }
 
-            /* Since the cube shifted, one cross-section has been shifted off the cube, and an
-             * empty cross section has been added on to the other end. For now, fill with blank vals.
+            /* Erase the part of the block that was shifted.
              * 
              * TODO: Make it so this behavior can be easily changed
              */
-            RGBColor black = new RGBColor(0,0,0);
-            switch(d)
-            {
-                case Direction.X:
-                    {
-                        for (int y = yMin; y <= yMax; y++ )
-                        {
-                            for(int z = zMin; z <= zMax; z++ )
-                            {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(xMax, y, z), black);
-                            }
-                        }
-                        break;
-                    }
-                case Direction.Y:
-                    {
-                        for (int x = xMin; x <= xMax; x++)
-                        {
-                            for (int z = zMin; z <= zMax; z++)
-                            {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, yMax, z), black);
-                            }
-                        }
-                        break;
-                    }
-                case Direction.Z:
-                    {
-                        for (int x = xMin; x <= xMax; x++)
-                        {
-                            for (int y = yMin; y <= yMax; y++)
-                            {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, y, zMax), black);
-                            }
-                        }
-                        break;
-                    }
-            }
+            EraseLEDs(imageFrames, imageIndex, eraseColor, d, xMin, xMax, yMin, yMax, zMin, zMax);
 
             return Tuple.Create<Coordinate, Coordinate>(c1, c2);
         }
 
-        private void EraseLEDs(List<byte[]> imageFrames, int imageIndex, RGBColor black, Direction d, 
+        /* Used when shifting blocks, fills the part of the block that was shifted with an erase color. */
+        private void EraseLEDs(List<byte[]> imageFrames, int imageIndex, RGBColor eraseColor, Direction d, 
             int xMin, int xMax, int yMin, int yMax, int zMin, int zMax)
         {
             switch (d)
@@ -526,7 +495,7 @@ namespace Interactive_LED_Cube
                         {
                             for (int z = zMin; z <= zMax; z++)
                             {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(xMax, y, z), black);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(xMax, y, z), eraseColor);
                             }
                         }
                         break;
@@ -537,7 +506,7 @@ namespace Interactive_LED_Cube
                         {
                             for (int z = zMin; z <= zMax; z++)
                             {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, yMax, z), black);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, yMax, z), eraseColor);
                             }
                         }
                         break;
@@ -548,96 +517,12 @@ namespace Interactive_LED_Cube
                         {
                             for (int y = yMin; y <= yMax; y++)
                             {
-                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, y, zMax), black);
+                                changeColorLEDImages(imageFrames, imageIndex, new Coordinate(x, y, zMax), eraseColor);
                             }
                         }
                         break;
                     }
             }
-        }
-
-
-        /* 
-         * Makes the colors of the cube be shifted so that the d-coordinates
-         * decrease by one.
-         */
-        private void ShiftOnceDecreasing(List<byte[]> imageFrames, Direction d)
-        {
-
-            /* Depending on d, one cross-section of the cube will be 
-             * effectively "pushed off" the cube as the color data is
-             * shifted by one. This switch statement is necessary to 
-             * determine correct pushing off behavior in the for loops
-             * below.
-             */
-            int xLowerBound = 0;
-            int yLowerBound = 0;
-            int zLowerBound = 0;
-
-            switch (d)
-            {
-                case Direction.X:
-                    {
-                        xLowerBound = 1;
-                        break;
-                    }
-                case Direction.Y:
-                    {
-                        yLowerBound = 1;
-                        break;
-                    }
-                case Direction.Z:
-                    {
-                        zLowerBound = 1;
-                        break;
-                    }
-            }
-
-            for (int x = xLowerBound; x < 8; x++)
-            {
-                for (int y = yLowerBound; y < 8; y++)
-                {
-                    for (int z = zLowerBound; z < 8; z++)
-                    {
-                        //Get color of initial coordinate
-                        RGBColor color = ColorFromCoord(new Coordinate(x, y, z));
-                        switch (d)
-                        {
-                            //Put whatever color was there into the space one d-value away from initial coordinate.
-                            case Direction.X:
-                                {
-                                    changeColorLED(new Coordinate((x - 1), y, z), color, false);
-                                    break;
-                                }
-                            case Direction.Y:
-                                {
-                                    changeColorLED(new Coordinate(x, (y - 1), z), color, false);
-                                    break;
-                                }
-                            case Direction.Z:
-                                {
-                                    changeColorLED(new Coordinate(x, y, (z - 1)), color, false);
-                                    break;
-                                }
-                            default:
-                                {
-                                    //Do nothing
-                                    break;
-                                }
-                        }
-                    }
-                }
-            }
-
-            /* Since the cube shifted, one cross-section has been shifted off the cube, and an
-             * empty cross section has been added on to the other end. For now, fill with blank vals.
-             * 
-             * TODO: Make it so this behavior can be easily changed
-             */
-            LightCrossSection(imageFrames, new RGBColor(50, 50, 50), new Coordinate(7, 7, 7), d, false);
-
-            AddImageFrame(imageFrames);
-
         }
 
         /* 
