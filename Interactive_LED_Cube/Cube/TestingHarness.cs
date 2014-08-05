@@ -418,10 +418,11 @@ namespace Interactive_LED_Cube.Cube
              * */
         }
     
+        /* Fill the block with random colors and then disappear back out. */
         private void RandomFillTest()
         {
-            hc.RandomFill(imageFrames, red);
-            hc.RandomFill2(imageFrames, black);
+            hc.RandomFill(imageFrames, black, true, 4);
+            hc.RandomFill(imageFrames, black, false, 8);
         }
     }
 }
