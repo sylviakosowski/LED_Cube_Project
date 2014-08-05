@@ -60,6 +60,7 @@ namespace Interactive_LED_Cube.Cube
             //ShiftBlockOnceDecreasingTest();
             //ShiftBlockAlongCubeDecreasingTest();
             ShiftBlockOnceIncreasingTest();
+            //ShiftBlockAlongCubeIncreasingTest();
 
             /* BLINKING TESTS */
             //
@@ -354,19 +355,64 @@ namespace Interactive_LED_Cube.Cube
             fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
             fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 7, 7), new Coordinate(3, 5, 5), red, 40);
+            //fader.FadeBlockUniform(imageFrames, new Coordinate(1, 0, 1), new Coordinate(3, 2, 3), red, 40);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 3, 3), new Coordinate(3, 1, 1), red, 40);
             //blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(2,2,2), red, 10, 10);
 
 
             Tuple<Coordinate, Coordinate> meep =
                 hc.ShiftOnce(imageFrames, (imageFrames.Count - 25), HypnocubeImpl.Direction.X, false,
-                new Coordinate(1, 7, 7), new Coordinate(3, 5, 5), black);
+                new Coordinate(1, 3, 3), new Coordinate(3, 1, 1), black);
 
             Console.WriteLine("Tuple is: " + meep.Item1.ToString() + ", " + meep.Item2.ToString());
 
-            /*
-            hc.ShiftOnce(imageFrames, (imageFrames.Count - 15), HypnocubeImpl.Direction.X, false,
+            
+            Tuple<Coordinate, Coordinate> wut = 
+                hc.ShiftOnce(imageFrames, (imageFrames.Count - 15), HypnocubeImpl.Direction.X, false,
                 meep.Item1, meep.Item2, black);
+        }
+
+        private void ShiftBlockAlongCubeIncreasingTest()
+        {
+            Fader fader = new Fader(hc);
+            Blinker blinker = new Blinker(hc, null);
+
+            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+
+            /* UNCOMMENT TO TEST A FADING SHIFTING BLOCK, COMMENT OUT BLINK CODE BELOW*/
+
+            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), red, 60);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), blue, 60);
+            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), yellow, 60);
+
+            /* UNCOMMENT TO TEST A BLINKING SHIFTING BLOCK, COMMENT OUT FADE CODE ABOVE */
+
+            /*
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 5, 5);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 5, 5);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), yellow, 5, 5);
+            */
+
+            Console.WriteLine(imageFrames.Count);
+
+
+            Tuple<Coordinate, Coordinate> meep1 =
+                hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 150), HypnocubeImpl.Direction.X, false,
+                new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), 4, 2, black);
+
+            /*
+            Tuple<Coordinate, Coordinate> meep2 =
+                hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 90), HypnocubeImpl.Direction.Y, false,
+                meep1.Item1, meep1.Item2, 4, 1, black);
+             * */
+
+            /*
+            Tuple<Coordinate, Coordinate> meep3 =
+                hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 30), HypnocubeImpl.Direction.Z, false,
+                meep2.Item1, meep2.Item2, 4, 3, purple);
              * */
         }
     }

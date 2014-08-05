@@ -108,6 +108,8 @@ namespace Interactive_LED_Cube
                     break;
                 }
                 coords = ShiftOnce(imageFrames, imageIndex, d, decreasing, coords.Item1, coords.Item2, eraseColor);
+
+                Console.WriteLine("coord 1: " + coords.Item1.ToString() + "coord 2: " + coords.Item2.ToString());
                 imageIndex = imageIndex + speedIncr;
             }
             return coords;
@@ -501,9 +503,9 @@ namespace Interactive_LED_Cube
             {
                 case Direction.X:
                     {
-                        if (xMin == 7)
+                        if (xMax == 7)
                         {
-                            xMin = 6;
+                            xMax = 6;
                         }
 
                         if (c1.X == 7 && c2.X == 7)
@@ -522,9 +524,9 @@ namespace Interactive_LED_Cube
                     }
                 case Direction.Y:
                     {
-                        if (yMin == 7)
+                        if (yMax == 7)
                         {
-                            yMin = 6;
+                            yMax = 6;
                         }
 
                         if (c1.Y == 7 && c2.Y == 7)
@@ -542,9 +544,9 @@ namespace Interactive_LED_Cube
                     }
                 case Direction.Z:
                     {
-                        if (zMin == 7)
+                        if (zMax == 7)
                         {
-                            zMin = 6;
+                            zMax = 6;
                         }
 
                         if (c1.Z == 7 && c2.Z == 7)
