@@ -59,13 +59,15 @@ namespace Interactive_LED_Cube.Cube
             /* SHIFT TESTS*/
             //ShiftBlockOnceDecreasingTest();
             //ShiftBlockAlongCubeDecreasingTest();
-            ShiftBlockOnceIncreasingTest();
+            //ShiftBlockOnceIncreasingTest();
             //ShiftBlockAlongCubeIncreasingTest();
 
             /* BLINKING TESTS */
             //
             //BlinkLEDTest();
             //BlinkLEDsTest();
+
+            RandomFillTest();
 
             //Need to keep this to send signal to visualization.
             //Won't need for actual cube.
@@ -414,6 +416,12 @@ namespace Interactive_LED_Cube.Cube
                 hc.ShiftAlongCube(imageFrames, (imageFrames.Count - 30), HypnocubeImpl.Direction.Z, false,
                 meep2.Item1, meep2.Item2, 4, 3, purple);
              * */
+        }
+    
+        private void RandomFillTest()
+        {
+            hc.RandomFill(imageFrames, red);
+            hc.RandomFill2(imageFrames, black);
         }
     }
 }

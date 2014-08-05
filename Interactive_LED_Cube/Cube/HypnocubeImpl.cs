@@ -810,5 +810,83 @@ namespace Interactive_LED_Cube
 
             AddImageFrame(imageFrames);
         }
+    
+        /* Fills the cube by filling one LED at a time, which is in a random position. */
+        public void RandomFill(List<byte[]> imageFrames, RGBColor col)
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 8; y++)
+                {
+                    for(int z = 0; z < 8; z++)
+                    {
+                        coords.Add(new Coordinate(x,y,z));
+                    }
+                }
+            }
+
+            Random r = new Random();
+            int counter = coords.Count;
+            int randIndex;
+
+            byte R;
+            byte G;
+            byte B;
+
+            RGBColor color;
+
+            while( counter > 0)
+            {
+                randIndex = r.Next(0, counter);
+
+                R = (byte)r.Next(0, 255);
+                G = (byte)r.Next(0, 255);
+                B= (byte)r.Next(0, 255);
+
+                color = new RGBColor(R, G, B);
+
+                randIndex = r.Next(0, counter);
+
+                changeColorLED(coords[randIndex],color,false);
+                AddImageFrame(imageFrames);
+                coords.RemoveAt(randIndex);
+
+                counter--;
+            }
+        }
+
+        public void RandomFill2(List<byte[]> imageFrames, RGBColor col)
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int z = 0; z < 8; z++)
+                    {
+                        coords.Add(new Coordinate(x, y, z));
+                    }
+                }
+            }
+
+            Random r = new Random();
+            int counter = coords.Count;
+            int randIndex;
+
+            while (counter > 0)
+            {
+                randIndex = r.Next(0, counter);
+
+                changeColorLED(coords[randIndex], col, false);
+                AddImageFrame(imageFrames);
+                coords.RemoveAt(randIndex);
+
+                counter--;
+            }
+        }
+
     }
 }
