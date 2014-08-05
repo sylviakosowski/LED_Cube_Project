@@ -84,6 +84,8 @@ namespace Interactive_LED_Cube.Cube
             }
         }
 
+        ///////////////// BASIC FUNCTIONALITY TESTS /////////////////
+
         /* Test RandomFullColorCubeChange */
         private void RandomFullColorCubeChangeTest()
         {
@@ -286,6 +288,12 @@ namespace Interactive_LED_Cube.Cube
             blinker.BlinkBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 1, 10, false);
         }
 
+
+
+
+
+        ////////////// WORK IN PROGRESS TESTS /////////////////
+
         /* Shift a block in a decreasing direction once. */
         private void ShiftBlockOnceDecreasingTest()
         {
@@ -425,6 +433,12 @@ namespace Interactive_LED_Cube.Cube
              * */
         }
     
+
+
+
+
+        //////////////// OFFICIAL ANIMATIONS TEST //////////////
+
         /* Fill the block with random colors and then disappear back out. */
         private void RandomFillTest()
         {

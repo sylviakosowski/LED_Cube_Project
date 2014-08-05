@@ -39,7 +39,7 @@ namespace Interactive_LED_Cube
             set { colorArray = value; }
         }
 
-        /////////////////////////// PUBLIC INTERFACE ////////////////////////////
+        /////////////////////////// INITIAL TEST ////////////////////////////
 
         /* Makes the cube blink quickly through count number of random colors, with option
          * to make colors blend.
@@ -60,76 +60,8 @@ namespace Interactive_LED_Cube
             return newFrames;
         }
 
-        /*
-         * Shift the colors of the cube by one in a specific direction.
-         * 
-         * d = specifies in what plane to shift the cube. If X is specified, all the x 
-         *      coordinates will be shifted by one as indicated by the bool decreasing.
-         *      If decreasing is true, x will be shifted down and if decreasing is 
-         *      false x will be shifted up.
-         *      
-         *      For example: if d = X and decreasing = true, then the color of the
-         *      LED at coordinate (1,2,3) will be copied to the LED at coordinate
-         *      (0,2,3). If decreasing = false, then the color at (1,2,3) will be 
-         *      copied to (2,2,3).
-         *      
-         *      The same applies for the direction Y and Z.
-         *      
-         * decreasing = true if we are decreasing the d-coordinates specified,
-         *      false if we are increasing the d-coordinates specified.
-         */
-        public Tuple<Coordinate, Coordinate> ShiftOnce(List<byte[]> imageFrames, int imageIndex, 
-            Direction d, bool decreasing, Coordinate c1, Coordinate c2, RGBColor eraseColor)
-        {
-            if (decreasing)
-            {
-                //ShiftOnceDecreasing(imageFrames, d);
-                return ShiftBlockOnceDecreasing(imageFrames, imageIndex, d, c1, c2, eraseColor);
-            }
-            else
-            {
-                return ShiftBlockOnceIncreasing(imageFrames, imageIndex, d, c1, c2, eraseColor);
-            }
-        }
 
-        /* 
-         * Iterate ShiftOnce numShift times so that the block shifts multiple times.
-         */
-        public Tuple<Coordinate,Coordinate> ShiftAlongCube(List<byte[]> imageFrames, int imageIndex, 
-            Direction d, bool decreasing, Coordinate c1, Coordinate c2, int speedIncr, int numShift,
-            RGBColor eraseColor)
-        {
-            Tuple<Coordinate, Coordinate> coords = new Tuple<Coordinate, Coordinate>(c1,c2);
 
-            for (int i = 0; i < numShift; i++)
-            {
-                if(coords.Item1 == null && coords.Item2 == null)
-                {
-                    break;
-                }
-                coords = ShiftOnce(imageFrames, imageIndex, d, decreasing, coords.Item1, coords.Item2, eraseColor);
-
-                Console.WriteLine("coord 1: " + coords.Item1.ToString() + "coord 2: " + coords.Item2.ToString());
-                imageIndex = imageIndex + speedIncr;
-            }
-            return coords;
-        }
-
-        /* Given a list of frames to repeat and an int count which determines the number of
-         * times we repeat, repeat an animation.
-         */
-        public void RepeatFrames(List<byte[]> framesToRepeat, List<byte[]> imageFrames, int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                foreach (byte[] frame in framesToRepeat)
-                {
-                    imageFrames.Add(frame);
-                }
-            }
-        }
-
-        ////////////////////// PRIVATE IMPLEMENTATION //////////////////////
 
         //////////////////////  BASIC HELPER METHODS //////////////////////
 
@@ -256,6 +188,23 @@ namespace Interactive_LED_Cube
             imageFrames.Add(newImage);
         }
 
+        /* Given a list of frames to repeat and an int count which determines the number of
+         * times we repeat, repeat an animation.
+         */
+        public void RepeatFrames(List<byte[]> framesToRepeat, List<byte[]> imageFrames, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                foreach (byte[] frame in framesToRepeat)
+                {
+                    imageFrames.Add(frame);
+                }
+            }
+        }
+
+
+
+
         //////////////////////// MORE INVOLVED HELPERS //////////////////////////
 
         /* Changes the whole cube to the specified color. 
@@ -316,6 +265,16 @@ namespace Interactive_LED_Cube
             return coords;
         }
 
+        /* Generate an animation for the specified LEDs in coords, using the colors and
+         * rates specified. Animation behavior is determined by the LightingMethod.
+         */
+        public void LightLEDs(List<byte[]> imageFrames, List<Coordinate> coords,
+            List<RGBColor> colors, List<int> rates, LightingMethod lm, bool resetFrames)
+        {
+            Dictionary<Coordinate, List<RGBColor>> animDict = lm.CreateAnimation(coords, colors, rates, resetFrames);
+            lm.CreateFrames(imageFrames, animDict, lm.GetLongestAnim(), resetFrames);
+        }
+
         /* Light up a rectangular sub-block of the cube in a specific color.
          *
          * The rectangular block is specified by two coordinates, which are the corners which
@@ -342,6 +301,64 @@ namespace Interactive_LED_Cube
             //AddImageFrame(imageFrames);
         }
 
+
+
+
+
+        //////////////////////   WORK IN PROGRESS DOESN'T WORK PROPERLY ////////////////////////
+
+        /* Shift the colors of the cube by one in a specific direction.
+         * 
+         * d = specifies in what plane to shift the cube. If X is specified, all the x 
+         *      coordinates will be shifted by one as indicated by the bool decreasing.
+         *      If decreasing is true, x will be shifted down and if decreasing is 
+         *      false x will be shifted up.
+         *      
+         *      For example: if d = X and decreasing = true, then the color of the
+         *      LED at coordinate (1,2,3) will be copied to the LED at coordinate
+         *      (0,2,3). If decreasing = false, then the color at (1,2,3) will be 
+         *      copied to (2,2,3).
+         *      
+         *      The same applies for the direction Y and Z.
+         *      
+         * decreasing = true if we are decreasing the d-coordinates specified,
+         *      false if we are increasing the d-coordinates specified.
+         */
+        public Tuple<Coordinate, Coordinate> ShiftOnce(List<byte[]> imageFrames, int imageIndex,
+            Direction d, bool decreasing, Coordinate c1, Coordinate c2, RGBColor eraseColor)
+        {
+            if (decreasing)
+            {
+                //ShiftOnceDecreasing(imageFrames, d);
+                return ShiftBlockOnceDecreasing(imageFrames, imageIndex, d, c1, c2, eraseColor);
+            }
+            else
+            {
+                return ShiftBlockOnceIncreasing(imageFrames, imageIndex, d, c1, c2, eraseColor);
+            }
+        }
+
+        /* Iterate ShiftOnce numShift times so that the block shifts multiple times.
+         */
+        public Tuple<Coordinate, Coordinate> ShiftAlongCube(List<byte[]> imageFrames, int imageIndex,
+            Direction d, bool decreasing, Coordinate c1, Coordinate c2, int speedIncr, int numShift,
+            RGBColor eraseColor)
+        {
+            Tuple<Coordinate, Coordinate> coords = new Tuple<Coordinate, Coordinate>(c1, c2);
+
+            for (int i = 0; i < numShift; i++)
+            {
+                if (coords.Item1 == null && coords.Item2 == null)
+                {
+                    break;
+                }
+                coords = ShiftOnce(imageFrames, imageIndex, d, decreasing, coords.Item1, coords.Item2, eraseColor);
+
+                Console.WriteLine("coord 1: " + coords.Item1.ToString() + "coord 2: " + coords.Item2.ToString());
+                imageIndex = imageIndex + speedIncr;
+            }
+            return coords;
+        }
 
         /* Shift a block of coordinates as determined by c1 and c2, in a direction d, filling in the 
          * empty space that is left by the shifting with eraseColor. Shifts the block in the imageFrame array
@@ -613,7 +630,6 @@ namespace Interactive_LED_Cube
             return Tuple.Create<Coordinate, Coordinate>(c1, c2);
         }
 
-
         /* Used when shifting blocks, fills the part of the block that was shifted with an erase color. */
         private void EraseLEDs(List<byte[]> imageFrames, int imageIndex, RGBColor eraseColor, Direction d, 
             int xMin, int xMax, int yMin, int yMax, int zMin, int zMax, bool decreasing)
@@ -667,8 +683,7 @@ namespace Interactive_LED_Cube
             }
         }
 
-        /* 
-         * Makes the colors of the cube be shifted so that the d-coordinates
+        /* Makes the colors of the cube be shifted so that the d-coordinates
          * increase by one.
          */
         private void ShiftOnceIncreasing(List<byte[]> imageFrames, Direction d)
@@ -752,18 +767,7 @@ namespace Interactive_LED_Cube
             AddImageFrame(imageFrames);
         }
 
-        /* Generate an animation for the specified LEDs in coords, using the colors and
-         * rates specified. Animation behavior is determined by the LightingMethod.
-         */
-        public void LightLEDs(List<byte[]> imageFrames, List<Coordinate> coords,
-            List<RGBColor> colors, List<int> rates, LightingMethod lm, bool resetFrames)
-        {
-            Dictionary<Coordinate, List<RGBColor>> animDict = lm.CreateAnimation(coords, colors, rates, resetFrames);
-            lm.CreateFrames(imageFrames, animDict, lm.GetLongestAnim(), resetFrames);
-        }
-
-        /* 
-         * TODO: Get rid of this function.
+        /* TODO: Get rid of this function.
          * 
         * Light up a cross section of the cube.
         * 
@@ -810,7 +814,48 @@ namespace Interactive_LED_Cube
 
             AddImageFrame(imageFrames);
         }
-    
+
+        /* ugh */
+        public List<byte[]> ConsolidateFrames(List<byte[]> frames1, List<byte[]> frames2, Coordinate c1, Coordinate c2,
+            int offset)
+        {
+            List<Coordinate> coords = GenerateCoordBlock(c1, c2);
+            List<byte[]> combinedFrames = new List<byte[]>();
+            byte[] frame;
+
+            int index = 0;
+
+            for (int i = 0; i < frames2.Count - offset; i++)
+            {
+                foreach (Coordinate c in coords)
+                {
+                    frame = changeColorLEDImage(frames2[i + offset], c, ImageColorFromCoord(frames1[i], c));
+                    combinedFrames.Add(frame);
+                }
+                index++;
+            }
+
+            byte[] finalFrame = frames2[frames2.Count - 1];
+
+            for (int i = index; i < frames1.Count - index; i++)
+            {
+                foreach (Coordinate c in coords)
+                {
+                    frame = changeColorLEDImage(finalFrame, c, ImageColorFromCoord(frames1[i], c));
+                    combinedFrames.Add(frame);
+                }
+            }
+
+            return combinedFrames;
+
+        }
+
+
+
+
+
+        ///////////////////// OFFICIAL ANIMATIONS /////////////////////////
+
         /* Fills the cube by filling one LED at a time, which is in a random position. 
          * 
          * If rand is true, will generate random color for each LED. Otherwise, will fill
@@ -902,41 +947,6 @@ namespace Interactive_LED_Cube
                     turnSignal = true;
                 }
             }
-        }
-
-        /* ugh */
-        public List<byte[]> ConsolidateFrames(List<byte[]> frames1, List<byte[]> frames2, Coordinate c1, Coordinate c2,
-            int offset)
-        {
-            List<Coordinate> coords = GenerateCoordBlock(c1, c2);
-            List<byte[]> combinedFrames = new List<byte[]>();
-            byte[] frame;
-
-            int index = 0;
-
-            for (int i = 0; i < frames2.Count - offset; i++ )
-            {
-                foreach (Coordinate c in coords)
-                {
-                    frame = changeColorLEDImage(frames2[i+offset], c, ImageColorFromCoord(frames1[i], c));
-                    combinedFrames.Add(frame);
-                }
-                index++;
-            }
-
-            byte[] finalFrame = frames2[frames2.Count - 1];
-
-            for (int i = index; i < frames1.Count - index; i++ )
-            {
-                foreach (Coordinate c in coords)
-                {
-                    frame = changeColorLEDImage(finalFrame, c, ImageColorFromCoord(frames1[i], c));
-                    combinedFrames.Add(frame);
-                }
-            }
-            
-            return combinedFrames;
-
         }
     
         /* Makes a miniature cube expand and contract. (1 cycle) */
