@@ -23,11 +23,14 @@ namespace Interactive_LED_Cube
          * frame in the animation.
          */
         Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
-            List<Coordinate> coords, List<RGBColor> colors, List<int> rates);
+            List<Coordinate> coords, List<RGBColor> colors, List<int> rates, bool resetFrames);
 
         void CreateFrames(List<byte[]> imageFrames,
-                Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim);
+                Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim, bool resetFrames);
 
         int GetLongestAnim();
+
+        void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
+            RGBColor color, int rate, bool resetFrames);
     }
 }

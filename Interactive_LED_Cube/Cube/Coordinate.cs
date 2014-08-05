@@ -38,6 +38,20 @@ namespace Interactive_LED_Cube
             set { z = value; }
         }
 
+        public int IncDec(int component, int changer)
+        {
+            int newComp = component + changer;
+
+            if(newComp < 0 || newComp > 7)
+            {
+                return component;
+            }
+            else
+            {
+                return newComp;
+            }
+        }
+
         public override string ToString()
         {
             return "(" + x.ToString() + ", " + y.ToString() + ", " + z.ToString() + ")";

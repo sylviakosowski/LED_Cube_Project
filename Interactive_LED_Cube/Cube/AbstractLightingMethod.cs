@@ -45,13 +45,18 @@ namespace Interactive_LED_Cube
         }
 
         public Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
-        List<Coordinate> coords, List<RGBColor> endColors, List<int> rates)
+        List<Coordinate> coords, List<RGBColor> endColors, List<int> rates, bool resetFrame)
         {
 
             List<RGBColor> animation = new List<RGBColor>();
             Dictionary<Coordinate, List<RGBColor>> animDict =
                 new Dictionary<Coordinate, List<RGBColor>>();
             longestAnim = 0;
+
+            if(resetFrame)
+            {
+                hc.SpecificColorWholeCube(new RGBColor(0, 0, 0), false);
+            }
 
             /* Create fading animation for each specific LED in coords, map it
              * to each coordinate in a dictionary.
@@ -69,10 +74,16 @@ namespace Interactive_LED_Cube
         public abstract List<RGBColor> CreateSingleLEDBehavior(Coordinate c, RGBColor endColor, int rate, int count);
 
         public void CreateFrames(List<byte[]> imageFrames,
-            Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim)
+            Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim, bool resetFrame)
         {
             int index;
             RGBColor color;
+            List<byte[]> imageFramesTest = new List<byte[]>();
+
+            if(resetFrame)
+            {
+                hc.SpecificColorWholeCube(new RGBColor(0,0,0), false);
+            }
 
             /* For each animation frame, update the behavior of each LED in coords. */
             for (int i = 0; i < longestAnim; i++)
@@ -89,8 +100,12 @@ namespace Interactive_LED_Cube
                         hc.ColorArray[index + 2] = color.B;
                     }
                 }
+                //hc.AddImageFrame(imageFrames);
                 hc.AddImageFrame(imageFrames);
             }
         }
+
+        public abstract void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
+            RGBColor color, int rate, bool resetFrames);
     }
 }

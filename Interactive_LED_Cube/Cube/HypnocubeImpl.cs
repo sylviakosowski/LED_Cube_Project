@@ -262,7 +262,7 @@ namespace Interactive_LED_Cube
          *
          * TODO: Change to use LightBlock in implementation
          */
-        private void SpecificColorWholeCube(RGBColor color, bool blend)
+        public void SpecificColorWholeCube(RGBColor color, bool blend)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -337,7 +337,7 @@ namespace Interactive_LED_Cube
             }
              * */
 
-            LightLEDs(imageFrames, coords, colors, rates, lm);
+            LightLEDs(imageFrames, coords, colors, rates, lm, false);
 
             //AddImageFrame(imageFrames);
         }
@@ -756,10 +756,10 @@ namespace Interactive_LED_Cube
          * rates specified. Animation behavior is determined by the LightingMethod.
          */
         public void LightLEDs(List<byte[]> imageFrames, List<Coordinate> coords,
-            List<RGBColor> colors, List<int> rates, LightingMethod lm)
+            List<RGBColor> colors, List<int> rates, LightingMethod lm, bool resetFrames)
         {
-            Dictionary<Coordinate, List<RGBColor>> animDict = lm.CreateAnimation(coords, colors, rates);
-            lm.CreateFrames(imageFrames, animDict, lm.GetLongestAnim());
+            Dictionary<Coordinate, List<RGBColor>> animDict = lm.CreateAnimation(coords, colors, rates, resetFrames);
+            lm.CreateFrames(imageFrames, animDict, lm.GetLongestAnim(), resetFrames);
         }
 
         /* 
@@ -848,8 +848,7 @@ namespace Interactive_LED_Cube
                 for (int i = 0; i < rate; i++ )
                 {
                     randIndex = r.Next(0, counter);
-                    Console.WriteLine("counter: " + counter);
-                    Console.WriteLine("size: " + coords.Count);
+
                     if (rand)
                     {
                         R = (byte)r.Next(0, 255);
@@ -873,8 +872,153 @@ namespace Interactive_LED_Cube
          
         }
 
-        public void ZigZagFill()
+        /* Zig-zag fills the cube with color, starting from bottom and zig-zagging to top. */
+        public void ZigZagFill(List<byte[]> imageFrames, RGBColor color ,bool rand, int rate)
         {
+            bool turnSignal = false;
+
+            //ColorFiller cf = new ColorFiller(this);
+            Fader f = new Fader(this);
+
+            for(int y = 0; y < 8; y++)
+            {
+                if(turnSignal)
+                {
+                    for(int x = 7; x >= 0; x--)
+                    {
+                        //cf.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, 1);
+                        f.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, rate, false);
+                        AddImageFrame(imageFrames);
+                    }
+                    turnSignal = false;
+                }
+                else
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        f.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, rate, false);
+                        AddImageFrame(imageFrames);
+                    }
+                    turnSignal = true;
+                }
+            }
+        }
+
+        /* ugh */
+        public List<byte[]> ConsolidateFrames(List<byte[]> frames1, List<byte[]> frames2, Coordinate c1, Coordinate c2,
+            int offset)
+        {
+            List<Coordinate> coords = GenerateCoordBlock(c1, c2);
+            List<byte[]> combinedFrames = new List<byte[]>();
+            byte[] frame;
+
+            int index = 0;
+
+            for (int i = 0; i < frames2.Count - offset; i++ )
+            {
+                foreach (Coordinate c in coords)
+                {
+                    frame = changeColorLEDImage(frames2[i+offset], c, ImageColorFromCoord(frames1[i], c));
+                    combinedFrames.Add(frame);
+                }
+                index++;
+            }
+
+            byte[] finalFrame = frames2[frames2.Count - 1];
+
+            for (int i = index; i < frames1.Count - index; i++ )
+            {
+                foreach (Coordinate c in coords)
+                {
+                    frame = changeColorLEDImage(finalFrame, c, ImageColorFromCoord(frames1[i], c));
+                    combinedFrames.Add(frame);
+                }
+            }
+            
+            return combinedFrames;
+
+        }
+    
+        /* Makes a miniature cube expand and contract. (1 cycle) */
+        public void ExpandingSolidCube(List<byte[]> imageFrames, RGBColor color, bool rand, int rate, LightingMethod lm)
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                lm.LightBlockUniform(imageFrames,new Coordinate(i,i,i), new Coordinate(7-i, 7-i, 7-i), color, rate, true);
+            }
+            lm.LightBlockUniform(imageFrames, new Coordinate(0,0,0), new Coordinate(0,0,0), new RGBColor(0,0,0), rate, true);
+
+
+            for (int i = 3; i >= 0; i--)
+            {
+                lm.LightBlockUniform(imageFrames, new Coordinate(i, i, i), new Coordinate(7 - i, 7 - i, 7 - i), color, rate, true);
+            }
+        }
+
+        /* A little roamer, one LED which moves around randomly leaving a trail behind it if resetFrames is true. */
+        public void LittleRoamer(List<byte[]> imageFrames, RGBColor color, int rate, LightingMethod lm, bool resetFrames)
+        {
+            Random rand = new Random();
+
+            int startX = rand.Next(0,8);
+            int startY = rand.Next(0,8);
+            int startZ = rand.Next(0,8);
+
+            Coordinate c = new Coordinate(startX, startY, startZ);
+
+            int nextDirection;
+
+            for(int i = 0; i < 500; i++)
+            {
+                nextDirection = rand.Next(0, 6);
+
+                switch(nextDirection)
+                {
+                    case 0:
+                        {
+                            //Increase x
+                            c.X = c.IncDec(c.X, 1);
+                            break;
+                        }
+                    case 1:
+                        {
+                            //Decrease x
+                            c.X = c.IncDec(c.X, -1);
+                            break;
+                        }
+                    case 2:
+                        {
+                            //Increase y
+                            c.Y = c.IncDec(c.Y, 1);
+                            break;
+                        }
+                    case 3:
+                        {
+                            //Decrease y
+                            c.Y = c.IncDec(c.Y, -1);
+                            break;
+                        }
+                    case 4:
+                        {
+                            //Increase z
+                            c.Z = c.IncDec(c.Z, 1);
+                            break;
+                        }
+                    case 5:
+                        {
+                            //Decrease z
+                            c.Z = c.IncDec(c.Z, -1);
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+
+                Console.WriteLine(c.ToString());
+                lm.LightBlockUniform(imageFrames, c, c, color, rate, resetFrames);
+            }
 
         }
     }

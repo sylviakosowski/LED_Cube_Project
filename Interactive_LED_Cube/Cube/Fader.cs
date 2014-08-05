@@ -72,8 +72,8 @@ namespace Interactive_LED_Cube
             return fadeAnimation;
         }
 
-        public void FadeBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
-            RGBColor color, int rate)
+        public override void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
+            RGBColor color, int rate, bool resetFrames)
         {
             List<Coordinate> coords = hc.GenerateCoordBlock(c1, c2);
             List<RGBColor> colors = new List<RGBColor>();
@@ -100,7 +100,7 @@ namespace Interactive_LED_Cube
                 rates.Add(rate);
             }
 
-            hc.LightLEDs(imageFrames, coords, colors, rates, this);
+            hc.LightLEDs(imageFrames, coords, colors, rates, this, resetFrames);
         }
     }
 }

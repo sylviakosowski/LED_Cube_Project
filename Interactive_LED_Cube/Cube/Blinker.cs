@@ -55,8 +55,14 @@ namespace Interactive_LED_Cube.Cube
             return colors;
         }
 
+        public override void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, 
+            RGBColor color, int rate, bool resetFrames)
+        {
+            BlinkBlockUniform(imageFrames, c1,c2,color,rate, 10, resetFrames);
+        }
+
         public void BlinkBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
-            RGBColor color, int rate, int num)
+            RGBColor color, int rate, int num, bool resetFrames)
         {
             List<Coordinate> coords = hc.GenerateCoordBlock(c1, c2);
             List<RGBColor> colors = new List<RGBColor>();
@@ -70,7 +76,7 @@ namespace Interactive_LED_Cube.Cube
                 numBlinks.Add(num);
             }
 
-            hc.LightLEDs(imageFrames, coords, colors, rates, this);
+            hc.LightLEDs(imageFrames, coords, colors, rates, this, resetFrames);
         }
     }
 }

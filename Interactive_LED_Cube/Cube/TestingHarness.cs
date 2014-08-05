@@ -68,6 +68,9 @@ namespace Interactive_LED_Cube.Cube
             //BlinkLEDsTest();
 
             RandomFillTest();
+            ZigZagFillTest();
+            ExpandingCubeTest();
+            LittleRoamerTest();
 
             //Need to keep this to send signal to visualization.
             //Won't need for actual cube.
@@ -113,7 +116,7 @@ namespace Interactive_LED_Cube.Cube
 
             rates.Add(50);
 
-            hc.LightLEDs(imageFrames, coords, colors, rates, fader);
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
         }
 
         /* Test fading multiple LEDs with the same rate. */
@@ -138,7 +141,7 @@ namespace Interactive_LED_Cube.Cube
                 }
             }
 
-            hc.LightLEDs(imageFrames, coords, colors, rates, fader);
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
         }
 
         /* Test fading multiple LEDs with different rates. 
@@ -174,7 +177,7 @@ namespace Interactive_LED_Cube.Cube
                 }
             }
 
-            hc.LightLEDs(imageFrames, coords, colors, rates, fader);
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
         }
 
         /* Test blinking a single LED */
@@ -197,7 +200,7 @@ namespace Interactive_LED_Cube.Cube
 
 
             LightingMethod blinker = new Blinker(hc, numBlinks);
-            hc.LightLEDs(imageFrames, coords, colors, rates, blinker);
+            hc.LightLEDs(imageFrames, coords, colors, rates, blinker, false);
         }
         
         /* Test blinking multiple LEDs */
@@ -225,7 +228,7 @@ namespace Interactive_LED_Cube.Cube
             }
 
             LightingMethod blinker = new Blinker(hc, numBlinks);
-            hc.LightLEDs(imageFrames, coords, colors, rates, blinker);
+            hc.LightLEDs(imageFrames, coords, colors, rates, blinker, false);
         }
 
         /* Test LightLEDs */
@@ -247,7 +250,7 @@ namespace Interactive_LED_Cube.Cube
 
             rates.Add(50);
 
-            hc.LightLEDs(imageFrames, coords, colors, rates, fader);
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
         }
 
         /* Test lighting up a block. */
@@ -255,11 +258,11 @@ namespace Interactive_LED_Cube.Cube
         {
             ColorFiller filler = new ColorFiller(hc);
 
-            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20);
-            filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
-            filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
-            filler.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
-            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20, false);
+            filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20, false);
+            filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20, false);
+            filler.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20, false);
+            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20, false);
         }
 
         /* Fade a block into a single color at a uniform rate */
@@ -267,11 +270,11 @@ namespace Interactive_LED_Cube.Cube
         {
             Fader fader = new Fader(hc);
 
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);            
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20, false);            
         }
 
         /* Blink a block in a single color at a uniform rate */
@@ -279,8 +282,8 @@ namespace Interactive_LED_Cube.Cube
         {
             Blinker blinker = new Blinker(hc, null);
 
-            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 3);
-            blinker.BlinkBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 1, 10);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 3, false);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 1, 10, false);
         }
 
         /* Shift a block in a decreasing direction once. */
@@ -290,11 +293,11 @@ namespace Interactive_LED_Cube.Cube
             Blinker blinker = new Blinker(hc, null);
             Fader fader = new Fader(hc);
 
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 40);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 40, false);
             //blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 10);
 
             
@@ -314,17 +317,19 @@ namespace Interactive_LED_Cube.Cube
             Fader fader = new Fader(hc);
             Blinker blinker = new Blinker(hc, null);
 
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+            /*
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
 
+             * */
             /* UNCOMMENT TO TEST A FADING SHIFTING BLOCK, COMMENT OUT BLINK CODE BELOW*/
-            
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 60);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 60);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), yellow, 60);
-
+            /*
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 60);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), blue, 60);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), yellow, 60);
+            */
             /* UNCOMMENT TO TEST A BLINKING SHIFTING BLOCK, COMMENT OUT FADE CODE ABOVE */
             
             /*
@@ -353,14 +358,15 @@ namespace Interactive_LED_Cube.Cube
             Blinker blinker = new Blinker(hc, null);
             Fader fader = new Fader(hc);
 
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+            /*
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
             //fader.FadeBlockUniform(imageFrames, new Coordinate(1, 0, 1), new Coordinate(3, 2, 3), red, 40);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 3, 3), new Coordinate(3, 1, 1), red, 40);
+            fader.LightBlockUniform(imageFrames, new Coordinate(1, 3, 3), new Coordinate(3, 1, 1), red, 40);
             //blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(2,2,2), red, 10, 10);
-
+            */
 
             Tuple<Coordinate, Coordinate> meep =
                 hc.ShiftOnce(imageFrames, (imageFrames.Count - 25), HypnocubeImpl.Direction.X, false,
@@ -379,17 +385,18 @@ namespace Interactive_LED_Cube.Cube
             Fader fader = new Fader(hc);
             Blinker blinker = new Blinker(hc, null);
 
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
-
+            /*
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20);
+            */
             /* UNCOMMENT TO TEST A FADING SHIFTING BLOCK, COMMENT OUT BLINK CODE BELOW*/
-
-            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), red, 60);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), blue, 60);
-            fader.FadeBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), yellow, 60);
-
+            /*
+            fader.LightBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), red, 60);
+            fader.LightBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), blue, 60);
+            fader.LightBlockUniform(imageFrames, new Coordinate(1, 1, 0), new Coordinate(3, 3, 2), yellow, 60);
+            */
             /* UNCOMMENT TO TEST A BLINKING SHIFTING BLOCK, COMMENT OUT FADE CODE ABOVE */
 
             /*
@@ -423,6 +430,28 @@ namespace Interactive_LED_Cube.Cube
         {
             hc.RandomFill(imageFrames, black, true, 4);
             hc.RandomFill(imageFrames, black, false, 8);
+        }
+    
+        /* Fill the block in a zigzag pattern. */
+        private void ZigZagFillTest()
+        {
+            hc.RandomFullCubeColorChange(imageFrames, 1, false);
+            hc.ZigZagFill(imageFrames, red, true, 1);
+        }
+
+        /* Expanding cube in the center, filled solidly. */
+        private void ExpandingCubeTest()
+        {
+            ColorFiller cf = new ColorFiller(hc);
+            Fader f = new Fader(hc);
+
+            hc.ExpandingSolidCube(imageFrames, red, false, 20, cf);
+        }
+
+        private void LittleRoamerTest()
+        {
+            ColorFiller cf = new ColorFiller(hc);
+            hc.LittleRoamer(imageFrames, red, 4, cf, true);
         }
     }
 }

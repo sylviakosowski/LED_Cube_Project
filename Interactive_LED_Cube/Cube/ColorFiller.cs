@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interactive_LED_Cube.Cube
+namespace Interactive_LED_Cube
 {
     /* Fills the LED with a single color, no fancy animation. Rate
      * deterimnes the number of frames that the LED will be filled
      * as this color.
      */
-    class ColorFiller : AbstractLightingMethod
+    public class ColorFiller : AbstractLightingMethod
     {
         HypnocubeImpl hc;
         private Coordinate c1;
@@ -64,8 +64,8 @@ namespace Interactive_LED_Cube.Cube
         }
 
         /* Light an entire block with the same color and rate. */
-        public void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, 
-            RGBColor color, int rate)
+        public override void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, 
+            RGBColor color, int rate, bool resetFrames)
         {
             List<Coordinate> coords = hc.GenerateCoordBlock(c1, c2);
 
@@ -73,7 +73,7 @@ namespace Interactive_LED_Cube.Cube
             List<int> rates = new List<int>();
 
             UniformColorRate(coords.Count, color, rate, colors, rates);
-            hc.LightLEDs(imageFrames, coords, colors, rates, this);
+            hc.LightLEDs(imageFrames, coords, colors, rates, this, resetFrames);
         }
     }
 }
