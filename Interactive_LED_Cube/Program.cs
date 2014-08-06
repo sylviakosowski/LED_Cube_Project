@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Cube_Visualization;
 
-namespace Autodesk_Interactive_Storytelling
+namespace Interactive_LED_Cube
 {
     /* Run this class to begin everything.*/
     public class Program
@@ -15,7 +15,7 @@ namespace Autodesk_Interactive_Storytelling
          * 1 for Visualization Mode, No Twitter
          * 2 for Physical Mode, No Twitter
          */
-        private static int CUBE_MODE = 1;
+        private static int CUBE_MODE = 2;
 
         private static TwitterObj t;
         private static HypnocubeImpl hc;
@@ -40,8 +40,16 @@ namespace Autodesk_Interactive_Storytelling
         private static void Begin(int phys_mode)
         {
 
-            Console.WriteLine("Welcome to the Tweeting Hypnocube!\n");
-            
+            Console.WriteLine("Welcome to the Tweeting Hypnocube!");
+            Console.WriteLine("Enter one of the following commands:");
+            Console.WriteLine("0 for Physical Cube without Twitter");
+            Console.WriteLine("1 for Physical Cube with Twitter");
+            Console.WriteLine("2 for OpenGL Visualization without Twitter");
+            Console.WriteLine("3 for OpenGL Visualization with Twitter");
+
+            SeekResponse();
+
+            /*
             if(phys_mode == 1)
             {
                 Console.WriteLine("Cube Visualization Mode: No Twitter");
@@ -57,9 +65,9 @@ namespace Autodesk_Interactive_Storytelling
                 Console.WriteLine("Enter 0 for Passive Mode, 1 for Interactive Mode \n");
                 t = new TwitterObj();
                 t.DoEverything();
-                beginVisualizationMode();
+                VisualizationMode();
             }
-
+            */
             Console.ReadLine();
         }
 
@@ -70,16 +78,44 @@ namespace Autodesk_Interactive_Storytelling
             DetermineResponse(response);
         }
 
-        /* Determines if input was 0, 1 or invalid, and acts accordingly. */
+        /* Determines if input was 0, 1, 2, 3 or invalid, and acts accordingly. */
         private static void DetermineResponse(int response)
         {
             if (response == 0)
             {
-                PassiveMode();
+                //PassiveMode();
+                //Physical cube + no twitter
+                Console.WriteLine("Hypnocube Mode: No Twitter");
+                HypnocubeTestingMode();
             }
             else if (response == 1)
             {
-                InteractiveMode();
+                //InteractiveMode();
+                //Physical cube + twitter
+
+                t = new TwitterObj();
+                t.DoEverything();
+
+                Console.WriteLine("Hypnocube Mode: Twitter");
+                HypnocubeMode();
+                PassiveMode();
+            }
+            else if (response == 2)
+            {
+                //OpenGL visualization + no twitter
+                Console.WriteLine("Cube Visualization Mode: No Twitter");
+                VisualizationTestingMode();
+            }
+            else if (response == 3)
+            {
+                //OpenGL visualization + twitter
+
+                t = new TwitterObj();
+                t.DoEverything();
+
+                Console.WriteLine("Cube Visualization Mode: Twitter");
+                VisualizationMode();
+                PassiveMode();
             }
             else
             {
@@ -126,26 +162,26 @@ namespace Autodesk_Interactive_Storytelling
         /*///////////////////////// MODES FOR VISUALIZATION /////////////////////////////*/
 
         /* Run light animations for Twitter on OpenGL visualization. */
-        private static void beginVisualizationMode()
+        private static void VisualizationMode()
         {
             hc = new HypnocubeImpl(false);
             game = new Game();
             tl = new TweetListener(game);
             ku = new KeywordUtil(tl, CUBE_MODE);
 
-            SeekResponse();
+            //SeekResponse();
 
             game.Run(30, 30);
         }
 
         /* Run light animations for Twitter on physical Hypnocube */
-        private static void beginPhysicalMode()
+        private static void HypnocubeMode()
         {
             hc = new HypnocubeImpl(true);
             //Nothing here yet!
         }
 
-        /* Stars a game without Twitter, useful for testing in visualization mode. */
+        /* Starts a game without Twitter, useful for testing in visualization mode. */
         private static void VisualizationTestingMode()
         {
             hc = new HypnocubeImpl(false);
