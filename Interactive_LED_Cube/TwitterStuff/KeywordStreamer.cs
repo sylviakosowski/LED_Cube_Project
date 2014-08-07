@@ -89,10 +89,10 @@ namespace Interactive_LED_Cube
                                  * cubeFound should have length 1 if this is so.
                                  */
                                 List<string> cubeFound = 
-                                    ku.determineKeywordsFromString(new string[]{"#cube"}, tweetText);
+                                    ku.determineKeywordsFromString(new string[]{"cube"}, tweetText);
 
                                 /* If the user did indeed include #cube, look for other commands.*/
-                                if(cubeFound.Count == 1)
+                                if(cubeFound.Count >= 1)
                                 {
                                     /* Find the valid pattern and color commands included in the tweet. */
                                     List<string> patternsFound = ku.determineKeywordsFromString(patterns, tweetText);

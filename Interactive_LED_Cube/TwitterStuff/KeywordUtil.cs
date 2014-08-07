@@ -149,28 +149,33 @@ namespace Interactive_LED_Cube
             {
                 case "fade":
                     {
+                        Console.WriteLine("fade");
+                        anim.Fade(color);
                         break;
                     }
                 case "blink":
                     {
+                        anim.Blink(color);
                         break;
                     }
                 case "random":
                     {
-                        Console.WriteLine("hi");
                         anim.RandomFill(color);
                         break;
                     }
                 case "zigzag":
                     {
+                        anim.ZigZagFill(color);
                         break;
                     }
                 case "box":
                     {
+                        anim.ExpandingCube(color);
                         break;
                     }
                 case "roamer":
                     {
+                        anim.LittleRoamer(color);
                         break;
                     }
                 default:
@@ -180,67 +185,6 @@ namespace Interactive_LED_Cube
                     }
             }
         }
-            
-
-        /*
-        public void RunAnimationBasedOnCommands(List<string> commandsPresent, string[] patterns,
-            string[] colors)
-        {
-            List<byte[]> imageFrames = new List<byte[]>();
-
-            Tuple<bool, string, string> parsedCommand = ParseCommand(commandsPresent, patterns, colors);
-            if(parsedCommand.Item1)
-            {
-                switch(parsedCommand.Item2)
-                {
-                    case "fade":
-                        {
-                            hc.RandomFill(imageFrames, new RGBColor(0,0,0), true, 4);
-                            hc.RandomFill(imageFrames, new RGBColor(0,0,0), false, 8);
-                            break;
-                        }
-                    case "blink":
-                        {
-                            break;
-                        }
-                    case "random":
-                        {
-                            break;
-                        }
-                    case "zigzag":
-                        {
-                            break;
-                        }
-                    case "box":
-                        {
-                            break;
-                        }
-                    case "roamer":
-                        {
-                            break;
-                        }
-                    default:
-                        {
-                            Console.WriteLine("Invalid command. ");
-                            break;
-                        }
-                }
-
-                if(mode == 1)
-                {
-                    DataTransfer.SendImagesToCube(port, imageFrames);
-                }
-                else
-                {
-                    tl.ReceiveAndSendSignal(imageFrames);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Command cube was not found.");
-            }
-        }
-         * */
 
     }
 }

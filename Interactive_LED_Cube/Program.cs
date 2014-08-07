@@ -180,7 +180,7 @@ namespace Interactive_LED_Cube
             tl = new TweetListener(game);
             port = new PIC32();
 
-            anim = new Animations(hc, tl, port, false);
+            anim = new Animations(hc, tl, port, physical);
             ku = new KeywordUtil(anim, physical);
         }
 
@@ -208,7 +208,6 @@ namespace Interactive_LED_Cube
             /*
             hc = new HypnocubeImpl(true);
             port = new PIC32();
-
             tl = new TweetListener(game);
             ku = new KeywordUtil(port, hc);
              * */
