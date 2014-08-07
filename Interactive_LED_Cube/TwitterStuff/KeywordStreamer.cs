@@ -85,10 +85,27 @@ namespace Interactive_LED_Cube
                                     ku.determineKeywordsFromString(keywordArray, tweetText);
                                 */
 
-                                List<string> patternsFound = ku.determineKeywordsFromString(patterns, tweetText);
-                                List<string> colorsFound = ku.determineKeywordsFromString(colors, tweetText);
-                                //Run animations based on the keywords found.
-                                //ku.RunAnimationBasedOnKeywords(keywordDict, keywordsFound);
+                                List<string> cubeFound = 
+                                    ku.determineKeywordsFromString(new string[]{"#cube"}, tweetText);
+
+                                if(cubeFound.Count == 1)
+                                {
+                                    List<string> patternsFound = ku.determineKeywordsFromString(patterns, tweetText);
+                                    List<string> colorsFound = ku.determineKeywordsFromString(colors, tweetText);
+
+                                    if(patternsFound.Count > 0 && colorsFound.Count > 0)
+                                    {
+                                        ku.RunAnimationBasedOnCommands(patternsFound[0], colorsFound[0]);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Commands entered incorrectly.");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Command cube not found.");
+                                }
                             }
                         }
                     }

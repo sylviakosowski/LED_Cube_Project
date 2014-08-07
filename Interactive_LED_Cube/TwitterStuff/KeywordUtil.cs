@@ -141,8 +141,9 @@ namespace Interactive_LED_Cube
                     }
                 case "random":
                     {
-                        hc.RandomFill(imageFrames, new RGBColor(0, 0, 0), true, 4);
-                        hc.RandomFill(imageFrames, new RGBColor(0, 0, 0), false, 8);
+                        Console.WriteLine("sup");
+                        //hc.RandomFill(imageFrames, new RGBColor(0, 0, 0), true, 4);
+                        //hc.RandomFill(imageFrames, new RGBColor(0, 0, 0), false, 8);
                         break;
                     }
                 case "zigzag":

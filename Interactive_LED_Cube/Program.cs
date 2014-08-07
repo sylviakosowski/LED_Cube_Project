@@ -31,8 +31,11 @@ namespace Interactive_LED_Cube
         //File name of the file containing keywords to use in user streaming mode.
         private static string userStreamPath = Path.Combine(Environment.CurrentDirectory, "userstream.txt");
 
-        //File name of the file containing words to parse out of tweets.
-        private static string commandsPath = Path.Combine(Environment.CurrentDirectory, "commands.txt");
+        //File name of the file containing pattern words to parse out of tweets.
+        private static string patternsPath = Path.Combine(Environment.CurrentDirectory, "patterns.txt");
+
+        //File name of the file containing color words to parse out of tweets.
+        private static string colorsPath = Path.Combine(Environment.CurrentDirectory, "colors.txt");
 
         static void Main(string[] args)
         {
@@ -137,10 +140,11 @@ namespace Interactive_LED_Cube
         {
             KeywordReader kr = new KeywordReader(keywordStreamPath);
             kr.ExtractKeywords();
-            string[] commands = kr.ExtractKeywordsOnly(commandsPath);
+            string[] patterns = kr.ExtractKeywordsOnly(patternsPath);
+            string[] colors = kr.ExtractKeywordsOnly(colorsPath);
             KeywordStreamer ks = 
                 new KeywordStreamer(t.TwitterCtx, kr.CombinedString, kr.KeywordArray,
-                    kr.KeywordDict, ku);
+                    kr.KeywordDict, ku, patterns, colors);
             ks.BeginStream();
         }
 
