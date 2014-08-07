@@ -13,12 +13,14 @@ namespace Interactive_LED_Cube
      */
     public class KeywordUtil
     {
-        private TweetListener tl;
-        private PIC32 port;
-        private int mode;
-        private HypnocubeImpl hc;
+        //private TweetListener tl;
+        //private PIC32 port;
+        //private int mode;
+        //private HypnocubeImpl hc;
         private Animations anim;
+        private bool physical;
 
+        /*
         public KeywordUtil(PIC32 port, HypnocubeImpl hc, Animations anim)
         {
             this.port = port;
@@ -26,14 +28,22 @@ namespace Interactive_LED_Cube
             this.hc = hc;
             this.anim = anim;
         }
-
+        */
         /* Constructor to be used when in OpenGL visualization mode. */
+        /*
         public KeywordUtil(TweetListener tl, HypnocubeImpl hc, Animations anim)
         {
             this.tl = tl;
             mode = 0;
             this.hc = hc;
             this.anim = anim;
+        }
+         * */
+
+        public KeywordUtil(Animations anim, bool physical)
+        {
+            this.anim = anim;
+            this.physical = physical;
         }
 
         /* 
@@ -85,9 +95,9 @@ namespace Interactive_LED_Cube
                 }
             }
 
-            if(mode == 0)
+            if(!physical)
             {
-                tl.ReceiveAndSendSignal(imageFrames);
+                //tl.ReceiveAndSendSignal(imageFrames);
             }
         }
 

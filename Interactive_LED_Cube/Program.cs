@@ -88,12 +88,12 @@ namespace Interactive_LED_Cube
         /* Determines if input was 0, 1, 2, 3 or invalid, and acts accordingly. */
         private static void DetermineResponse(int response)
         {
-            Initialize();
 
             if (response == 0)
             {
                 //PassiveMode();
                 //Physical cube + no twitter
+                Initialize(true);
                 Console.WriteLine("Hypnocube Mode: No Twitter");
                 HypnocubeTestingMode();
             }
@@ -104,18 +104,21 @@ namespace Interactive_LED_Cube
 
                 t = new TwitterObj();
                 t.DoEverything();
+                Initialize(true);
 
                 Console.WriteLine("Hypnocube Mode: Twitter");
                 HypnocubeMode();
             }
             else if (response == 2)
             {
+                Initialize(false);
                 //OpenGL visualization + no twitter
                 Console.WriteLine("Cube Visualization Mode: No Twitter");
                 VisualizationTestingMode();
             }
             else if (response == 3)
             {
+                Initialize(false);
                 //OpenGL visualization + twitter
 
                 t = new TwitterObj();
@@ -170,7 +173,7 @@ namespace Interactive_LED_Cube
 
         /*///////////////////////// MODES FOR VISUALIZATION /////////////////////////////*/
 
-        private static void Initialize()
+        private static void Initialize(bool physical)
         {
             hc = new HypnocubeImpl(false);
             game = new Game();
@@ -178,7 +181,7 @@ namespace Interactive_LED_Cube
             port = new PIC32();
 
             anim = new Animations(hc, tl, port, false);
-            ku = new KeywordUtil(tl, hc, anim);
+            ku = new KeywordUtil(anim, physical);
         }
 
         /* Run light animations for Twitter on OpenGL visualization. */
