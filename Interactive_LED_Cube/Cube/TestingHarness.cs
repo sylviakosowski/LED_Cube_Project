@@ -67,21 +67,33 @@ namespace Interactive_LED_Cube.Cube
             //BlinkLEDTest();
             //BlinkLEDsTest();
 
-            RandomFillTest();
-            ZigZagFillTest();
-            ExpandingCubeTest();
-            LittleRoamerTest();
+            //RandomFillTest();
+            //ZigZagFillTest();
+            //ExpandingCubeTest();
+            //LittleRoamerTest();
 
-            //Need to keep this to send signal to visualization.
-            //Won't need for actual cube.
-            if(physical)
+            for (int i = 0; i < 10; i++ )
             {
-                DataTransfer.SendImagesToCube(port, imageFrames);
+                //FadeLEDsSameRateTest();
+                //FadeLEDsDiffRatesTest();
+                //BlinkLEDsTest();
+                //RandomFillTest();
+                //ZigZagFillTest();
+                //ExpandingCubeTest();
+                //LittleRoamerTest();
             }
-            else
-            {
-                tl.ReceiveAndSendSignal(imageFrames);
-            }
+
+
+                //Need to keep this to send signal to visualization.
+                //Won't need for actual cube.
+                if (physical)
+                {
+                    DataTransfer.SendImagesToCube(port, imageFrames);
+                }
+                else
+                {
+                    tl.ReceiveAndSendSignal(imageFrames);
+                }
         }
 
         ///////////////// BASIC FUNCTIONALITY TESTS /////////////////
@@ -166,7 +178,7 @@ namespace Interactive_LED_Cube.Cube
                     for (int k = 0; k < 8; k++)
                     {
                         coords.Add(new Coordinate(i, j, k));
-                        colors.Add(blue);
+                        colors.Add(red);
                         if(i == 0 && j == 0 && k == 0)
                         {
                             rates.Add(5);
@@ -449,7 +461,7 @@ namespace Interactive_LED_Cube.Cube
         /* Fill the block in a zigzag pattern. */
         private void ZigZagFillTest()
         {
-            hc.RandomFullCubeColorChange(imageFrames, 1, false);
+            //hc.RandomFullCubeColorChange(imageFrames, 1, false);
             hc.ZigZagFill(imageFrames, red, true, 1);
         }
 

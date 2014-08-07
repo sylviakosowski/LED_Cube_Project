@@ -14,27 +14,30 @@ namespace Interactive_LED_Cube
     public class KeywordUtil
     {
         private TweetListener tl;
+        private PIC32 port;
         private int mode;
 
-        public KeywordUtil()
+        public KeywordUtil(PIC32 port)
         {
+            this.port = port;
+            mode = 1;
         }
 
         /* Constructor to be used when in OpenGL visualization mode. */
-        public KeywordUtil(TweetListener tl, int mode)
+        public KeywordUtil(TweetListener tl)
         {
             this.tl = tl;
-            this.mode = mode;
+            mode = 0;
         }
 
         /* 
          * Determines which Twitter keywords are in the Tweet's status string, and returns
-         * an ArrayList of those keywords. 
+         * an list of those keywords.
          */
-        public ArrayList determineKeywordsFromString(string[] keywords, string s)
+        public List<string> determineKeywordsFromString(string[] keywords, string s)
         {
             string status = s.ToLower();
-            ArrayList keywordsPresent = new ArrayList();
+            List<string> keywordsPresent = new List<String>();
             foreach(string element in keywords)
             {
                 if(status.Contains(element))
@@ -55,7 +58,7 @@ namespace Interactive_LED_Cube
          * be done in some sort of animation handler, not here.
          */
         public void RunAnimationBasedOnKeywords(Dictionary<string,int> keywordDict, 
-            ArrayList keywordsPresent)
+            List<string> keywordsPresent)
         {
             List<byte[]> imageFrames = new List<byte[]>();
             //HypnocubeImpl hc = new HypnocubeImpl();
@@ -79,6 +82,89 @@ namespace Interactive_LED_Cube
             if(mode == 0)
             {
                 tl.ReceiveAndSendSignal(imageFrames);
+            }
+        }
+
+        /* Given a list of commands which were present in the Tweet, returns a tuple where the bool value indicates
+         * if the command "cube" was found in the tweet, and two string values representing the desired pattern
+         * and color.
+         */
+        public Tuple<bool, string,string> ParseCommand(List<string> commandsPresent, string[] patterns, string[] colors)
+        {
+            bool cubeCommandFound = false;
+            string color = null;
+            string pattern = null;
+
+            foreach(string command in commandsPresent)
+            {
+                foreach(string c in patterns)
+                {
+                    if(command.Equals(c))
+                    {
+                        pattern = command;
+                    }
+                    if(command.Equals("cube"))
+                    {
+                        cubeCommandFound = true;
+                    }
+                }
+
+                foreach(string c in colors)
+                {
+                    if(command.Equals(c))
+                    {
+                        color = command;
+                    }
+                }
+            }
+
+            return new Tuple<bool, string, string>(cubeCommandFound, pattern, color);
+            
+        }
+
+        public void RunAnimationBasedOnCommands(List<string> commandsPresent, string[] patterns,
+            string[] colors)
+        {
+            Tuple<bool, string, string> parsedCommand = ParseCommand(commandsPresent, patterns, colors);
+            if(parsedCommand.Item1)
+            {
+                switch(parsedCommand.Item2)
+                {
+                    case "fade":
+                        {
+
+                            break;
+                        }
+                    case "blink":
+                        {
+                            break;
+                        }
+                    case "random":
+                        {
+                            break;
+                        }
+                    case "zigzag":
+                        {
+                            break;
+                        }
+                    case "box":
+                        {
+                            break;
+                        }
+                    case "roamer":
+                        {
+                            break;
+                        }
+                    default:
+                        {
+                            Console.WriteLine("Invalid command. ");
+                            break;
+                        }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Command cube was not found.");
             }
         }
 

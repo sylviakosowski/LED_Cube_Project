@@ -67,5 +67,13 @@ namespace Interactive_LED_Cube
             }
         }
 
+        /* Given a file, returns a string array of all the keywords in the file.
+         *
+         * Doesn't do all the stuff mentioned in previous method.
+         */
+        public string[] ExtractKeywordsOnly(string file)
+        {
+            return System.IO.File.ReadAllLines(file);
+        }
     }
 }

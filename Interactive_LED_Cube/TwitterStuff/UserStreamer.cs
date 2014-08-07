@@ -68,7 +68,7 @@ namespace Interactive_LED_Cube
                                  Console.WriteLine(tweetText + "\n");
 
                                  //Determine which keywords were found.
-                                 ArrayList keywordsFound =
+                                 List<string> keywordsFound =
                                      ku.determineKeywordsFromString(keywordArray, tweetText);
 
                                  //Run animations based on the keywords found.

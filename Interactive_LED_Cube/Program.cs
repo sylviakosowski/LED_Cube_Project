@@ -31,6 +31,9 @@ namespace Interactive_LED_Cube
         //File name of the file containing keywords to use in user streaming mode.
         private static string userStreamPath = Path.Combine(Environment.CurrentDirectory, "userstream.txt");
 
+        //File name of the file containing words to parse out of tweets.
+        private static string commandsPath = Path.Combine(Environment.CurrentDirectory, "commands.txt");
+
         static void Main(string[] args)
         {
             Begin(CUBE_MODE);
@@ -98,7 +101,6 @@ namespace Interactive_LED_Cube
 
                 Console.WriteLine("Hypnocube Mode: Twitter");
                 HypnocubeMode();
-                PassiveMode();
             }
             else if (response == 2)
             {
@@ -115,7 +117,6 @@ namespace Interactive_LED_Cube
 
                 Console.WriteLine("Cube Visualization Mode: Twitter");
                 VisualizationMode();
-                PassiveMode();
             }
             else
             {
@@ -136,6 +137,7 @@ namespace Interactive_LED_Cube
         {
             KeywordReader kr = new KeywordReader(keywordStreamPath);
             kr.ExtractKeywords();
+            string[] commands = kr.ExtractKeywordsOnly(commandsPath);
             KeywordStreamer ks = 
                 new KeywordStreamer(t.TwitterCtx, kr.CombinedString, kr.KeywordArray,
                     kr.KeywordDict, ku);
@@ -167,9 +169,10 @@ namespace Interactive_LED_Cube
             hc = new HypnocubeImpl(false);
             game = new Game();
             tl = new TweetListener(game);
-            ku = new KeywordUtil(tl, CUBE_MODE);
+            ku = new KeywordUtil(tl);
 
             //SeekResponse();
+            PassiveMode();
 
             game.Run(30, 30);
         }
@@ -178,6 +181,11 @@ namespace Interactive_LED_Cube
         private static void HypnocubeMode()
         {
             hc = new HypnocubeImpl(true);
+            port = new PIC32();
+
+            tl = new TweetListener(game);
+            ku = new KeywordUtil(port);
+            PassiveMode();
             //Nothing here yet!
         }
 
