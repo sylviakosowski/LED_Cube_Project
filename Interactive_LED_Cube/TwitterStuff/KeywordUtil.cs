@@ -16,18 +16,21 @@ namespace Interactive_LED_Cube
         private TweetListener tl;
         private PIC32 port;
         private int mode;
+        private HypnocubeImpl hc;
 
-        public KeywordUtil(PIC32 port)
+        public KeywordUtil(PIC32 port, HypnocubeImpl hc)
         {
             this.port = port;
             mode = 1;
+            this.hc = hc;
         }
 
         /* Constructor to be used when in OpenGL visualization mode. */
-        public KeywordUtil(TweetListener tl)
+        public KeywordUtil(TweetListener tl, HypnocubeImpl hc)
         {
             this.tl = tl;
             mode = 0;
+            this.hc = hc;
         }
 
         /* 
@@ -122,9 +125,53 @@ namespace Interactive_LED_Cube
             
         }
 
+        public void RunAnimationBasedOnCommands(string pattern, string color)
+        {
+            List<byte[]> imageFrames = new List<byte[]>();
+
+            switch (pattern)
+            {
+                case "fade":
+                    {
+                        break;
+                    }
+                case "blink":
+                    {
+                        break;
+                    }
+                case "random":
+                    {
+                        hc.RandomFill(imageFrames, new RGBColor(0, 0, 0), true, 4);
+                        hc.RandomFill(imageFrames, new RGBColor(0, 0, 0), false, 8);
+                        break;
+                    }
+                case "zigzag":
+                    {
+                        break;
+                    }
+                case "box":
+                    {
+                        break;
+                    }
+                case "roamer":
+                    {
+                        break;
+                    }
+                default:
+                    {
+                        Console.WriteLine("Invalid command. ");
+                        break;
+                    }
+            }
+        }
+            
+
+        /*
         public void RunAnimationBasedOnCommands(List<string> commandsPresent, string[] patterns,
             string[] colors)
         {
+            List<byte[]> imageFrames = new List<byte[]>();
+
             Tuple<bool, string, string> parsedCommand = ParseCommand(commandsPresent, patterns, colors);
             if(parsedCommand.Item1)
             {
@@ -132,7 +179,8 @@ namespace Interactive_LED_Cube
                 {
                     case "fade":
                         {
-
+                            hc.RandomFill(imageFrames, new RGBColor(0,0,0), true, 4);
+                            hc.RandomFill(imageFrames, new RGBColor(0,0,0), false, 8);
                             break;
                         }
                     case "blink":
@@ -161,12 +209,22 @@ namespace Interactive_LED_Cube
                             break;
                         }
                 }
+
+                if(mode == 1)
+                {
+                    DataTransfer.SendImagesToCube(port, imageFrames);
+                }
+                else
+                {
+                    tl.ReceiveAndSendSignal(imageFrames);
+                }
             }
             else
             {
                 Console.WriteLine("Command cube was not found.");
             }
         }
+         * */
 
     }
 }

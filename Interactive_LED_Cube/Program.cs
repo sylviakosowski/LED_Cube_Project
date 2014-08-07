@@ -169,7 +169,7 @@ namespace Interactive_LED_Cube
             hc = new HypnocubeImpl(false);
             game = new Game();
             tl = new TweetListener(game);
-            ku = new KeywordUtil(tl);
+            ku = new KeywordUtil(tl, hc);
 
             //SeekResponse();
             PassiveMode();
@@ -184,7 +184,7 @@ namespace Interactive_LED_Cube
             port = new PIC32();
 
             tl = new TweetListener(game);
-            ku = new KeywordUtil(port);
+            ku = new KeywordUtil(port, hc);
             PassiveMode();
             //Nothing here yet!
         }

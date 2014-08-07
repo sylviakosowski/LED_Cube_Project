@@ -23,18 +23,23 @@ namespace Interactive_LED_Cube
         private string keywords; //Keywords to track.
         private string[] keywordArray; //Keywrods in array.
         private Dictionary<string, int> keywordDict; //Keywords paired with dict for anim
-        private KeywordUtil ku; 
+        private KeywordUtil ku;
+        private string[] patterns; //Array of pattern commands for cube.
+        private string[] colors; //Array of color commands for cube.
 
         /* Constructor */
         public KeywordStreamer(TwitterContext twitterCtx, 
             string keywords, string[] keywordArray,
-            Dictionary<string,int> keywordDict, KeywordUtil ku)
+            Dictionary<string,int> keywordDict, KeywordUtil ku, string[] patterns,
+            string[] colors)
         {
             this.twitterCtx = twitterCtx;
             this.keywords = keywords;
             this.keywordArray = keywordArray;
             this.keywordDict = keywordDict;
             this.ku = ku;
+            this.patterns = patterns;
+            this.colors = colors;
 
             Console.WriteLine("\nTracking keywords:" + keywords);
         }
@@ -75,11 +80,15 @@ namespace Interactive_LED_Cube
                                 Console.WriteLine(tweetText + "\n");
 
                                 //Determine which keywords were found.
+                                /*
                                 List<string> keywordsFound =
                                     ku.determineKeywordsFromString(keywordArray, tweetText);
+                                */
 
+                                List<string> patternsFound = ku.determineKeywordsFromString(patterns, tweetText);
+                                List<string> colorsFound = ku.determineKeywordsFromString(colors, tweetText);
                                 //Run animations based on the keywords found.
-                                ku.RunAnimationBasedOnKeywords(keywordDict, keywordsFound);
+                                //ku.RunAnimationBasedOnKeywords(keywordDict, keywordsFound);
                             }
                         }
                     }
