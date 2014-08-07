@@ -85,14 +85,20 @@ namespace Interactive_LED_Cube
                                     ku.determineKeywordsFromString(keywordArray, tweetText);
                                 */
 
+                                /* Determine if this post which contains #Autodesk also contains #cube.
+                                 * cubeFound should have length 1 if this is so.
+                                 */
                                 List<string> cubeFound = 
                                     ku.determineKeywordsFromString(new string[]{"#cube"}, tweetText);
 
+                                /* If the user did indeed include #cube, look for other commands.*/
                                 if(cubeFound.Count == 1)
                                 {
+                                    /* Find the valid pattern and color commands included in the tweet. */
                                     List<string> patternsFound = ku.determineKeywordsFromString(patterns, tweetText);
                                     List<string> colorsFound = ku.determineKeywordsFromString(colors, tweetText);
 
+                                    /* */
                                     if(patternsFound.Count > 0 && colorsFound.Count > 0)
                                     {
                                         ku.RunAnimationBasedOnCommands(patternsFound[0], colorsFound[0]);

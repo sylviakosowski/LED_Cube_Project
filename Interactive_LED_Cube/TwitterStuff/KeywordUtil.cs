@@ -17,20 +17,23 @@ namespace Interactive_LED_Cube
         private PIC32 port;
         private int mode;
         private HypnocubeImpl hc;
+        private Animations anim;
 
-        public KeywordUtil(PIC32 port, HypnocubeImpl hc)
+        public KeywordUtil(PIC32 port, HypnocubeImpl hc, Animations anim)
         {
             this.port = port;
             mode = 1;
             this.hc = hc;
+            this.anim = anim;
         }
 
         /* Constructor to be used when in OpenGL visualization mode. */
-        public KeywordUtil(TweetListener tl, HypnocubeImpl hc)
+        public KeywordUtil(TweetListener tl, HypnocubeImpl hc, Animations anim)
         {
             this.tl = tl;
             mode = 0;
             this.hc = hc;
+            this.anim = anim;
         }
 
         /* 
@@ -125,9 +128,12 @@ namespace Interactive_LED_Cube
             
         }
 
-        public void RunAnimationBasedOnCommands(string pattern, string color)
+        public void RunAnimationBasedOnCommands(string pattern, string colorString)
         {
             List<byte[]> imageFrames = new List<byte[]>();
+            ColorDict cd = new ColorDict();
+            RGBColor color;
+            bool colorInDict = cd.Dict.TryGetValue(colorString, out color);
 
             switch (pattern)
             {
@@ -141,9 +147,8 @@ namespace Interactive_LED_Cube
                     }
                 case "random":
                     {
-                        Console.WriteLine("sup");
-                        //hc.RandomFill(imageFrames, new RGBColor(0, 0, 0), true, 4);
-                        //hc.RandomFill(imageFrames, new RGBColor(0, 0, 0), false, 8);
+                        Console.WriteLine("hi");
+                        anim.RandomFill(color);
                         break;
                     }
                 case "zigzag":

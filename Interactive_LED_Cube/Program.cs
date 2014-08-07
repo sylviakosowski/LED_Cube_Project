@@ -24,6 +24,7 @@ namespace Interactive_LED_Cube
         private static TweetListener tl;
         private static Cube.TestingHarness th;
         private static PIC32 port;
+        private static Animations anim;
 
         //File name of the file containing keywords to use in keyword streaming mode.
         private static string keywordStreamPath = Path.Combine(Environment.CurrentDirectory, "keywordstream.txt");
@@ -87,6 +88,8 @@ namespace Interactive_LED_Cube
         /* Determines if input was 0, 1, 2, 3 or invalid, and acts accordingly. */
         private static void DetermineResponse(int response)
         {
+            Initialize();
+
             if (response == 0)
             {
                 //PassiveMode();
@@ -167,14 +170,29 @@ namespace Interactive_LED_Cube
 
         /*///////////////////////// MODES FOR VISUALIZATION /////////////////////////////*/
 
-        /* Run light animations for Twitter on OpenGL visualization. */
-        private static void VisualizationMode()
+        private static void Initialize()
         {
             hc = new HypnocubeImpl(false);
             game = new Game();
             tl = new TweetListener(game);
-            ku = new KeywordUtil(tl, hc);
+            port = new PIC32();
 
+            anim = new Animations(hc, tl, port, false);
+            ku = new KeywordUtil(tl, hc, anim);
+        }
+
+        /* Run light animations for Twitter on OpenGL visualization. */
+        private static void VisualizationMode()
+        {
+            /*
+            hc = new HypnocubeImpl(false);
+            game = new Game();
+            tl = new TweetListener(game);
+            port = new PIC32();
+
+            ku = new KeywordUtil(tl, hc);
+            anim = new Animations(hc, tl, port, false);
+            */
             //SeekResponse();
             PassiveMode();
 
@@ -184,11 +202,15 @@ namespace Interactive_LED_Cube
         /* Run light animations for Twitter on physical Hypnocube */
         private static void HypnocubeMode()
         {
+            /*
             hc = new HypnocubeImpl(true);
             port = new PIC32();
 
             tl = new TweetListener(game);
             ku = new KeywordUtil(port, hc);
+             * */
+            port.Open("COM5");
+            Console.WriteLine(port.IsConnected);
             PassiveMode();
             //Nothing here yet!
         }
@@ -196,13 +218,16 @@ namespace Interactive_LED_Cube
         /* Starts a game without Twitter, useful for testing in visualization mode. */
         private static void VisualizationTestingMode()
         {
+            /*
             hc = new HypnocubeImpl(false);
             game = new Game();
             port = new PIC32();
             tl = new TweetListener(game);
-            th = new Cube.TestingHarness(hc, tl, port, false);
+             * */
 
+            th = new Cube.TestingHarness(hc, tl, port, false);
             th.BeginTests();
+
             game.Run(30, 30);
         }
 
@@ -211,12 +236,14 @@ namespace Interactive_LED_Cube
          */
         private static void HypnocubeTestingMode()
         {
+            /*
             hc = new HypnocubeImpl(true);
             port = new PIC32();
             game = new Game();
             tl = new TweetListener(game);
-            th = new Cube.TestingHarness(hc, tl, port, true);
+             * */
 
+            th = new Cube.TestingHarness(hc, tl, port, true);
             port.Open("COM5");
 
             Console.WriteLine(port.IsConnected);
