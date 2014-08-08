@@ -39,13 +39,14 @@ namespace Interactive_LED_Cube
             else
             {
                 tl.ReceiveAndSendSignal(imageFrames);
-                imageFrames = new List<byte[]>();
+                //imageFrames = new List<byte[]>();
             }
         }
 
         /* Animation pool */
         public void Fade(RGBColor color)
         {
+            //Console.WriteLine("uuuh");
             hc.SpecificColorWholeCube(black, false);
 
             List<Coordinate> coords = new List<Coordinate>();
@@ -69,27 +70,33 @@ namespace Interactive_LED_Cube
 
             hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
 
+            List<Coordinate> coords2 = new List<Coordinate>();
+            List<RGBColor> colors2 = new List<RGBColor>();
+            List<int> rates2 = new List<int>();
+            //RGBColor blue = new RGBColor(0, 0, 255);
+            LightingMethod fader2 = new Fader(hc);
+
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
                     for (int k = 0; k < 8; k++)
                     {
-                        coords.Add(new Coordinate(i, j, k));
-                        colors.Add(color);
+                        coords2.Add(new Coordinate(i, j, k));
+                        colors2.Add(color);
                         if (i == 0 && j == 0 && k == 0)
                         {
-                            rates.Add(5);
+                            rates2.Add(5);
                         }
                         else
                         {
-                            rates.Add((i + j + k) * 10);
+                            rates2.Add((i + j + k) * 10);
                         }
                     }
                 }
             }
 
-            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
+            hc.LightLEDs(imageFrames, coords2, colors2, rates2, fader2, false);
 
             sendFrames();
         }
@@ -121,6 +128,7 @@ namespace Interactive_LED_Cube
 
             LightingMethod blinker = new Blinker(hc, numBlinks);
             hc.LightLEDs(imageFrames, coords, colors, rates, blinker, false);
+            sendFrames();
         }
 
         public void RandomFill(RGBColor color)

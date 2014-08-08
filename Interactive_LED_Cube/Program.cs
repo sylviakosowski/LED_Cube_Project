@@ -227,8 +227,10 @@ namespace Interactive_LED_Cube
             tl = new TweetListener(game);
              * */
 
-            th = new Cube.TestingHarness(hc, tl, port, false);
-            th.BeginTests();
+            //th = new Cube.TestingHarness(hc, tl, port, false);
+            //th.BeginTests();
+            Console.WriteLine("meep?");
+            anim.DoAll(new RGBColor(255, 0, 0));
 
             game.Run(30, 30);
         }
