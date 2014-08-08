@@ -34,16 +34,20 @@ namespace Interactive_LED_Cube
             if (physical)
             {
                 DataTransfer.SendImagesToCube(port, imageFrames);
+                imageFrames = new List<byte[]>();
             }
             else
             {
                 tl.ReceiveAndSendSignal(imageFrames);
+                imageFrames = new List<byte[]>();
             }
         }
 
         /* Animation pool */
         public void Fade(RGBColor color)
         {
+            hc.SpecificColorWholeCube(black, false);
+
             List<Coordinate> coords = new List<Coordinate>();
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
@@ -92,6 +96,8 @@ namespace Interactive_LED_Cube
 
         public void Blink(RGBColor color)
         {
+            hc.SpecificColorWholeCube(black, false);
+
             List<Coordinate> coords = new List<Coordinate>();
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
@@ -119,6 +125,8 @@ namespace Interactive_LED_Cube
 
         public void RandomFill(RGBColor color)
         {
+            hc.SpecificColorWholeCube(black, false);
+
             hc.RandomFill(imageFrames, color, true, 4);
             hc.RandomFill(imageFrames, black, false, 8);
             sendFrames();
@@ -126,12 +134,16 @@ namespace Interactive_LED_Cube
 
         public void ZigZagFill(RGBColor color)
         {
+            hc.SpecificColorWholeCube(black, false);
+
             hc.ZigZagFill(imageFrames, color, true, 1);
             sendFrames();
         }
 
         public void ExpandingCube(RGBColor color)
         {
+            hc.SpecificColorWholeCube(black, false);
+
             ColorFiller cf = new ColorFiller(hc);
             Fader f = new Fader(hc);
 
@@ -141,9 +153,21 @@ namespace Interactive_LED_Cube
 
         public void LittleRoamer(RGBColor color)
         {
+            hc.SpecificColorWholeCube(black, false);
+
             ColorFiller cf = new ColorFiller(hc);
             hc.LittleRoamer(imageFrames, color, 4, cf, true);
             sendFrames();
+        }
+
+        public void DoAll(RGBColor color)
+        {
+            Fade(color);
+            Blink(color);
+            RandomFill(color);
+            ZigZagFill(color);
+            ExpandingCube(color);
+            LittleRoamer(color);
         }
     }
 }

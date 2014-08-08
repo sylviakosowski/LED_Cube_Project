@@ -175,7 +175,7 @@ namespace Interactive_LED_Cube
 
         private static void Initialize(bool physical)
         {
-            hc = new HypnocubeImpl(false);
+            hc = new HypnocubeImpl(physical);
             game = new Game();
             tl = new TweetListener(game);
             port = new PIC32();
@@ -250,9 +250,9 @@ namespace Interactive_LED_Cube
 
             Console.WriteLine(port.IsConnected);
 
-            th.BeginTests();
+            //th.BeginTests();
             //game.Run(30, 30);
-
+            anim.DoAll(new RGBColor(255,0,0));
 
             port.ClosePort();
         }
