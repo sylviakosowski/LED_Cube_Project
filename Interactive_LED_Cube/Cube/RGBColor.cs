@@ -34,5 +34,10 @@ namespace Interactive_LED_Cube
         {
             get { return blue; }
         }
+
+        public override string ToString()
+        {
+            return "(" + R.ToString() + ", " + G.ToString() + ", " + B.ToString() + ")";
+        }
     }
 }

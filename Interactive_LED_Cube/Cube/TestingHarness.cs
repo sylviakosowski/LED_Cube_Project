@@ -72,7 +72,7 @@ namespace Interactive_LED_Cube.Cube
             //ExpandingCubeTest();
             //LittleRoamerTest();
 
-            for (int i = 0; i < 10; i++ )
+            for (int i = 0; i < 5; i++ )
             {
                 //FadeLEDsSameRateTest();
                 //FadeLEDsDiffRatesTest();
@@ -462,7 +462,10 @@ namespace Interactive_LED_Cube.Cube
         private void ZigZagFillTest()
         {
             //hc.RandomFullCubeColorChange(imageFrames, 1, false);
-            hc.ZigZagFill(imageFrames, red, true, 1);
+            hc.ZigZagFill(imageFrames, red, true, 1, HypnocubeImpl.Direction.X);
+            hc.ZigZagFill(imageFrames, blue, true, 1, HypnocubeImpl.Direction.Y);
+            hc.ZigZagFill(imageFrames, green, true, 1, HypnocubeImpl.Direction.Z);
+            hc.ZigZagFill(imageFrames, black, true, 1, HypnocubeImpl.Direction.Y);
         }
 
         /* Expanding cube in the center, filled solidly. */
@@ -471,13 +474,13 @@ namespace Interactive_LED_Cube.Cube
             ColorFiller cf = new ColorFiller(hc);
             Fader f = new Fader(hc);
 
-            hc.ExpandingSolidCube(imageFrames, red, false, 20, cf);
+            hc.ExpandingSolidCube(imageFrames, red, false, 40, f);
         }
 
         private void LittleRoamerTest()
         {
             ColorFiller cf = new ColorFiller(hc);
-            hc.LittleRoamer(imageFrames, red, 4, cf, true);
+            hc.LittleRoamer(imageFrames, red, 4, cf, false);
         }
     }
 }

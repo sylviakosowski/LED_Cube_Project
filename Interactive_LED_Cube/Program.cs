@@ -227,10 +227,9 @@ namespace Interactive_LED_Cube
             tl = new TweetListener(game);
              * */
 
-            //th = new Cube.TestingHarness(hc, tl, port, false);
-            //th.BeginTests();
-            Console.WriteLine("meep?");
-            anim.DoAll(new RGBColor(255, 0, 0));
+            th = new Cube.TestingHarness(hc, tl, port, false);
+            th.BeginTests();
+            //anim.DoAll(new RGBColor(255, 0, 0));
 
             game.Run(30, 30);
         }
@@ -252,9 +251,9 @@ namespace Interactive_LED_Cube
 
             Console.WriteLine(port.IsConnected);
 
-            //th.BeginTests();
+            th.BeginTests();
             //game.Run(30, 30);
-            anim.DoAll(new RGBColor(255,0,0));
+            //anim.DoAll(new RGBColor(255,0,0));
 
             port.ClosePort();
         }

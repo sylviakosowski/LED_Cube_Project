@@ -850,10 +850,6 @@ namespace Interactive_LED_Cube
 
         }
 
-
-
-
-
         ///////////////////// OFFICIAL ANIMATIONS /////////////////////////
 
         /* Fills the cube by filling one LED at a time, which is in a random position. 
@@ -918,13 +914,100 @@ namespace Interactive_LED_Cube
         }
 
         /* Zig-zag fills the cube with color, starting from bottom and zig-zagging to top. */
-        public void ZigZagFill(List<byte[]> imageFrames, RGBColor color ,bool rand, int rate)
+        public void ZigZagFill(List<byte[]> imageFrames, RGBColor color ,bool rand, int rate, Direction d)
         {
             bool turnSignal = false;
 
             //ColorFiller cf = new ColorFiller(this);
             Fader f = new Fader(this);
 
+            switch(d)
+            {
+                case Direction.X:
+                    {
+                        for (int x = 0; x < 8; x++)
+                        {
+                            if (turnSignal)
+                            {
+                                for (int y = 7; y >= 0; y--)
+                                {
+                                    //cf.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, 1);
+                                    f.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, rate, false);
+                                    AddImageFrame(imageFrames);
+                                }
+                                turnSignal = false;
+                            }
+                            else
+                            {
+                                for (int y = 0; y < 8; y++)
+                                {
+                                    f.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, rate, false);
+                                    AddImageFrame(imageFrames);
+                                }
+                                turnSignal = true;
+                            }
+                        }
+                        break;
+                    }
+                case Direction.Y:
+                    {
+                        for (int y = 0; y < 8; y++)
+                        {
+                            if (turnSignal)
+                            {
+                                for (int x = 7; x >= 0; x--)
+                                {
+                                    //cf.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, 1);
+                                    f.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, rate, false);
+                                    AddImageFrame(imageFrames);
+                                }
+                                turnSignal = false;
+                            }
+                            else
+                            {
+                                for (int x = 0; x < 8; x++)
+                                {
+                                    f.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, rate, false);
+                                    AddImageFrame(imageFrames);
+                                }
+                                turnSignal = true;
+                            }
+                        }
+                        break;
+                    }
+                case Direction.Z:
+                    {
+                        for (int z = 0; z < 8; z++)
+                        {
+                            if (turnSignal)
+                            {
+                                for (int y = 7; y >= 0; y--)
+                                {
+                                    //cf.LightBlockUniform(imageFrames, new Coordinate(x, y, 0), new Coordinate(x, y, 7), color, 1);
+                                    f.LightBlockUniform(imageFrames, new Coordinate(0, y, z), new Coordinate(7, y, z), color, rate, false);
+                                    AddImageFrame(imageFrames);
+                                }
+                                turnSignal = false;
+                            }
+                            else
+                            {
+                                for (int y = 0; y < 8; y++)
+                                {
+                                    f.LightBlockUniform(imageFrames, new Coordinate(7, y, z), new Coordinate(0, y, z), color, rate, false);
+                                    AddImageFrame(imageFrames);
+                                }
+                                turnSignal = true;
+                            }
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+
+            /*
             for(int y = 0; y < 8; y++)
             {
                 if(turnSignal)
@@ -947,6 +1030,7 @@ namespace Interactive_LED_Cube
                     turnSignal = true;
                 }
             }
+             * */
         }
     
         /* Makes a miniature cube expand and contract. (1 cycle) */
@@ -954,18 +1038,26 @@ namespace Interactive_LED_Cube
         {
             for(int i = 0; i < 4; i++)
             {
-                lm.LightBlockUniform(imageFrames,new Coordinate(i,i,i), new Coordinate(7-i, 7-i, 7-i), color, rate, true);
+                //Fade in
+                lm.LightBlockUniform(imageFrames,new Coordinate(i,i,i), new Coordinate(7-i, 7-i, 7-i), color, rate, false);
+                
+                //Fade out
+                lm.LightBlockUniform(imageFrames, new Coordinate(i, i, i), new Coordinate(7 - i, 7 - i, 7 - i), new RGBColor(0,0,0), rate, false);
             }
-            lm.LightBlockUniform(imageFrames, new Coordinate(0,0,0), new Coordinate(0,0,0), new RGBColor(0,0,0), rate, true);
+            //lm.LightBlockUniform(imageFrames, new Coordinate(0,0,0), new Coordinate(0,0,0), new RGBColor(0,0,0), rate, false);
 
 
             for (int i = 3; i >= 0; i--)
             {
+                //Fade in
                 lm.LightBlockUniform(imageFrames, new Coordinate(i, i, i), new Coordinate(7 - i, 7 - i, 7 - i), color, rate, true);
+
+                //Fade out
+                lm.LightBlockUniform(imageFrames, new Coordinate(i, i, i), new Coordinate(7 - i, 7 - i, 7 - i), new RGBColor(0, 0, 0), rate, false);
             }
         }
 
-        /* A little roamer, one LED which moves around randomly leaving a trail behind it if resetFrames is true. */
+        /* A little roamer, one LED which moves around randomly leaving a trail behind it if resetFrames is false. */
         public void LittleRoamer(List<byte[]> imageFrames, RGBColor color, int rate, LightingMethod lm, bool resetFrames)
         {
             Random rand = new Random();
@@ -1026,7 +1118,6 @@ namespace Interactive_LED_Cube
                         }
                 }
 
-                Console.WriteLine(c.ToString());
                 lm.LightBlockUniform(imageFrames, c, c, color, rate, resetFrames);
             }
 

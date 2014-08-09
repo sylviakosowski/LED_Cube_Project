@@ -42,7 +42,7 @@ namespace Interactive_LED_Cube
             List<RGBColor> fadeAnimation = new List<RGBColor>();
             //Get old RGB value at c.
             int index = hc.IndexFromCoord(c);
-
+            
             int oldR = hc.ColorArray[index];
             int oldG = hc.ColorArray[index + 1];
             int oldB = hc.ColorArray[index + 2];
