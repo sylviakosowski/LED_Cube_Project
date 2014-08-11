@@ -72,6 +72,9 @@ namespace Interactive_LED_Cube.Cube
             //ExpandingCubeTest();
             //LittleRoamerTest();
 
+            FadeLEDsRainbowTest();
+            LittleRoamerTest();
+
             for (int i = 0; i < 5; i++ )
             {
                 //FadeLEDsSameRateTest();
@@ -180,6 +183,37 @@ namespace Interactive_LED_Cube.Cube
                         coords.Add(new Coordinate(i, j, k));
                         colors.Add(red);
                         if(i == 0 && j == 0 && k == 0)
+                        {
+                            rates.Add(5);
+                        }
+                        else
+                        {
+                            rates.Add((i + j + k) * 10);
+                        }
+                    }
+                }
+            }
+
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
+        }
+
+        private void FadeLEDsRainbowTest()
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+
+            LightingMethod fader = new Fader(hc);
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        coords.Add(new Coordinate(i, j, k));
+                        colors.Add(hc.MapRainbow1(new Coordinate(i,j,k)));
+                        if (i == 0 && j == 0 && k == 0)
                         {
                             rates.Add(5);
                         }
@@ -480,6 +514,7 @@ namespace Interactive_LED_Cube.Cube
         private void LittleRoamerTest()
         {
             ColorFiller cf = new ColorFiller(hc);
+            hc.LittleRoamer(imageFrames, red, 4, cf, true);
             hc.LittleRoamer(imageFrames, red, 4, cf, false);
         }
     }

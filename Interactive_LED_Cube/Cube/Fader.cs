@@ -79,21 +79,6 @@ namespace Interactive_LED_Cube
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
 
-            /*
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        coords.Add(new Coordinate(i, j, k));
-                        colors.Add(color);
-                        rates.Add(50);
-                    }
-                }
-            }
-             * */
-
             foreach( Coordinate c in coords )
             {
                 colors.Add(color);

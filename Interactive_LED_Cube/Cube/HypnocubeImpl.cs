@@ -1118,9 +1118,47 @@ namespace Interactive_LED_Cube
                         }
                 }
 
-                lm.LightBlockUniform(imageFrames, c, c, color, rate, resetFrames);
+                RGBColor newColor = MapRainbow1(c);
+
+                lm.LightBlockUniform(imageFrames, c, c, newColor, rate, resetFrames);
             }
 
         }
+
+        public RGBColor MapCoordToColor(Coordinate c)
+        {
+            //R values controlled by X
+            int R = 256 - 32 * (c.X + 1);
+
+            //G values controlled by Y
+            /*
+            int G;
+            if(c.Y < 4)
+            {
+                G = 0 + 64 * (c.Y);
+            }
+            else
+            {
+                G = 256 - 64 * (c.Y);
+            }
+             * */
+            int G = 256 - 32 * (c.Y + 1);
+
+            //B values controlled by Z
+            //int B = 0 + 32 * (c.Z);
+            int B = 256 - 32 * (c.Z + 1);
+
+            return new RGBColor((byte)R,(byte)G,(byte)B);
+        }
+
+        public RGBColor MapRainbow1(Coordinate c)
+        {
+            int R = 256 - 32 * (c.X + 1);
+            int G = 256 - 32 * (c.Y + 1);
+            int B = 256 - 32 * (c.Z + 1);
+
+            return new RGBColor((byte)R, (byte)G, (byte)B);
+        }
+
     }
 }

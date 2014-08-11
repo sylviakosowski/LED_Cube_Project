@@ -144,7 +144,12 @@ namespace Interactive_LED_Cube
         {
             hc.SpecificColorWholeCube(black, false);
 
-            hc.ZigZagFill(imageFrames, color, true, 1);
+            //hc.ZigZagFill(imageFrames, color, true, 1);
+            hc.ZigZagFill(imageFrames, color, true, 1, HypnocubeImpl.Direction.X);
+            hc.ZigZagFill(imageFrames, black, true, 1, HypnocubeImpl.Direction.Y);
+            hc.ZigZagFill(imageFrames, color, true, 1, HypnocubeImpl.Direction.Z);
+            hc.ZigZagFill(imageFrames, black, true, 1, HypnocubeImpl.Direction.Y);
+
             sendFrames();
         }
 
