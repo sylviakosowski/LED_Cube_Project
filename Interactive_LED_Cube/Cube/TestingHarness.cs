@@ -78,18 +78,19 @@ namespace Interactive_LED_Cube.Cube
             //ExpandingCubeTest();
             //LittleRoamerTest();
 
-            FadeLEDsRainbowTest();
-            LittleRoamerTest();
+            //FadeLEDsRainbowTest();
+            //LittleRoamerTest();
 
             for (int i = 0; i < 5; i++ )
             {
-                //FadeLEDsSameRateTest();
+                FadeLEDsSameRateTest();
                 //FadeLEDsDiffRatesTest();
-                //BlinkLEDsTest();
-                //RandomFillTest();
-                //ZigZagFillTest();
-                //ExpandingCubeTest();
-                //LittleRoamerTest();
+                FadeLEDsRainbowTest();
+                BlinkLEDsTest();
+                RandomFillTest();
+                ZigZagFillTest();
+                ExpandingCubeTest();
+                LittleRoamerTest();
             }
 
 
@@ -264,6 +265,7 @@ namespace Interactive_LED_Cube.Cube
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
             List<int> numBlinks = new List<int>();
+            ColorPalette cp = new RainbowPalette();
 
             RGBColor red = new RGBColor(255,0,0);
 
@@ -274,7 +276,7 @@ namespace Interactive_LED_Cube.Cube
                     for (int k = 0; k < 8; k++)
                     {
                         coords.Add(new Coordinate(i, j, k));
-                        colors.Add(red);
+                        colors.Add(cp.MapCoordToColor(new Coordinate(i,j,k)));
                         rates.Add((i + j + k));
                         numBlinks.Add(i + j+ k);
                     }
