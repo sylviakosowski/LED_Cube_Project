@@ -16,13 +16,19 @@ namespace Interactive_LED_Cube.Cube
         private List<byte[]> imageFrames;
         private bool physical;
 
-        private RGBColor red = new RGBColor(255, 0, 0);
-        private RGBColor green = new RGBColor(0, 255, 0);
-        private RGBColor yellow = new RGBColor(255, 255, 0);
-        private RGBColor cyan = new RGBColor(0, 255, 255);
-        private RGBColor purple = new RGBColor(255, 0, 255);
-        private RGBColor blue = new RGBColor(0, 0, 255);
-        private RGBColor black = new RGBColor(0,0,0);
+        private static RGBColor red = new RGBColor(255, 0, 0);
+        private static RGBColor green = new RGBColor(0, 255, 0);
+        private static RGBColor yellow = new RGBColor(255, 255, 0);
+        private static RGBColor cyan = new RGBColor(0, 255, 255);
+        private static RGBColor purple = new RGBColor(255, 0, 255);
+        private static RGBColor blue = new RGBColor(0, 0, 255);
+        private static RGBColor black = new RGBColor(0,0,0);
+
+        private ColorPalette redP = new SolidPalette(red);
+        private ColorPalette greenP = new SolidPalette(green);
+        private ColorPalette yellowP = new SolidPalette(yellow);
+        private ColorPalette cyanP = new SolidPalette(cyan);
+        private ColorPalette purpleP = new SolidPalette(purple);
 
         public TestingHarness(HypnocubeImpl hc, TweetListener tl, PIC32 port, bool physical)
         {
@@ -306,11 +312,11 @@ namespace Interactive_LED_Cube.Cube
         {
             ColorFiller filler = new ColorFiller(hc);
 
-            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20, false);
-            filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20, false);
-            filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20, false);
-            filler.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20, false);
-            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20, false);
+            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 20, false, redP);
+            filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), 20, false, greenP);
+            filler.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), 20, false, yellowP);
+            filler.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), 20, false, cyanP);
+            filler.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), 20, false, purpleP);
         }
 
         /* Fade a block into a single color at a uniform rate */
@@ -318,11 +324,11 @@ namespace Interactive_LED_Cube.Cube
         {
             Fader fader = new Fader(hc);
 
-            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 20, false);
-            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20, false);
-            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20, false);
-            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20, false);
-            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20, false);            
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 20, false, redP);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), 20, false, greenP);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), 20, false, yellowP);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), 20, false, cyanP);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), 20, false, purpleP);            
         }
 
         /* Blink a block in a single color at a uniform rate */
@@ -330,8 +336,8 @@ namespace Interactive_LED_Cube.Cube
         {
             Blinker blinker = new Blinker(hc, null);
 
-            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 3, false);
-            blinker.BlinkBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 1, 10, false);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 10, 3, false, redP);
+            blinker.BlinkBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), 1, 10, false, greenP);
         }
 
 
@@ -347,11 +353,11 @@ namespace Interactive_LED_Cube.Cube
             Blinker blinker = new Blinker(hc, null);
             Fader fader = new Fader(hc);
 
-            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), green, 20, false);
-            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), yellow, 20, false);
-            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), cyan, 20, false);
-            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), purple, 20, false);
-            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 40, false);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(0, 7, 7), 20, false, greenP);
+            fader.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 0, 0), 20, false, yellowP);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 3, 4), new Coordinate(7, 3, 3), 20, false, cyanP);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 0), new Coordinate(7, 7, 0), 20, false, purpleP);
+            fader.LightBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), 40, false, redP);
             //blinker.BlinkBlockUniform(imageFrames, new Coordinate(7, 7, 7), new Coordinate(5, 5, 5), red, 10, 10);
 
             
@@ -495,11 +501,13 @@ namespace Interactive_LED_Cube.Cube
         /* Fill the block in a zigzag pattern. */
         private void ZigZagFillTest()
         {
+            ColorPalette cp = new RainbowPalette();
+            ColorPalette bp = new SolidPalette(black);
             //hc.RandomFullCubeColorChange(imageFrames, 1, false);
-            hc.ZigZagFill(imageFrames, red, true, 1, HypnocubeImpl.Direction.X);
-            hc.ZigZagFill(imageFrames, blue, true, 1, HypnocubeImpl.Direction.Y);
-            hc.ZigZagFill(imageFrames, green, true, 1, HypnocubeImpl.Direction.Z);
-            hc.ZigZagFill(imageFrames, black, true, 1, HypnocubeImpl.Direction.Y);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.X, cp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Z, cp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
         }
 
         /* Expanding cube in the center, filled solidly. */
@@ -507,15 +515,18 @@ namespace Interactive_LED_Cube.Cube
         {
             ColorFiller cf = new ColorFiller(hc);
             Fader f = new Fader(hc);
+            ColorPalette cp = new RainbowPalette();
 
-            hc.ExpandingSolidCube(imageFrames, red, false, 40, f);
+            hc.ExpandingSolidCube(imageFrames, false, 40, f, cp);
         }
 
         private void LittleRoamerTest()
         {
             ColorFiller cf = new ColorFiller(hc);
-            hc.LittleRoamer(imageFrames, red, 4, cf, true);
-            hc.LittleRoamer(imageFrames, red, 4, cf, false);
+            ColorPalette cp = new RainbowPalette();
+
+            hc.LittleRoamer(imageFrames, 4, cf, true, cp);
+            hc.LittleRoamer(imageFrames, 4, cf, false, cp);
         }
     }
 }

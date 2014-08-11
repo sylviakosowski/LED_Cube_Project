@@ -31,6 +31,6 @@ namespace Interactive_LED_Cube
         int GetLongestAnim();
 
         void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
-            RGBColor color, int rate, bool resetFrames);
+            int rate, bool resetFrames, ColorPalette cp);
     }
 }

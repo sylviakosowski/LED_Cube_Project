@@ -53,27 +53,39 @@ namespace Interactive_LED_Cube
             return fillAnimation;
         }
 
-        public void UniformColorRate(int numCoords, RGBColor c, int rate, List<RGBColor> colors,
-            List<int> rates)
+        public void UniformColorRate(int numCoords, int rate, List<RGBColor> colors,
+            List<int> rates, ColorPalette cp)
         {
             for(int i = 0; i < numCoords; i++)
             {
-                colors.Add(c);
+                //colors.Add(cp.MapCoordToColor(c));
                 rates.Add(rate);
             }
         }
 
         /* Light an entire block with the same color and rate. */
         public override void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, 
-            RGBColor color, int rate, bool resetFrames)
+            int rate, bool resetFrames, ColorPalette cp)
         {
             List<Coordinate> coords = hc.GenerateCoordBlock(c1, c2);
 
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
 
-            UniformColorRate(coords.Count, color, rate, colors, rates);
+            //UniformColorRate(coords.Count, rate, colors, rates, cp);
+            foreach(Coordinate c in coords)
+            {
+                rates.Add(rate);
+                colors.Add(cp.MapCoordToColor(c));
+            }
+
             hc.LightLEDs(imageFrames, coords, colors, rates, this, resetFrames);
+        }
+
+        public void LightManyBlocksUniform(List<byte[]> imageFrames, List<Coordinate> coords, List<RGBColor> colors, 
+            int rate, bool resetFrames)
+        {
+            List<int> rates = new List<int>();
         }
     }
 }

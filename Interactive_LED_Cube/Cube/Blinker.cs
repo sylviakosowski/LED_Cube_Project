@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interactive_LED_Cube.Cube
+namespace Interactive_LED_Cube
 {
     /* 
      * LightingMethod which implements Blinking behavior for LEDs. Allows an LED to blink 
@@ -56,13 +56,13 @@ namespace Interactive_LED_Cube.Cube
         }
 
         public override void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, 
-            RGBColor color, int rate, bool resetFrames)
+            int rate, bool resetFrames, ColorPalette cp)
         {
-            BlinkBlockUniform(imageFrames, c1,c2,color,rate, 10, resetFrames);
+            BlinkBlockUniform(imageFrames, c1, c2, rate, 10, resetFrames, cp);
         }
 
         public void BlinkBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
-            RGBColor color, int rate, int num, bool resetFrames)
+            int rate, int num, bool resetFrames, ColorPalette cp)
         {
             List<Coordinate> coords = hc.GenerateCoordBlock(c1, c2);
             List<RGBColor> colors = new List<RGBColor>();
@@ -71,7 +71,7 @@ namespace Interactive_LED_Cube.Cube
 
             foreach(Coordinate c in coords)
             {
-                colors.Add(color);
+                colors.Add(cp.MapCoordToColor(c));
                 rates.Add(rate);
                 numBlinks.Add(num);
             }

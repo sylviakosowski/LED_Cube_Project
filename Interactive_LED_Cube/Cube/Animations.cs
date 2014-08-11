@@ -143,12 +143,14 @@ namespace Interactive_LED_Cube
         public void ZigZagFill(RGBColor color)
         {
             hc.SpecificColorWholeCube(black, false);
+            ColorPalette cp = new SolidPalette(color);
+            ColorPalette bp = new SolidPalette(black);
 
             //hc.ZigZagFill(imageFrames, color, true, 1);
-            hc.ZigZagFill(imageFrames, color, true, 1, HypnocubeImpl.Direction.X);
-            hc.ZigZagFill(imageFrames, black, true, 1, HypnocubeImpl.Direction.Y);
-            hc.ZigZagFill(imageFrames, color, true, 1, HypnocubeImpl.Direction.Z);
-            hc.ZigZagFill(imageFrames, black, true, 1, HypnocubeImpl.Direction.Y);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.X, cp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Z, cp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
 
             sendFrames();
         }
@@ -159,8 +161,9 @@ namespace Interactive_LED_Cube
 
             ColorFiller cf = new ColorFiller(hc);
             Fader f = new Fader(hc);
+            ColorPalette cp = new SolidPalette(color);
 
-            hc.ExpandingSolidCube(imageFrames, color, false, 20, cf);
+            hc.ExpandingSolidCube(imageFrames, false, 20, cf, cp);
             sendFrames();
         }
 
@@ -169,7 +172,9 @@ namespace Interactive_LED_Cube
             hc.SpecificColorWholeCube(black, false);
 
             ColorFiller cf = new ColorFiller(hc);
-            hc.LittleRoamer(imageFrames, color, 4, cf, true);
+            ColorPalette cp = new SolidPalette(color);
+
+            hc.LittleRoamer(imageFrames, 4, cf, true, cp);
             sendFrames();
         }
 

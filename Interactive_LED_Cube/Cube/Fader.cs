@@ -73,7 +73,7 @@ namespace Interactive_LED_Cube
         }
 
         public override void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
-            RGBColor color, int rate, bool resetFrames)
+            int rate, bool resetFrames, ColorPalette cp)
         {
             List<Coordinate> coords = hc.GenerateCoordBlock(c1, c2);
             List<RGBColor> colors = new List<RGBColor>();
@@ -81,7 +81,7 @@ namespace Interactive_LED_Cube
 
             foreach( Coordinate c in coords )
             {
-                colors.Add(color);
+                colors.Add(cp.MapCoordToColor(c));
                 rates.Add(rate);
             }
 
