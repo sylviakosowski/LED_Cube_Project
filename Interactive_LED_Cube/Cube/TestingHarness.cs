@@ -29,6 +29,7 @@ namespace Interactive_LED_Cube.Cube
         private ColorPalette yellowP = new SolidPalette(yellow);
         private ColorPalette cyanP = new SolidPalette(cyan);
         private ColorPalette purpleP = new SolidPalette(purple);
+        private ColorPalette cp = new RainbowPalette();
 
         public TestingHarness(HypnocubeImpl hc, TweetListener tl, PIC32 port, bool physical)
         {
@@ -80,17 +81,21 @@ namespace Interactive_LED_Cube.Cube
 
             //FadeLEDsRainbowTest();
             //LittleRoamerTest();
+            //RoamerTest();
+            ManyRoamersTest();
 
             for (int i = 0; i < 5; i++ )
             {
+                /*
                 FadeLEDsSameRateTest();
-                //FadeLEDsDiffRatesTest();
+                FadeLEDsDiffRatesTest();
                 FadeLEDsRainbowTest();
                 BlinkLEDsTest();
                 RandomFillTest();
                 ZigZagFillTest();
                 ExpandingCubeTest();
                 LittleRoamerTest();
+                 * */
             }
 
 
@@ -180,6 +185,7 @@ namespace Interactive_LED_Cube.Cube
             List<int> rates = new List<int>();
             RGBColor blue = new RGBColor(0, 0, 255);
             LightingMethod fader = new Fader(hc);
+            
 
             for (int i = 0; i < 8; i++)
             {
@@ -211,6 +217,7 @@ namespace Interactive_LED_Cube.Cube
             List<int> rates = new List<int>();
 
             LightingMethod fader = new Fader(hc);
+            ColorPalette cp = new RainbowPalette();
 
             for (int i = 0; i < 8; i++)
             {
@@ -219,7 +226,7 @@ namespace Interactive_LED_Cube.Cube
                     for (int k = 0; k < 8; k++)
                     {
                         coords.Add(new Coordinate(i, j, k));
-                        colors.Add(hc.MapRainbow1(new Coordinate(i,j,k)));
+                        colors.Add(cp.MapCoordToColor(new Coordinate(i,j,k)));
                         if (i == 0 && j == 0 && k == 0)
                         {
                             rates.Add(5);
@@ -530,5 +537,26 @@ namespace Interactive_LED_Cube.Cube
             hc.LittleRoamer(imageFrames, 4, cf, true, cp);
             hc.LittleRoamer(imageFrames, 4, cf, false, cp);
         }
+
+        private void RoamerTest()
+        {
+            ColorFiller cf = new ColorFiller(hc);
+            ColorPalette cp = new RainbowPalette();
+            Coordinate c1 = new Coordinate(4,4,4);
+            Coordinate c2 = new Coordinate(5,5,5);
+
+            hc.Roamer(imageFrames, 4, cf, true, cp, c1, c2);
+            hc.Roamer(imageFrames, 4, cf, false, cp, c1, c2);
+        }
+        
+        private void ManyRoamersTest()
+        {
+            ColorFiller cf = new ColorFiller(hc);
+            ColorPalette cp = new RainbowPalette();
+
+            hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp);
+            hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp);
+        }
+
     }
 }

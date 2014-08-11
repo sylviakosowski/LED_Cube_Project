@@ -32,5 +32,8 @@ namespace Interactive_LED_Cube
 
         void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
             int rate, bool resetFrames, ColorPalette cp);
+
+        void LightManyBlocksUniform(List<byte[]> imageFrames, List<Coordinate> coords,
+            int rate, bool resetFrames, ColorPalette cp);
     }
 }

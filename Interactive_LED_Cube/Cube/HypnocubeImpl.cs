@@ -17,7 +17,7 @@ namespace Interactive_LED_Cube
          * Each byte in array is one RGB value for LED.
          * Therefore, each LED takes up 3 bytes and therefore, 3 positions in array.
          */
-        private byte[] colorArray; 
+        private byte[] colorArray;
         private static int ARRAY_SIZE = 1536;
 
         //True if using physical cube, false if using OpenGL visualization.
@@ -97,7 +97,7 @@ namespace Interactive_LED_Cube
                     new RGBColor(colorArray[index], colorArray[index + 1], colorArray[index + 2]);
                 newColor = Blend(existingColor, color);
             }*/
-            if(index < 0)
+            if (index < 0)
             {
                 Console.WriteLine(coord.ToString());
             }
@@ -113,7 +113,7 @@ namespace Interactive_LED_Cube
         {
             int index = IndexFromCoord(coord);
 
-            for (int i = imageIndex; i < imageFrames.Count; i++ )
+            for (int i = imageIndex; i < imageFrames.Count; i++)
             {
                 imageFrames[i][index] = color.R;
                 imageFrames[i][index + 1] = color.G;
@@ -127,7 +127,7 @@ namespace Interactive_LED_Cube
         {
             /* Coordinates of visualization and actual cube are a  bit different,
              * need to test what mode we're in and return index accordingly. */
-            if(physical)
+            if (physical)
             {
                 //Using physical cube.
                 return (c.Z + 8 * c.X + 64 * c.Y) * 3;
@@ -150,7 +150,7 @@ namespace Interactive_LED_Cube
             return new RGBColor(red, green, blue);
         }
 
-       private RGBColor ImageColorFromCoord(byte[] imageFrame, Coordinate c)
+        private RGBColor ImageColorFromCoord(byte[] imageFrame, Coordinate c)
         {
             int index = IndexFromCoord(c);
             byte red = imageFrame[index];
@@ -257,7 +257,7 @@ namespace Interactive_LED_Cube
                 {
                     for (int z = zMin; z <= zMax; z++)
                     {
-                        coords.Add(new Coordinate(x,y,z));
+                        coords.Add(new Coordinate(x, y, z));
                     }
                 }
             }
@@ -284,7 +284,7 @@ namespace Interactive_LED_Cube
          *       Make this change for better implementation code reuse, but still provide
          *       changeFullColor in code interface for user use.
          */
-        public void LightBlock(List<byte[]> imageFrames, Coordinate c1, Coordinate c2, 
+        public void LightBlock(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
             List<RGBColor> colors, List<int> rates, LightingMethod lm)
         {
             List<Coordinate> coords = GenerateCoordBlock(c1, c2);
@@ -366,7 +366,7 @@ namespace Interactive_LED_Cube
          * 
          * TODO: If time, make this less hacky and cut & paste-y.
          */
-        public Tuple<Coordinate, Coordinate> ShiftBlockOnceDecreasing(List<byte[]> imageFrames, int imageIndex, 
+        public Tuple<Coordinate, Coordinate> ShiftBlockOnceDecreasing(List<byte[]> imageFrames, int imageIndex,
             Direction d, Coordinate c1, Coordinate c2, RGBColor eraseColor)
         {
 
@@ -388,12 +388,12 @@ namespace Interactive_LED_Cube
             {
                 case Direction.X:
                     {
-                        if(xMin == 0)
+                        if (xMin == 0)
                         {
                             xMin = 1;
                         }
 
-                        if(c1.X == 0 && c2.X == 0)
+                        if (c1.X == 0 && c2.X == 0)
                         {
                             EraseLEDs(imageFrames, imageIndex, eraseColor, d, 0, xMax, yMin, yMax, zMin, zMax, true);
                             return new Tuple<Coordinate, Coordinate>(null, null);
@@ -409,7 +409,7 @@ namespace Interactive_LED_Cube
                     }
                 case Direction.Y:
                     {
-                        if(yMin == 0)
+                        if (yMin == 0)
                         {
                             yMin = 1;
                         }
@@ -429,7 +429,7 @@ namespace Interactive_LED_Cube
                     }
                 case Direction.Z:
                     {
-                        if(zMin == 0)
+                        if (zMin == 0)
                         {
                             zMin = 1;
                         }
@@ -631,7 +631,7 @@ namespace Interactive_LED_Cube
         }
 
         /* Used when shifting blocks, fills the part of the block that was shifted with an erase color. */
-        private void EraseLEDs(List<byte[]> imageFrames, int imageIndex, RGBColor eraseColor, Direction d, 
+        private void EraseLEDs(List<byte[]> imageFrames, int imageIndex, RGBColor eraseColor, Direction d,
             int xMin, int xMax, int yMin, int yMax, int zMin, int zMax, bool decreasing)
         {
             int value = 0;
@@ -863,13 +863,13 @@ namespace Interactive_LED_Cube
         {
             List<Coordinate> coords = new List<Coordinate>();
 
-            for(int x = 0; x < 8; x++)
+            for (int x = 0; x < 8; x++)
             {
-                for(int y = 0; y < 8; y++)
+                for (int y = 0; y < 8; y++)
                 {
-                    for(int z = 0; z < 8; z++)
+                    for (int z = 0; z < 8; z++)
                     {
-                        coords.Add(new Coordinate(x,y,z));
+                        coords.Add(new Coordinate(x, y, z));
                     }
                 }
             }
@@ -886,7 +886,7 @@ namespace Interactive_LED_Cube
 
             while (counter > 0)
             {
-                for (int i = 0; i < rate; i++ )
+                for (int i = 0; i < rate; i++)
                 {
                     randIndex = r.Next(0, counter);
 
@@ -910,7 +910,7 @@ namespace Interactive_LED_Cube
 
                 AddImageFrame(imageFrames);
             }
-         
+
         }
 
         /* Zig-zag fills the cube with color, starting from bottom and zig-zagging to top. */
@@ -921,7 +921,7 @@ namespace Interactive_LED_Cube
             //ColorFiller cf = new ColorFiller(this);
             Fader f = new Fader(this);
 
-            switch(d)
+            switch (d)
             {
                 case Direction.X:
                     {
@@ -1032,15 +1032,15 @@ namespace Interactive_LED_Cube
             }
              * */
         }
-    
+
         /* Makes a miniature cube expand and contract. (1 cycle) */
         public void ExpandingSolidCube(List<byte[]> imageFrames, bool rand, int rate, LightingMethod lm, ColorPalette cp)
         {
             ColorPalette blackPalette = new SolidPalette(new RGBColor(0, 0, 0));
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 //Fade in
-                lm.LightBlockUniform(imageFrames,new Coordinate(i,i,i), new Coordinate(7-i, 7-i, 7-i), rate, false, cp);
+                lm.LightBlockUniform(imageFrames, new Coordinate(i, i, i), new Coordinate(7 - i, 7 - i, 7 - i), rate, false, cp);
 
                 //Fade out
                 lm.LightBlockUniform(imageFrames, new Coordinate(i, i, i), new Coordinate(7 - i, 7 - i, 7 - i), rate, false, blackPalette);
@@ -1063,19 +1063,19 @@ namespace Interactive_LED_Cube
         {
             Random rand = new Random();
 
-            int startX = rand.Next(0,8);
-            int startY = rand.Next(0,8);
-            int startZ = rand.Next(0,8);
+            int startX = rand.Next(0, 8);
+            int startY = rand.Next(0, 8);
+            int startZ = rand.Next(0, 8);
 
             Coordinate c = new Coordinate(startX, startY, startZ);
 
             int nextDirection;
 
-            for(int i = 0; i < 500; i++)
+            for (int i = 0; i < 500; i++)
             {
                 nextDirection = rand.Next(0, 6);
 
-                switch(nextDirection)
+                switch (nextDirection)
                 {
                     case 0:
                         {
@@ -1126,14 +1126,243 @@ namespace Interactive_LED_Cube
 
         }
 
-        public RGBColor MapRainbow1(Coordinate c)
+        /* A roamer which can be any rectangular shape as indicated by the two coordinates. */
+        public void Roamer(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp,
+            Coordinate c1, Coordinate c2)
         {
-            int R = 256 - 32 * (c.X + 1);
-            int G = 256 - 32 * (c.Y + 1);
-            int B = 256 - 32 * (c.Z + 1);
+            Random rand = new Random();
 
-            return new RGBColor((byte)R, (byte)G, (byte)B);
+            int startX = rand.Next(0, 8);
+            int startY = rand.Next(0, 8);
+            int startZ = rand.Next(0, 8);
+
+            //Coordinate c = new Coordinate(startX, startY, startZ);
+
+            int xDiff = c1.X - c2.X;
+            int yDiff = c1.Y - c2.Y;
+            int zDiff = c1.Z - c2.Z;
+
+            int nextDirection;
+
+            for (int i = 0; i < 500; i++)
+            {
+                nextDirection = rand.Next(0, 6);
+
+                switch (nextDirection)
+                {
+                    case 0:
+                        {
+                            //Increase x
+                            int x1 = c1.IncDec(c1.X, 1);
+                            int x2 = c2.IncDec(c2.X, 1);
+                            if (!(c1.X == x1 || c2.X == x2))
+                            {
+                                c1.X = x1;
+                                c2.X = x2;
+                            }
+                            break;
+                        }
+                    case 1:
+                        {
+                            //Decrease x
+                            int x1 = c1.IncDec(c1.X, -1);
+                            int x2 = c2.IncDec(c2.X, -1);
+                            if (!(c1.X == x1 || c2.X == x2))
+                            {
+                                c1.X = x1;
+                                c2.X = x2;
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            //Increase y
+                            int y1 = c1.IncDec(c1.Y, 1);
+                            int y2 = c2.IncDec(c2.Y, 1);
+                            if (!(c1.Y == y1 || c2.Y == y2))
+                            {
+                                c1.Y = y1;
+                                c2.Y = y2;
+                            }
+                            break;
+                        }
+                    case 3:
+                        {
+                            //Decrease y
+                            int y1 = c1.IncDec(c1.Y, -1);
+                            int y2 = c2.IncDec(c2.Y, -1);
+                            if (!(c1.Y == y1 || c2.Y == y2))
+                            {
+                                c1.Y = y1;
+                                c2.Y = y2;
+                            }
+                            break;
+                        }
+                    case 4:
+                        {
+                            //Increase z
+                            int z1 = c1.IncDec(c1.Z, 1);
+                            int z2 = c2.IncDec(c2.Z, 1);
+                            if (!(c1.Z == z1 || c2.Z == z2))
+                            {
+                                c1.Z = z1;
+                                c2.Z = z2;
+                            }
+                            break;
+                        }
+                    case 5:
+                        {
+                            //Decrease z
+                            int z1 = c1.IncDec(c1.Z, -1);
+                            int z2 = c2.IncDec(c2.Z, -1);
+                            if (!(c1.Z == z1 || c2.Z == z2))
+                            {
+                                c1.Z = z1;
+                                c2.Z = z2;
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+
+                //RGBColor newColor = cp.MapCoordToColor(c);
+
+                lm.LightBlockUniform(imageFrames, c1, c2, rate, resetFrames, cp);
+            }
         }
 
+
+        public void ManyLittleRoamers(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp)
+        {
+            Random rand = new Random();
+
+            int startX = rand.Next(0, 8);
+            int startY = rand.Next(0, 8);
+            int startZ = rand.Next(0, 8);
+
+            int startX2 = rand.Next(0, 8);
+            int startY2 = rand.Next(0, 8);
+            int startZ2 = rand.Next(0, 8);
+
+            Coordinate c1 = new Coordinate(startX, startY, startZ);
+            Coordinate c2 = new Coordinate(startX2, startY2, startZ2);
+
+            int nextDirection1;
+            int nextDirection2;
+
+            for (int i = 0; i < 500; i++)
+            {
+                nextDirection1 = rand.Next(0, 6);
+                nextDirection2 = rand.Next(0, 6);
+
+                Shift(nextDirection1, c1);
+                Shift(nextDirection2, c2);
+                /*
+                switch (nextDirection)
+                {
+                    case 0:
+                        {
+                            //Increase x
+                            c1.X = c1.IncDec(c1.X, 1);
+                            break;
+                        }
+                    case 1:
+                        {
+                            //Decrease x
+                            c1.X = c1.IncDec(c1.X, -1);
+                            break;
+                        }
+                    case 2:
+                        {
+                            //Increase y
+                            c1.Y = c1.IncDec(c1.Y, 1);
+                            break;
+                        }
+                    case 3:
+                        {
+                            //Decrease y
+                            c1.Y = c1.IncDec(c1.Y, -1);
+                            break;
+                        }
+                    case 4:
+                        {
+                            //Increase z
+                            c1.Z = c1.IncDec(c1.Z, 1);
+                            break;
+                        }
+                    case 5:
+                        {
+                            //Decrease z
+                            c1.Z = c1.IncDec(c1.Z, -1);
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+                 * */
+
+                //RGBColor newColor = cp.MapCoordToColor(c);
+
+                //lm.LightBlockUniform(imageFrames, c1, c2, rate, resetFrames, cp);
+
+                List<Coordinate> coords = new List<Coordinate>();
+                coords.Add(c1);
+                coords.Add(c2);
+
+                lm.LightManyBlocksUniform(imageFrames, coords, rate, resetFrames, cp);
+            }
+        }
+
+        public void Shift(int nextDirection, Coordinate c1)
+        {
+            switch (nextDirection)
+            {
+                case 0:
+                    {
+                        //Increase x
+                        c1.X = c1.IncDec(c1.X, 1);
+                        break;
+                    }
+                case 1:
+                    {
+                        //Decrease x
+                        c1.X = c1.IncDec(c1.X, -1);
+                        break;
+                    }
+                case 2:
+                    {
+                        //Increase y
+                        c1.Y = c1.IncDec(c1.Y, 1);
+                        break;
+                    }
+                case 3:
+                    {
+                        //Decrease y
+                        c1.Y = c1.IncDec(c1.Y, -1);
+                        break;
+                    }
+                case 4:
+                    {
+                        //Increase z
+                        c1.Z = c1.IncDec(c1.Z, 1);
+                        break;
+                    }
+                case 5:
+                    {
+                        //Decrease z
+                        c1.Z = c1.IncDec(c1.Z, -1);
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
     }
 }

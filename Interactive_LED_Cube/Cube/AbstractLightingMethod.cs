@@ -107,5 +107,8 @@ namespace Interactive_LED_Cube
 
         public abstract void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
             int rate, bool resetFrames, ColorPalette cp);
+
+        public abstract void LightManyBlocksUniform(List<byte[]> imageFrames, List<Coordinate> coords,
+            int rate, bool resetFrames, ColorPalette cp);
     }
 }

@@ -82,10 +82,19 @@ namespace Interactive_LED_Cube
             hc.LightLEDs(imageFrames, coords, colors, rates, this, resetFrames);
         }
 
-        public void LightManyBlocksUniform(List<byte[]> imageFrames, List<Coordinate> coords, List<RGBColor> colors, 
-            int rate, bool resetFrames)
+        public override void LightManyBlocksUniform(List<byte[]> imageFrames, List<Coordinate> coords, 
+            int rate, bool resetFrames, ColorPalette cp)
         {
             List<int> rates = new List<int>();
+            List<RGBColor> colors = new List<RGBColor>();
+
+            foreach(Coordinate c in coords)
+            {
+                rates.Add(rate);
+                colors.Add(cp.MapCoordToColor(c));
+            }
+
+            hc.LightLEDs(imageFrames, coords, colors, rates, this, resetFrames);
         }
     }
 }

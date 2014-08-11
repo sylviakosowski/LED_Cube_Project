@@ -87,5 +87,11 @@ namespace Interactive_LED_Cube
 
             hc.LightLEDs(imageFrames, coords, colors, rates, this, resetFrames);
         }
+
+        public override void LightManyBlocksUniform(List<byte[]> imageFrames, List<Coordinate> coords, 
+            int rate, bool resetFrames, ColorPalette cp)
+        {
+
+        }
     }
 }
