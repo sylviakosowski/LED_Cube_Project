@@ -44,11 +44,38 @@ namespace Interactive_LED_Cube
         }
 
         /* Animation pool */
-        public void Fade(RGBColor color)
+        public void Fade(ColorPalette cp)
         {
-            //Console.WriteLine("uuuh");
             hc.SpecificColorWholeCube(black, false);
 
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+
+            LightingMethod fader = new Fader(hc);
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        coords.Add(new Coordinate(i, j, k));
+                        colors.Add(cp.MapCoordToColor(new Coordinate(i, j, k)));
+                        if (i == 0 && j == 0 && k == 0)
+                        {
+                            rates.Add(5);
+                        }
+                        else
+                        {
+                            rates.Add((i + j + k) * 10);
+                        }
+                    }
+                }
+            }
+
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
+            /*
             List<Coordinate> coords = new List<Coordinate>();
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
@@ -98,13 +125,39 @@ namespace Interactive_LED_Cube
 
             hc.LightLEDs(imageFrames, coords2, colors2, rates2, fader2, false);
 
+             * */
             sendFrames();
         }
 
-        public void Blink(RGBColor color)
+        public void Blink(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
 
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+            List<int> numBlinks = new List<int>();
+
+            RGBColor red = new RGBColor(255, 0, 0);
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        coords.Add(new Coordinate(i, j, k));
+                        colors.Add(cp.MapCoordToColor(new Coordinate(i, j, k)));
+                        rates.Add((i + j + k));
+                        numBlinks.Add(i + j + k);
+                    }
+                }
+            }
+
+            LightingMethod blinker = new Blinker(hc, numBlinks);
+            hc.LightLEDs(imageFrames, coords, colors, rates, blinker, false);
+
+            /*
             List<Coordinate> coords = new List<Coordinate>();
             List<RGBColor> colors = new List<RGBColor>();
             List<int> rates = new List<int>();
@@ -128,25 +181,37 @@ namespace Interactive_LED_Cube
 
             LightingMethod blinker = new Blinker(hc, numBlinks);
             hc.LightLEDs(imageFrames, coords, colors, rates, blinker, false);
+             * */
             sendFrames();
         }
 
-        public void RandomFill(RGBColor color)
+        public void RandomFill(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
 
-            hc.RandomFill(imageFrames, color, true, 4);
+            hc.RandomFill(imageFrames, black, true, 4);
             hc.RandomFill(imageFrames, black, false, 8);
             sendFrames();
         }
 
-        public void ZigZagFill(RGBColor color)
+        public void ZigZagFill(ColorPalette cp)
         {
+
             hc.SpecificColorWholeCube(black, false);
+
+            /*
             ColorPalette cp = new SolidPalette(color);
             ColorPalette bp = new SolidPalette(black);
 
-            //hc.ZigZagFill(imageFrames, color, true, 1);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.X, cp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Z, cp);
+            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
+            */
+            //ColorPalette cp = new RainbowPalette();
+
+            ColorPalette bp = new SolidPalette(black);
+
             hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.X, cp);
             hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
             hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Z, cp);
@@ -155,15 +220,23 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
-        public void ExpandingCube(RGBColor color)
+        public void ExpandingCube(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
 
+            /*
             ColorFiller cf = new ColorFiller(hc);
             Fader f = new Fader(hc);
             ColorPalette cp = new SolidPalette(color);
 
             hc.ExpandingSolidCube(imageFrames, false, 20, cf, cp);
+             * */
+
+            ColorFiller cf = new ColorFiller(hc);
+            Fader f = new Fader(hc);
+
+            hc.ExpandingSolidCube(imageFrames, false, 40, f, cp);
+
             sendFrames();
         }
 
@@ -178,14 +251,51 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
-        public void DoAll(RGBColor color)
+        public void Fireflies(ColorPalette cp)
         {
-            Fade(color);
-            Blink(color);
-            RandomFill(color);
-            ZigZagFill(color);
-            ExpandingCube(color);
-            LittleRoamer(color);
+            hc.SpecificColorWholeCube(black, false);
+
+            ColorFiller cf = new ColorFiller(hc);
+            //ColorPalette cp = new RainbowPalette();
+
+            hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp, 20);
+            sendFrames();
+        }
+
+        public void Blocks(ColorPalette cp)
+        {
+            hc.SpecificColorWholeCube(black, false);
+
+            ColorFiller cf = new ColorFiller(hc);
+            Coordinate c1 = new Coordinate(3, 3, 3);
+            Coordinate c2 = new Coordinate(5, 5, 5);
+
+            hc.Roamer(imageFrames, 4, cf, true, cp, c1, c2);
+
+            sendFrames();
+        }
+
+        public void Trail(ColorPalette cp)
+        {
+            hc.SpecificColorWholeCube(black, false);
+
+            ColorFiller cf = new ColorFiller(hc);
+
+            hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp, 1);
+
+            sendFrames();
+        }
+
+        public void DoAll(ColorPalette cp)
+        {
+            Fade(cp);
+            Blink(cp);
+            RandomFill(cp);
+            ZigZagFill(cp);
+            ExpandingCube(cp);
+            Fireflies(cp);
+            Blocks(cp);
+            Trail(cp);
         }
     }
 }

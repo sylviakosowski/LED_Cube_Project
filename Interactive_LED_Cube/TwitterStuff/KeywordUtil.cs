@@ -142,40 +142,50 @@ namespace Interactive_LED_Cube
         {
             List<byte[]> imageFrames = new List<byte[]>();
             ColorDict cd = new ColorDict();
-            RGBColor color;
-            bool colorInDict = cd.Dict.TryGetValue(colorString, out color);
+            ColorPalette cp;
+            bool colorInDict = cd.Dict.TryGetValue(colorString, out cp);
 
             switch (pattern)
             {
                 case "fade":
                     {
                         Console.WriteLine("fade");
-                        anim.Fade(color);
+                        anim.Fade(cp);
                         break;
                     }
                 case "blink":
                     {
-                        anim.Blink(color);
+                        anim.Blink(cp);
                         break;
                     }
                 case "random":
                     {
-                        anim.RandomFill(color);
+                        anim.RandomFill(cp);
                         break;
                     }
                 case "zigzag":
                     {
-                        anim.ZigZagFill(color);
+                        anim.ZigZagFill(cp);
                         break;
                     }
                 case "box":
                     {
-                        anim.ExpandingCube(color);
+                        anim.ExpandingCube(cp);
                         break;
                     }
-                case "roamer":
+                case "fireflies":
                     {
-                        anim.LittleRoamer(color);
+                        anim.Fireflies(cp);
+                        break;
+                    }
+                case "blocks":
+                    {
+                        anim.Blocks(cp);
+                        break;
+                    }
+                case "trail":
+                    {
+                        anim.Trail(cp);
                         break;
                     }
                 default:

@@ -524,7 +524,7 @@ namespace Interactive_LED_Cube.Cube
             ColorFiller cf = new ColorFiller(hc);
             ColorPalette cp = new RainbowPalette();
 
-            hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp,20);
+            hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp, 20);
             //hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp,10);
         }
 

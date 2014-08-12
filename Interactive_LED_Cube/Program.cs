@@ -251,9 +251,11 @@ namespace Interactive_LED_Cube
 
             Console.WriteLine(port.IsConnected);
 
-            th.BeginTests();
+            //th.BeginTests();
             //game.Run(30, 30);
-            //anim.DoAll(new RGBColor(255,0,0));
+            bool physical = true;
+            anim = new Animations(hc, tl, port, physical);
+            anim.DoAll(new RainbowPalette());
 
             port.ClosePort();
         }
