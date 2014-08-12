@@ -1071,7 +1071,7 @@ namespace Interactive_LED_Cube
 
             int nextDirection;
 
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 100; i++)
             {
                 nextDirection = rand.Next(0, 6);
 
@@ -1144,7 +1144,7 @@ namespace Interactive_LED_Cube
 
             int nextDirection;
 
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 100; i++)
             {
                 nextDirection = rand.Next(0, 6);
 
@@ -1235,84 +1235,35 @@ namespace Interactive_LED_Cube
         }
 
 
-        public void ManyLittleRoamers(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp)
+        public void ManyLittleRoamers(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp, int count)
         {
             Random rand = new Random();
 
-            int startX = rand.Next(0, 8);
-            int startY = rand.Next(0, 8);
-            int startZ = rand.Next(0, 8);
+            List<Coordinate> coords = new List<Coordinate>();
+            List<int> directions = new List<int>();
 
-            int startX2 = rand.Next(0, 8);
-            int startY2 = rand.Next(0, 8);
-            int startZ2 = rand.Next(0, 8);
-
-            Coordinate c1 = new Coordinate(startX, startY, startZ);
-            Coordinate c2 = new Coordinate(startX2, startY2, startZ2);
-
-            int nextDirection1;
-            int nextDirection2;
-
-            for (int i = 0; i < 500; i++)
+            int startX;
+            int startY;
+            int startZ; 
+            for(int i = 0; i < count; i++)
             {
-                nextDirection1 = rand.Next(0, 6);
-                nextDirection2 = rand.Next(0, 6);
+                startX = rand.Next(0, 8);
+                startY = rand.Next(0, 8);
+                startZ = rand.Next(0, 8);
 
-                Shift(nextDirection1, c1);
-                Shift(nextDirection2, c2);
-                /*
-                switch (nextDirection)
+                coords.Add(new Coordinate(startX, startY, startZ));    
+            }
+
+            for (int i = 0; i < 100; i++)
+            {
+                for(int j = 0; j < count; j++)
                 {
-                    case 0:
-                        {
-                            //Increase x
-                            c1.X = c1.IncDec(c1.X, 1);
-                            break;
-                        }
-                    case 1:
-                        {
-                            //Decrease x
-                            c1.X = c1.IncDec(c1.X, -1);
-                            break;
-                        }
-                    case 2:
-                        {
-                            //Increase y
-                            c1.Y = c1.IncDec(c1.Y, 1);
-                            break;
-                        }
-                    case 3:
-                        {
-                            //Decrease y
-                            c1.Y = c1.IncDec(c1.Y, -1);
-                            break;
-                        }
-                    case 4:
-                        {
-                            //Increase z
-                            c1.Z = c1.IncDec(c1.Z, 1);
-                            break;
-                        }
-                    case 5:
-                        {
-                            //Decrease z
-                            c1.Z = c1.IncDec(c1.Z, -1);
-                            break;
-                        }
-                    default:
-                        {
-                            break;
-                        }
+                    directions.Add(rand.Next(0, 6));
+                    Shift(directions[j], coords[j]);
+                    
                 }
-                 * */
 
-                //RGBColor newColor = cp.MapCoordToColor(c);
-
-                //lm.LightBlockUniform(imageFrames, c1, c2, rate, resetFrames, cp);
-
-                List<Coordinate> coords = new List<Coordinate>();
-                coords.Add(c1);
-                coords.Add(c2);
+                directions = new List<int>();
 
                 lm.LightManyBlocksUniform(imageFrames, coords, rate, resetFrames, cp);
             }
@@ -1363,6 +1314,11 @@ namespace Interactive_LED_Cube
                         break;
                     }
             }
+        }
+    
+        public void ShiftBlock()
+        {
+
         }
     }
 }

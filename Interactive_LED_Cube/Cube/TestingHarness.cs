@@ -82,20 +82,20 @@ namespace Interactive_LED_Cube.Cube
             //FadeLEDsRainbowTest();
             //LittleRoamerTest();
             //RoamerTest();
-            ManyRoamersTest();
+            //ManyRoamersTest();
 
-            for (int i = 0; i < 5; i++ )
+            for (int i = 0; i < 1; i++ )
             {
-                /*
-                FadeLEDsSameRateTest();
-                FadeLEDsDiffRatesTest();
-                FadeLEDsRainbowTest();
-                BlinkLEDsTest();
+                
+                //FadeLEDsSameRateTest();
+                //FadeLEDsDiffRatesTest();
+                //FadeLEDsRainbowTest();
+                //BlinkLEDsTest();
                 RandomFillTest();
                 ZigZagFillTest();
                 ExpandingCubeTest();
-                LittleRoamerTest();
-                 * */
+                ManyRoamersTest();
+                RoamerTest();
             }
 
 
@@ -196,38 +196,6 @@ namespace Interactive_LED_Cube.Cube
                         coords.Add(new Coordinate(i, j, k));
                         colors.Add(red);
                         if(i == 0 && j == 0 && k == 0)
-                        {
-                            rates.Add(5);
-                        }
-                        else
-                        {
-                            rates.Add((i + j + k) * 10);
-                        }
-                    }
-                }
-            }
-
-            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
-        }
-
-        private void FadeLEDsRainbowTest()
-        {
-            List<Coordinate> coords = new List<Coordinate>();
-            List<RGBColor> colors = new List<RGBColor>();
-            List<int> rates = new List<int>();
-
-            LightingMethod fader = new Fader(hc);
-            ColorPalette cp = new RainbowPalette();
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        coords.Add(new Coordinate(i, j, k));
-                        colors.Add(cp.MapCoordToColor(new Coordinate(i,j,k)));
-                        if (i == 0 && j == 0 && k == 0)
                         {
                             rates.Add(5);
                         }
@@ -510,7 +478,9 @@ namespace Interactive_LED_Cube.Cube
         /* Fill the block in a zigzag pattern. */
         private void ZigZagFillTest()
         {
-            ColorPalette cp = new RainbowPalette();
+            //ColorPalette cp = new RainbowPalette();
+            ColorPalette cp = new AutodeskPalette();
+
             ColorPalette bp = new SolidPalette(black);
             //hc.RandomFullCubeColorChange(imageFrames, 1, false);
             hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.X, cp);
@@ -542,11 +512,11 @@ namespace Interactive_LED_Cube.Cube
         {
             ColorFiller cf = new ColorFiller(hc);
             ColorPalette cp = new RainbowPalette();
-            Coordinate c1 = new Coordinate(4,4,4);
+            Coordinate c1 = new Coordinate(3,3,3);
             Coordinate c2 = new Coordinate(5,5,5);
 
             hc.Roamer(imageFrames, 4, cf, true, cp, c1, c2);
-            hc.Roamer(imageFrames, 4, cf, false, cp, c1, c2);
+            //hc.Roamer(imageFrames, 4, cf, false, cp, c1, c2);
         }
         
         private void ManyRoamersTest()
@@ -554,8 +524,43 @@ namespace Interactive_LED_Cube.Cube
             ColorFiller cf = new ColorFiller(hc);
             ColorPalette cp = new RainbowPalette();
 
-            hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp);
-            hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp);
+            hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp,20);
+            //hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp,10);
+        }
+
+        private void FadeLEDsRainbowTest()
+        {
+            List<Coordinate> coords = new List<Coordinate>();  
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+
+            LightingMethod fader = new Fader(hc);
+            ColorPalette cp = new RainbowPalette();
+            //ColorPalette cp = new AutodeskPalette();
+            //ColorPalette cp = new BlueGreenPalette();
+            //ColorPalette cp = new RedBluePalette();
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        coords.Add(new Coordinate(i, j, k));
+                        colors.Add(cp.MapCoordToColor(new Coordinate(i, j, k)));
+                        if (i == 0 && j == 0 && k == 0)
+                        {
+                            rates.Add(5);
+                        }
+                        else
+                        {
+                            rates.Add((i + j + k) * 10);
+                        }
+                    }
+                }
+            }
+
+            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
         }
 
     }
