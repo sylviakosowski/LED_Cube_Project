@@ -111,6 +111,11 @@ namespace Interactive_LED_Cube
                                 else
                                 {
                                     Console.WriteLine("Command cube not found.");
+                                    //Blink in green for Autodesk
+                                    //Blink in rainbow for AutodeskGallery
+
+                                    List<string> keywordsFound = ku.determineKeywordsFromString(keywordArray, tweetText);
+                                    ku.RunAnimationBasedOnKeywords(keywordDict, keywordsFound);
                                 }
                             }
                         }

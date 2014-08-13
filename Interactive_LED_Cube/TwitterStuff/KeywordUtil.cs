@@ -88,6 +88,25 @@ namespace Interactive_LED_Cube
                     Console.WriteLine("Value is: " + value.ToString());
 
                     //Add cube behavior here
+
+                    switch(value)
+                    {
+                        case 0:
+                            {
+                                if(keywordsPresent.Count == 1)
+                                {
+                                    anim.SimpleLight(new AutodeskPalette());
+                                }
+                                break;
+                            }
+                        case 1:
+                            {
+                                anim.SimpleLight(new RainbowPalette());
+                                break;
+                            }
+                        default:
+                            break;
+                    }
                 }
                 else
                 {

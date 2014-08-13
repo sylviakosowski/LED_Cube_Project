@@ -1058,6 +1058,13 @@ namespace Interactive_LED_Cube
             }
         }
 
+        public void SimpleLight(List<byte[]> imageFrames, bool rand, int rate, LightingMethod lm, ColorPalette cp)
+        {
+            ColorPalette blackPalette = new SolidPalette(new RGBColor(0, 0, 0));
+            lm.LightBlockUniform(imageFrames, new Coordinate(0,0,0), new Coordinate(7,7,7), rate, false, cp);
+            lm.LightBlockUniform(imageFrames, new Coordinate(0,0,0), new Coordinate(7,7,7), rate, false, blackPalette);
+        }
+
         /* A little roamer, one LED which moves around randomly leaving a trail behind it if resetFrames is false. */
         public void LittleRoamer(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp)
         {

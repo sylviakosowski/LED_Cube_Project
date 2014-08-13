@@ -240,6 +240,17 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
+        public void SimpleLight(ColorPalette cp)
+        {
+            hc.SpecificColorWholeCube(black, false);
+
+            Fader f = new Fader(hc);
+
+
+            hc.SimpleLight(imageFrames, false, 40, f, cp);
+            sendFrames();
+        }
+
         public void LittleRoamer(RGBColor color)
         {
             hc.SpecificColorWholeCube(black, false);
