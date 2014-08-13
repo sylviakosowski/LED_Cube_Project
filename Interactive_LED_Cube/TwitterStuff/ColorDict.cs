@@ -15,10 +15,13 @@ namespace Interactive_LED_Cube
          */
         public ColorDict()
         {
+            Random r = new Random();
             dict = new Dictionary<string, ColorPalette>();
             dict.Add("rainbow", new RainbowPalette());
-            dict.Add("green", new AutodeskPalette());
-            dict.Add("red", new RedBluePalette());
+            dict.Add("mist", new AutodeskPalette());
+            dict.Add("twilight", new RedBluePalette());
+            dict.Add("sun", new SunrisePalette());
+            dict.Add("random", new RandomPalette(r));
 
             //dict.Add("red", new RGBColor(255, 0, 0));
             //dict.Add("green", new RGBColor(0, 255, 0));

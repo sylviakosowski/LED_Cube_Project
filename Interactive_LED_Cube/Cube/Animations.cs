@@ -189,8 +189,9 @@ namespace Interactive_LED_Cube
         {
             hc.SpecificColorWholeCube(black, false);
 
-            hc.RandomFill(imageFrames, black, true, 4);
-            hc.RandomFill(imageFrames, black, false, 8);
+            ColorPalette bp = new SolidPalette(new RGBColor(0,0,0));
+            hc.RandomFill(imageFrames, black, false, 4, cp);
+            hc.RandomFill(imageFrames, black, false, 8, bp);
             sendFrames();
         }
 
@@ -258,7 +259,10 @@ namespace Interactive_LED_Cube
             ColorFiller cf = new ColorFiller(hc);
             ColorPalette cp = new SolidPalette(color);
 
-            hc.LittleRoamer(imageFrames, 4, cf, true, cp);
+            hc.LittleRoamer(imageFrames, 4, cf, true, cp, 200);
+
+            ColorPalette blackPalette = new SolidPalette(new RGBColor(0, 0, 0));
+            
             sendFrames();
         }
 
@@ -269,7 +273,7 @@ namespace Interactive_LED_Cube
             ColorFiller cf = new ColorFiller(hc);
             //ColorPalette cp = new RainbowPalette();
 
-            hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp, 20);
+            hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp, 20, 200);
             sendFrames();
         }
 
@@ -281,7 +285,7 @@ namespace Interactive_LED_Cube
             Coordinate c1 = new Coordinate(3, 3, 3);
             Coordinate c2 = new Coordinate(5, 5, 5);
 
-            hc.Roamer(imageFrames, 4, cf, true, cp, c1, c2);
+            hc.Roamer(imageFrames, 4, cf, true, cp, c1, c2, 200);
 
             sendFrames();
         }
@@ -292,7 +296,7 @@ namespace Interactive_LED_Cube
 
             ColorFiller cf = new ColorFiller(hc);
 
-            hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp, 1);
+            hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp, 1, 200);
 
             sendFrames();
         }

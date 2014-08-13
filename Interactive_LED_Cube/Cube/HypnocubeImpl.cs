@@ -859,7 +859,7 @@ namespace Interactive_LED_Cube
          * 
          * Rate determines how fast the block will fill up. Should be a number that divides into 512.
          */
-        public void RandomFill(List<byte[]> imageFrames, RGBColor color, bool rand, int rate)
+        public void RandomFill(List<byte[]> imageFrames, RGBColor color, bool rand, int rate, ColorPalette cp)
         {
             List<Coordinate> coords = new List<Coordinate>();
 
@@ -902,7 +902,8 @@ namespace Interactive_LED_Cube
                     }
                     else
                     {
-                        changeColorLED(coords[randIndex], color, false);
+                        //changeColorLED(coords[randIndex], color, false);
+                        changeColorLED(coords[randIndex], cp.MapCoordToColor(coords[randIndex]), false);
                     }
                     coords.RemoveAt(randIndex);
                     counter--;
@@ -1066,7 +1067,8 @@ namespace Interactive_LED_Cube
         }
 
         /* A little roamer, one LED which moves around randomly leaving a trail behind it if resetFrames is false. */
-        public void LittleRoamer(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp)
+        public void LittleRoamer(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp,
+            int duration)
         {
             Random rand = new Random();
 
@@ -1078,7 +1080,7 @@ namespace Interactive_LED_Cube
 
             int nextDirection;
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < duration; i++)
             {
                 nextDirection = rand.Next(0, 6);
 
@@ -1135,7 +1137,7 @@ namespace Interactive_LED_Cube
 
         /* A roamer which can be any rectangular shape as indicated by the two coordinates. */
         public void Roamer(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp,
-            Coordinate c1, Coordinate c2)
+            Coordinate c1, Coordinate c2, int duration)
         {
             Random rand = new Random();
 
@@ -1151,7 +1153,7 @@ namespace Interactive_LED_Cube
 
             int nextDirection;
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < duration; i++)
             {
                 nextDirection = rand.Next(0, 6);
 
@@ -1238,11 +1240,15 @@ namespace Interactive_LED_Cube
                 //RGBColor newColor = cp.MapCoordToColor(c);
 
                 lm.LightBlockUniform(imageFrames, c1, c2, rate, resetFrames, cp);
+
             }
+            ColorPalette blackPalette = new SolidPalette(new RGBColor(0, 0, 0));
+            lm.LightBlockUniform(imageFrames, new Coordinate(0, 0, 0), new Coordinate(7, 7, 7), 4, false, blackPalette);
         }
 
 
-        public void ManyLittleRoamers(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp, int count)
+        public void ManyLittleRoamers(List<byte[]> imageFrames, int rate, LightingMethod lm, bool resetFrames, ColorPalette cp, int count,
+            int duration)
         {
             Random rand = new Random();
 
@@ -1261,7 +1267,7 @@ namespace Interactive_LED_Cube
                 coords.Add(new Coordinate(startX, startY, startZ));    
             }
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < duration; i++)
             {
                 for(int j = 0; j < count; j++)
                 {
@@ -1274,6 +1280,9 @@ namespace Interactive_LED_Cube
 
                 lm.LightManyBlocksUniform(imageFrames, coords, rate, resetFrames, cp);
             }
+
+            ColorPalette blackPalette = new SolidPalette(new RGBColor(0, 0, 0));
+            lm.LightBlockUniform(imageFrames, new Coordinate(0,0,0), new Coordinate(7,7,7), 4, false, blackPalette);
         }
 
         public void Shift(int nextDirection, Coordinate c1)
@@ -1323,9 +1332,5 @@ namespace Interactive_LED_Cube
             }
         }
     
-        public void ShiftBlock()
-        {
-
-        }
     }
 }

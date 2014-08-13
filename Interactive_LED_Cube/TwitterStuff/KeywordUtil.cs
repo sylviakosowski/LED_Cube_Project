@@ -177,7 +177,7 @@ namespace Interactive_LED_Cube
                         anim.Blink(cp);
                         break;
                     }
-                case "random":
+                case "cluster":
                     {
                         anim.RandomFill(cp);
                         break;
