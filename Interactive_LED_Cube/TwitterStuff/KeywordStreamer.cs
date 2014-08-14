@@ -98,13 +98,31 @@ namespace Interactive_LED_Cube
                                     List<string> patternsFound = ku.determineKeywordsFromString(patterns, tweetText);
                                     List<string> colorsFound = ku.determineKeywordsFromString(colors, tweetText);
 
-                                    /* */
                                     if(patternsFound.Count > 0 && colorsFound.Count > 0)
                                     {
+                                        //User entered a valid pattern and color.
                                         ku.RunAnimationBasedOnCommands(patternsFound[0], colorsFound[0]);
+                                    }
+                                    else if(patternsFound.Count == 0 && colorsFound.Count > 0) 
+                                    {
+                                        //User forgot to enter a pattern, but did enter a color
+                                        Random r = new Random();
+                                        int index = r.Next(0, patterns.Length);
+                                        Console.WriteLine(index);
+
+                                        ku.RunAnimationBasedOnCommands(patterns[index], colorsFound[0]);
+                                    }
+                                    else if(colorsFound.Count == 0 && patternsFound.Count > 0)
+                                    {
+                                        //User forgot to enter a color, bit did enter a pattern
+                                        Random r = new Random();
+                                        int index = r.Next(0, colors.Length);
+
+                                        ku.RunAnimationBasedOnCommands(patternsFound[0], colors[index]);
                                     }
                                     else
                                     {
+                                        //User just messed up. Terribly.
                                         Console.WriteLine("Commands entered incorrectly.");
                                     }
                                 }
