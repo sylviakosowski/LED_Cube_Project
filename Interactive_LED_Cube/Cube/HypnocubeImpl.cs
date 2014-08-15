@@ -316,6 +316,66 @@ namespace Interactive_LED_Cube
 
         ///////////////////// OFFICIAL ANIMATIONS /////////////////////////
 
+        /* Fade the cube using cp, starting from one corner and working to 
+         * the other. */
+        public void Fade(List<byte[]> imageFrames, ColorPalette cp)
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+
+            LightingMethod fader = new Fader(this);
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        coords.Add(new Coordinate(i, j, k));
+                        colors.Add(cp.MapCoordToColor(new Coordinate(i, j, k)));
+                        if (i == 0 && j == 0 && k == 0)
+                        {
+                            rates.Add(5);
+                        }
+                        else
+                        {
+                            rates.Add((i + j + k) * 10);
+                        }
+                    }
+                }
+            }
+
+            LightLEDs(imageFrames, coords, colors, rates, fader, false);
+        }
+
+        /* Makes the cube blink in a fancy pattern. */
+        public void Blink(List<byte[]> imageFrames, ColorPalette cp)
+        {
+            List<Coordinate> coords = new List<Coordinate>();
+            List<RGBColor> colors = new List<RGBColor>();
+            List<int> rates = new List<int>();
+            List<int> numBlinks = new List<int>();
+
+            RGBColor red = new RGBColor(255, 0, 0);
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+                        coords.Add(new Coordinate(i, j, k));
+                        colors.Add(cp.MapCoordToColor(new Coordinate(i, j, k)));
+                        rates.Add((i + j + k));
+                        numBlinks.Add(i + j + k);
+                    }
+                }
+            }
+            LightingMethod blinker = new Blinker(this, numBlinks);
+            LightLEDs(imageFrames, coords, colors, rates, blinker, false);
+        }
+
         /* Fills the cube by filling one LED at a time, which is in a random position. 
          * 
          * If rand is true, will generate random color for each LED. Otherwise, will fill

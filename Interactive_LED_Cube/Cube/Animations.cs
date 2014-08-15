@@ -54,34 +54,8 @@ namespace Interactive_LED_Cube
         {
             hc.SpecificColorWholeCube(black, false);
 
-            List<Coordinate> coords = new List<Coordinate>();
-            List<RGBColor> colors = new List<RGBColor>();
-            List<int> rates = new List<int>();
-
-            LightingMethod fader = new Fader(hc);
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        coords.Add(new Coordinate(i, j, k));
-                        colors.Add(cp.MapCoordToColor(new Coordinate(i, j, k)));
-                        if (i == 0 && j == 0 && k == 0)
-                        {
-                            rates.Add(5);
-                        }
-                        else
-                        {
-                            rates.Add((i + j + k) * 10);
-                        }
-                    }
-                }
-            }
-
-            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
-
+            hc.Fade(imageFrames, cp);
+            hc.Fade(imageFrames, new SolidPalette(black));
             sendFrames();
         }
 
@@ -90,30 +64,7 @@ namespace Interactive_LED_Cube
         public void Blink(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
-
-            List<Coordinate> coords = new List<Coordinate>();
-            List<RGBColor> colors = new List<RGBColor>();
-            List<int> rates = new List<int>();
-            List<int> numBlinks = new List<int>();
-
-            RGBColor red = new RGBColor(255, 0, 0);
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        coords.Add(new Coordinate(i, j, k));
-                        colors.Add(cp.MapCoordToColor(new Coordinate(i, j, k)));
-                        rates.Add((i + j + k));
-                        numBlinks.Add(i + j + k);
-                    }
-                }
-            }
-
-            LightingMethod blinker = new Blinker(hc, numBlinks);
-            hc.LightLEDs(imageFrames, coords, colors, rates, blinker, false);
+            hc.Blink(imageFrames, cp);
 
             sendFrames();
         }
@@ -132,6 +83,7 @@ namespace Interactive_LED_Cube
         /* Fill the cube in a zig-zag pattern. */
         public void ZigZagFill(ColorPalette cp)
         {
+
             hc.SpecificColorWholeCube(black, false);
 
             ColorPalette bp = new SolidPalette(black);
