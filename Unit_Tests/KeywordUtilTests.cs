@@ -6,6 +6,8 @@ using System.Collections;
 namespace UnitTests
 {
     [TestClass]
+    /* SOME OF THESE TESTS MAY NOT WORK ANYMORE BECAUSE THEY ARE FROM AN
+     * OLD VERSION OF THE CODE RUN AT YOUR OWN RISK*/
     public class KeywordUtilTests
     {
         string[] keywords = { "autodesk", "autocad", "autodesk maya"};

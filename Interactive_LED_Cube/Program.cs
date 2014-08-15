@@ -11,12 +11,6 @@ namespace Interactive_LED_Cube
     /* Run this class to begin everything.*/
     public class Program
     {
-        /* Cube Mode: 0 for starting cube (opengl or phys) with Twitter.
-         * 1 for Visualization Mode, No Twitter
-         * 2 for Physical Mode, No Twitter
-         */
-        private static int CUBE_MODE = 2;
-
         private static TwitterObj t;
         private static HypnocubeImpl hc;
         private static Game game;
@@ -40,11 +34,11 @@ namespace Interactive_LED_Cube
 
         static void Main(string[] args)
         {
-            Begin(CUBE_MODE);
+            Begin();
         }
 
         /* Creates a new Twitter instance and prompts for mode selection. */
-        private static void Begin(int phys_mode)
+        private static void Begin()
         {
 
             Console.WriteLine("Welcome to the Tweeting Hypnocube!");
@@ -56,25 +50,6 @@ namespace Interactive_LED_Cube
 
             SeekResponse();
 
-            /*
-            if(phys_mode == 1)
-            {
-                Console.WriteLine("Cube Visualization Mode: No Twitter");
-                VisualizationTestingMode();
-            }
-            else if(phys_mode == 2)
-            {
-                Console.WriteLine("Physical Hypnocube Mode: No Twitter");
-                HypnocubeTestingMode();
-            }
-            else if(phys_mode == 0)
-            {
-                Console.WriteLine("Enter 0 for Passive Mode, 1 for Interactive Mode \n");
-                t = new TwitterObj();
-                t.DoEverything();
-                VisualizationMode();
-            }
-            */
             Console.ReadLine();
         }
 
@@ -91,7 +66,6 @@ namespace Interactive_LED_Cube
 
             if (response == 0)
             {
-                //PassiveMode();
                 //Physical cube + no twitter
                 Initialize(true);
                 Console.WriteLine("Hypnocube Mode: No Twitter");
@@ -99,9 +73,7 @@ namespace Interactive_LED_Cube
             }
             else if (response == 1)
             {
-                //InteractiveMode();
                 //Physical cube + twitter
-
                 t = new TwitterObj();
                 t.DoEverything();
                 Initialize(true);
@@ -111,16 +83,15 @@ namespace Interactive_LED_Cube
             }
             else if (response == 2)
             {
-                Initialize(false);
                 //OpenGL visualization + no twitter
+                Initialize(false);
                 Console.WriteLine("Cube Visualization Mode: No Twitter");
                 VisualizationTestingMode();
             }
             else if (response == 3)
             {
-                Initialize(false);
                 //OpenGL visualization + twitter
-
+                Initialize(false);
                 t = new TwitterObj();
                 t.DoEverything();
 
@@ -129,7 +100,7 @@ namespace Interactive_LED_Cube
             }
             else
             {
-                Console.Write("Invalid Response: Please enter either 0 or 1.\n");
+                Console.Write("Invalid Response, please re-enter response.");
                 SeekResponse();
             }
         }
@@ -155,13 +126,12 @@ namespace Interactive_LED_Cube
         }
 
         /*
-         * Running this method will stream from the authenticated user's Twitter account. 
-         * This mode allows for a more interactive display: users will Tweet directly to
-         * the authenticating account and the nature of their Tweet will change how the
-         * Hypnocube will behave.
-         * 
-         * TODO: Right now the authenticating account is my own personal Twitter account.
-         * We need to make an account for the Hypnocube.
+         * Right now this method isn't used in the code. It takes step to open up a 
+         * stream of the authenticated user's Twitter. The name is also MISLEADING,
+         * since the interactive component of this project (users tweeting commands
+         * to the cube) is actually combined with the passivemode above. So,
+         * don't worry about this method, don't use it unless user streams are
+         * later incorporated into the project.
          */
         private static void InteractiveMode()
         {
@@ -173,6 +143,7 @@ namespace Interactive_LED_Cube
 
         /*///////////////////////// MODES FOR VISUALIZATION /////////////////////////////*/
 
+        /* Initializes a ton of necessary stuff. */
         private static void Initialize(bool physical)
         {
             hc = new HypnocubeImpl(physical);
@@ -187,49 +158,32 @@ namespace Interactive_LED_Cube
         /* Run light animations for Twitter on OpenGL visualization. */
         private static void VisualizationMode()
         {
-            /*
-            hc = new HypnocubeImpl(false);
-            game = new Game();
-            tl = new TweetListener(game);
-            port = new PIC32();
-
-            ku = new KeywordUtil(tl, hc);
-            anim = new Animations(hc, tl, port, false);
-            */
             //SeekResponse();
             PassiveMode();
-
             game.Run(30, 30);
         }
 
         /* Run light animations for Twitter on physical Hypnocube */
         private static void HypnocubeMode()
         {
-            /*
-            hc = new HypnocubeImpl(true);
-            port = new PIC32();
-            tl = new TweetListener(game);
-            ku = new KeywordUtil(port, hc);
-             * */
             port.Open("COM5");
             Console.WriteLine(port.IsConnected);
             PassiveMode();
-            //Nothing here yet!
         }
 
         /* Starts a game without Twitter, useful for testing in visualization mode. */
         private static void VisualizationTestingMode()
         {
-            /*
-            hc = new HypnocubeImpl(false);
-            game = new Game();
-            port = new PIC32();
-            tl = new TweetListener(game);
-             * */
-
             th = new Cube.TestingHarness(hc, tl, port, false);
-            th.BeginTests();
-            //anim.DoAll(new RGBColor(255, 0, 0));
+            //th.BeginTests();
+            anim = new Animations(hc, tl, port, false);
+            Random r = new Random();
+
+            anim.DoAll(new RandomPalette(r));
+            anim.DoAll(new RainbowPalette());
+            anim.DoAll(new SunrisePalette());
+            anim.DoAll(new RedBluePalette());
+            anim.DoAll(new AutodeskPalette());
 
             game.Run(30, 30);
         }
@@ -239,24 +193,23 @@ namespace Interactive_LED_Cube
          */
         private static void HypnocubeTestingMode()
         {
-            /*
-            hc = new HypnocubeImpl(true);
-            port = new PIC32();
-            game = new Game();
-            tl = new TweetListener(game);
-             * */
 
             th = new Cube.TestingHarness(hc, tl, port, true);
             port.Open("COM5");
 
             Console.WriteLine(port.IsConnected);
 
-            th.BeginTests();
+            //th.BeginTests();
             //game.Run(30, 30);
             bool physical = true;
             anim = new Animations(hc, tl, port, physical);
             Random r = new Random();
+            
             anim.DoAll(new RandomPalette(r));
+            anim.DoAll(new RainbowPalette());
+            anim.DoAll(new SunrisePalette());
+            anim.DoAll(new RedBluePalette());
+            anim.DoAll(new AutodeskPalette());
 
             port.ClosePort();
         }

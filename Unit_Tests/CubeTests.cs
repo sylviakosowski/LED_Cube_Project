@@ -5,6 +5,8 @@ using Interactive_LED_Cube;
 namespace UnitTests
 {
     [TestClass]
+    /* SOME OF THESE TESTS MAY NOT WORK ANYMORE SINCE THEY ARE FROM OLD
+     * VERSIONS OF THE CODE. RUN TESTS AT YOUR OWN RISK. */
     public class CubeTests
     {
         private HypnocubeImpl cube = new HypnocubeImpl(true);
