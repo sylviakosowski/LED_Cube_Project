@@ -132,7 +132,6 @@ namespace Interactive_LED_Cube
         /* Fill the cube in a zig-zag pattern. */
         public void ZigZagFill(ColorPalette cp)
         {
-            Console.WriteLine("MEEP!");
             hc.SpecificColorWholeCube(black, false);
 
             ColorPalette bp = new SolidPalette(black);
