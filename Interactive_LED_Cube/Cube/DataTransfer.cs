@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interactive_LED_Cube.Cube
+namespace Interactive_LED_Cube
 {
+    /* Used to send animations to the physical cube (not the OpenGL simulation,
+     * that uses the TweetListener class in Cube_Visualization. */
     public static class DataTransfer
     {
-
         /* Port is an already opened port. */
         public static void SendImagesToCube(PIC32 port, List<byte[]> imageFrames)
         {

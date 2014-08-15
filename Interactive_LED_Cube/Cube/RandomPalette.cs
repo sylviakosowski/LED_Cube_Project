@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Interactive_LED_Cube
 {
+    /* Color palette where each coordinate is mapped to
+     * a random color. */
     class RandomPalette : ColorPalette
     {
         Random r;

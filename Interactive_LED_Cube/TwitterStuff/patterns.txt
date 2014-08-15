@@ -1,0 +1,8 @@
+﻿fade
+blink
+random
+zigzag
+box
+fireflies
+blocks
+trail

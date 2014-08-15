@@ -7,6 +7,9 @@ using Cube_Visualization;
 
 namespace Interactive_LED_Cube
 {
+    /* Class which stores the different animations which are currently implemented for
+     * the hypnocube. Call these functions to perform these animations on the cube.
+     */
     public class Animations
     {
         private static RGBColor black = new RGBColor(0, 0, 0);
@@ -43,7 +46,10 @@ namespace Interactive_LED_Cube
             }
         }
 
-        /* Animation pool */
+        ////////////////////////* ANIMATION POOL *///////////////////////////
+
+        /* Fade the cube using cp, starting from one corner and working to 
+         * the other. */
         public void Fade(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
@@ -75,60 +81,12 @@ namespace Interactive_LED_Cube
             }
 
             hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
-            /*
-            List<Coordinate> coords = new List<Coordinate>();
-            List<RGBColor> colors = new List<RGBColor>();
-            List<int> rates = new List<int>();
-            RGBColor blue = new RGBColor(0, 0, 255);
-            LightingMethod fader = new Fader(hc);
 
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        coords.Add(new Coordinate(i, j, k));
-                        colors.Add(blue);
-                        rates.Add(50);
-                    }
-                }
-            }
-
-            hc.LightLEDs(imageFrames, coords, colors, rates, fader, false);
-
-            List<Coordinate> coords2 = new List<Coordinate>();
-            List<RGBColor> colors2 = new List<RGBColor>();
-            List<int> rates2 = new List<int>();
-            //RGBColor blue = new RGBColor(0, 0, 255);
-            LightingMethod fader2 = new Fader(hc);
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        coords2.Add(new Coordinate(i, j, k));
-                        colors2.Add(color);
-                        if (i == 0 && j == 0 && k == 0)
-                        {
-                            rates2.Add(5);
-                        }
-                        else
-                        {
-                            rates2.Add((i + j + k) * 10);
-                        }
-                    }
-                }
-            }
-
-            hc.LightLEDs(imageFrames, coords2, colors2, rates2, fader2, false);
-
-             * */
             sendFrames();
         }
 
+        /* Makes the cube blink in a fancy pattern, starts with whole cube
+         * and then recedes into the corner. */
         public void Blink(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
@@ -157,34 +115,10 @@ namespace Interactive_LED_Cube
             LightingMethod blinker = new Blinker(hc, numBlinks);
             hc.LightLEDs(imageFrames, coords, colors, rates, blinker, false);
 
-            /*
-            List<Coordinate> coords = new List<Coordinate>();
-            List<RGBColor> colors = new List<RGBColor>();
-            List<int> rates = new List<int>();
-            List<int> numBlinks = new List<int>();
-
-            //RGBColor red = new RGBColor(255, 0, 0);
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    for (int k = 0; k < 8; k++)
-                    {
-                        coords.Add(new Coordinate(i, j, k));
-                        colors.Add(color);
-                        rates.Add((i + j + k));
-                        numBlinks.Add(i + j + k);
-                    }
-                }
-            }
-
-            LightingMethod blinker = new Blinker(hc, numBlinks);
-            hc.LightLEDs(imageFrames, coords, colors, rates, blinker, false);
-             * */
             sendFrames();
         }
 
+        /* Randomly fills the cube, then fades it out. */
         public void RandomFill(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
@@ -195,21 +129,11 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
+        /* Fill the cube in a zig-zag pattern. */
         public void ZigZagFill(ColorPalette cp)
         {
-
+            Console.WriteLine("MEEP!");
             hc.SpecificColorWholeCube(black, false);
-
-            /*
-            ColorPalette cp = new SolidPalette(color);
-            ColorPalette bp = new SolidPalette(black);
-
-            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.X, cp);
-            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
-            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Z, cp);
-            hc.ZigZagFill(imageFrames, true, 1, HypnocubeImpl.Direction.Y, bp);
-            */
-            //ColorPalette cp = new RainbowPalette();
 
             ColorPalette bp = new SolidPalette(black);
 
@@ -221,17 +145,10 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
+        /* Make a sub-cube inside the cube expand and contract. */
         public void ExpandingCube(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
-
-            /*
-            ColorFiller cf = new ColorFiller(hc);
-            Fader f = new Fader(hc);
-            ColorPalette cp = new SolidPalette(color);
-
-            hc.ExpandingSolidCube(imageFrames, false, 20, cf, cp);
-             * */
 
             ColorFiller cf = new ColorFiller(hc);
             Fader f = new Fader(hc);
@@ -241,6 +158,7 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
+        /* Make the cube fade in uniformly. */
         public void SimpleLight(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
@@ -252,6 +170,9 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
+        /* Make a single LED in the cube run around the cube in a random path. 
+         * THIS METHOD IS NO LONGER USED
+         */
         public void LittleRoamer(RGBColor color)
         {
             hc.SpecificColorWholeCube(black, false);
@@ -266,17 +187,21 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
+        /* The multiple version of LittleRoamer. */
         public void Fireflies(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
 
             ColorFiller cf = new ColorFiller(hc);
-            //ColorPalette cp = new RainbowPalette();
 
             hc.ManyLittleRoamers(imageFrames, 4, cf, true, cp, 20, 200);
             sendFrames();
         }
 
+        /* Make a single block roam around the cube. 
+         *
+         * TODO: Make multiple blocks roam around the cube.
+         */
         public void Blocks(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
@@ -290,17 +215,19 @@ namespace Interactive_LED_Cube
             sendFrames();
         }
 
+        /* Make a random trail appear through the cube. */
         public void Trail(ColorPalette cp)
         {
             hc.SpecificColorWholeCube(black, false);
 
             ColorFiller cf = new ColorFiller(hc);
 
-            hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp, 1, 200);
+            hc.ManyLittleRoamers(imageFrames, 4, cf, false, cp, 2, 200);
 
             sendFrames();
         }
 
+        /* Do all of the animations, useful for testing. */
         public void DoAll(ColorPalette cp)
         {
             Fade(cp);

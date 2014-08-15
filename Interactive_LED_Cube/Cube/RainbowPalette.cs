@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interactive_LED_Cube.Cube
+namespace Interactive_LED_Cube
 {
+    /* Color palette using all the colors of the rainbow. */
     class RainbowPalette : ColorPalette
     {
         public RGBColor MapCoordToColor(Coordinate c)

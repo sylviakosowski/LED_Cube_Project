@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Interactive_LED_Cube
 {
+    /* Fades from red to yellow. Corresponds to the keyword
+     * "sun" in the twitter code. */
     class SunrisePalette : ColorPalette
     {
         public RGBColor MapCoordToColor(Coordinate c)

@@ -22,6 +22,16 @@ namespace Interactive_LED_Cube
      * the animation represented as coordinate-color list dictionary,
      * creates animation frames for the cube and adds them to the 
      * animation queue.
+     * 
+     * LightBlockUniform and LightManyBlocksUniform are methods for
+     * lighting a single block and many blocks in a uniform way, using
+     * a specific color palette and this LightingMethod. They are 
+     * abstract and must be implemented by classes inheriting form
+     * this class.
+     * 
+     * TODO: Make LightBlockUniform is basically a subset of
+     * LightManyBlocksUniform. We could combine them into a single
+     * function given time.
      */
     public abstract class AbstractLightingMethod : LightingMethod
     {
@@ -100,7 +110,6 @@ namespace Interactive_LED_Cube
                         hc.ColorArray[index + 2] = color.B;
                     }
                 }
-                //hc.AddImageFrame(imageFrames);
                 hc.AddImageFrame(imageFrames);
             }
         }

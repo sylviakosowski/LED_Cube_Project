@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Interactive_LED_Cube
 {
-    /* Fills the LED with a single color, no fancy animation. Rate
+    /* LightingMethod which fills the LED with a single color, no fancy animation. Rate
      * deterimnes the number of frames that the LED will be filled
      * as this color.
      */

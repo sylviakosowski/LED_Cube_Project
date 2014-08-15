@@ -38,6 +38,9 @@ namespace Interactive_LED_Cube
             set { z = value; }
         }
 
+        /* Increments the specific component according to 
+         * the incrementor or decrementor, which is changer.
+         */
         public int IncDec(int component, int changer)
         {
             int newComp = component + changer;

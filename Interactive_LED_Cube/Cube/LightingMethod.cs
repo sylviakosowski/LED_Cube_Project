@@ -25,14 +25,22 @@ namespace Interactive_LED_Cube
         Dictionary<Coordinate, List<RGBColor>> CreateAnimation(
             List<Coordinate> coords, List<RGBColor> colors, List<int> rates, bool resetFrames);
 
+        /* Creates the frames of the animation which is specified in the Dictionary, and send
+         * them off to the cube.
+         */
         void CreateFrames(List<byte[]> imageFrames,
                 Dictionary<Coordinate, List<RGBColor>> animDict, int longestAnim, bool resetFrames);
 
+        /* Helper method to get the length (in number of animation frames) of the 
+         * longest animation. */
         int GetLongestAnim();
 
+        /* Light a block specified between coordinate c1 and coordinate c2, using this
+         * LightingMethod and the specified color palette and rate. */
         void LightBlockUniform(List<byte[]> imageFrames, Coordinate c1, Coordinate c2,
             int rate, bool resetFrames, ColorPalette cp);
 
+        /* Like LightBlockUniform except for many blocks. */
         void LightManyBlocksUniform(List<byte[]> imageFrames, List<Coordinate> coords,
             int rate, bool resetFrames, ColorPalette cp);
     }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Interactive_LED_Cube
 {
+    /* Maps a color palette keyword to a color palette implementation. */
     public class ColorDict
     {
         private Dictionary<string, ColorPalette> dict;
@@ -23,10 +24,7 @@ namespace Interactive_LED_Cube
             dict.Add("sun", new SunrisePalette());
             dict.Add("random", new RandomPalette(r));
 
-            //dict.Add("red", new RGBColor(255, 0, 0));
-            //dict.Add("green", new RGBColor(0, 255, 0));
-            //dict.Add("blue", new RGBColor(0, 0, 255));
-            /* Add more colors as you see fit. */
+            /* Add more color palettes as you create them. */
         }
 
         public Dictionary<string, ColorPalette> Dict

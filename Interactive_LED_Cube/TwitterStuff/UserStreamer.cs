@@ -15,6 +15,9 @@ namespace Interactive_LED_Cube
      * (The Twitter account we are usining to authenticate using
      * OAuth keys and stuff). The Tweets received from this user
      * stream can then be sorted by keywords they might contain.
+     * 
+     * This is NOT USED in the current hypnocube implementation.
+     * But could maybe be useful later.
      */
     public class UserStreamer
     {

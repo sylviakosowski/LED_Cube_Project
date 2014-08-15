@@ -13,32 +13,8 @@ namespace Interactive_LED_Cube
      */
     public class KeywordUtil
     {
-        //private TweetListener tl;
-        //private PIC32 port;
-        //private int mode;
-        //private HypnocubeImpl hc;
         private Animations anim;
         private bool physical;
-
-        /*
-        public KeywordUtil(PIC32 port, HypnocubeImpl hc, Animations anim)
-        {
-            this.port = port;
-            mode = 1;
-            this.hc = hc;
-            this.anim = anim;
-        }
-        */
-        /* Constructor to be used when in OpenGL visualization mode. */
-        /*
-        public KeywordUtil(TweetListener tl, HypnocubeImpl hc, Animations anim)
-        {
-            this.tl = tl;
-            mode = 0;
-            this.hc = hc;
-            this.anim = anim;
-        }
-         * */
 
         public KeywordUtil(Animations anim, bool physical)
         {
@@ -70,14 +46,18 @@ namespace Interactive_LED_Cube
          * specific to that keyword (as detailed by the dictionary int value corresponding
          * to that keyword.
          * 
-         * TODO: Handling values which are greater than the number of animations available will
-         * be done in some sort of animation handler, not here.
+         * This method will be called if the command "cube" is NOT found, i.e. this is
+         * what will be called when the cube is passively listening to keywords, i.e.
+         * #Autodesk with no extra cube information in it.
+         * 
+         * The purpose behind KeywordDict rather than hardcoding the keyword strings into
+         * this is so that you can easily change what keywords you want to listen for
+         * in Twitter.
          */
         public void RunAnimationBasedOnKeywords(Dictionary<string,int> keywordDict, 
             List<string> keywordsPresent)
         {
             List<byte[]> imageFrames = new List<byte[]>();
-            //HypnocubeImpl hc = new HypnocubeImpl();
 
             foreach( string element in keywordsPresent )
             {
@@ -86,8 +66,6 @@ namespace Interactive_LED_Cube
                 if (keywordDict.TryGetValue(element, out value))
                 {
                     Console.WriteLine("Value is: " + value.ToString());
-
-                    //Add cube behavior here
 
                     switch(value)
                     {
@@ -105,7 +83,10 @@ namespace Interactive_LED_Cube
                                 break;
                             }
                         default:
-                            break;
+                            {
+                                anim.SimpleLight(new AutodeskPalette());
+                                break;
+                            }
                     }
                 }
                 else
@@ -157,6 +138,8 @@ namespace Interactive_LED_Cube
             
         }
 
+        /* Run an animation based on the given pattern and color commands. If you 
+         * create new animations, they must be added to this switch statement. */
         public void RunAnimationBasedOnCommands(string pattern, string colorString)
         {
             List<byte[]> imageFrames = new List<byte[]>();
@@ -168,6 +151,7 @@ namespace Interactive_LED_Cube
             {
                 case "fade":
                     {
+                        Console.WriteLine("HI IT WORKED");
                         Console.WriteLine("fade");
                         anim.Fade(cp);
                         break;

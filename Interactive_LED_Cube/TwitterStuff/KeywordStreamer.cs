@@ -79,13 +79,7 @@ namespace Interactive_LED_Cube
                             {
                                 Console.WriteLine(tweetText + "\n");
 
-                                //Determine which keywords were found.
-                                /*
-                                List<string> keywordsFound =
-                                    ku.determineKeywordsFromString(keywordArray, tweetText);
-                                */
-
-                                /* Determine if this post which contains #Autodesk also contains #cube.
+                                /* Determine if this post which contains an Autodesk hashtag also contains #cube.
                                  * cubeFound should have length 1 if this is so.
                                  */
                                 List<string> cubeFound = 
@@ -98,23 +92,31 @@ namespace Interactive_LED_Cube
                                     List<string> patternsFound = ku.determineKeywordsFromString(patterns, tweetText);
                                     List<string> colorsFound = ku.determineKeywordsFromString(colors, tweetText);
 
-                                    if(patternsFound.Count > 0 && colorsFound.Count > 0)
+                                    int numPatterns = patternsFound.Count;
+                                    int numColors = colorsFound.Count;
+
+                                    if(numPatterns > 0 && numColors > 0)
                                     {
-                                        //User entered a valid pattern and color.
                                         ku.RunAnimationBasedOnCommands(patternsFound[0], colorsFound[0]);
                                     }
-                                    else if(patternsFound.Count == 0 && colorsFound.Count > 0) 
+                                    else if(numPatterns == 0 && numColors > 0) 
                                     {
-                                        //User forgot to enter a pattern, but did enter a color
+                                        //User forgot pattern.
+                                        Console.WriteLine("User forgot the pattern but did enter a color.");
+                                        Console.WriteLine("Generating a random pattern.");
+
                                         Random r = new Random();
                                         int index = r.Next(0, patterns.Length);
                                         Console.WriteLine(index);
 
                                         ku.RunAnimationBasedOnCommands(patterns[index], colorsFound[0]);
                                     }
-                                    else if(colorsFound.Count == 0 && patternsFound.Count > 0)
+                                    else if(numPatterns == 0 && numColors > 0)
                                     {
-                                        //User forgot to enter a color, bit did enter a pattern
+                                        //User forgot color.
+                                        Console.WriteLine("User forgot the color but did enter a pattern.");
+                                        Console.WriteLine("Generating a random color.");
+
                                         Random r = new Random();
                                         int index = r.Next(0, colors.Length);
 
@@ -122,8 +124,16 @@ namespace Interactive_LED_Cube
                                     }
                                     else
                                     {
-                                        //User just messed up. Terribly.
-                                        Console.WriteLine("Commands entered incorrectly.");
+                                        //User just messed up. Terribly. Give 'em a random animation 
+                                        //so they don't feel sad.
+                                        Console.WriteLine("User forgot both pattern and color commands.");
+                                        Console.WriteLine("Generating random pattern and color.");
+
+                                        Random r = new Random();
+                                        int patternIndex = r.Next(0, patterns.Length);
+                                        int colorIndex = r.Next(0, colors.Length);
+
+                                        ku.RunAnimationBasedOnCommands(patterns[patternIndex], colors[colorIndex]);
                                     }
                                 }
                                 else
