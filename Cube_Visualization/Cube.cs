@@ -7,6 +7,11 @@ using OpenTK;
 
 namespace Cube_Visualization
 {
+    /* 
+     * Class to represent a cube in OpenGL. Used to create virtual LEDs
+     * (each LED is a solid color cube in my visualization. They are
+     * arranged in 3D space to form a cube of cubes.)
+     */
     public class Cube
     {
         public Vector3 Position = Vector3.Zero;

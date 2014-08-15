@@ -7,8 +7,8 @@ using OpenTK;
 
 namespace Cube_Visualization
 {
-    /* The link between the twitter code in Autodesk_Interactive_Storytelling and
-     * the visualization in CubeVisualization. Provides methods for converting
+    /* The link between the twitter code in Interactive_LED_Cube and
+     * the visualization in Cube_Visualization. Provides methods for converting
      * a set of RGB values to OpenGL color values, (and converting byte color
      * arrays to OpenGL Color arrays), as well as sending queues of image frames
      * to the visualization's Game class.

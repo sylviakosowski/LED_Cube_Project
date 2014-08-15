@@ -7,6 +7,7 @@ using OpenTK;
 
 namespace Cube_Visualization
 {
+    //Class to represent the camera in OpenGL.
     public class Camera
     {
         //public Vector3 Position = Vector3.Zero;
